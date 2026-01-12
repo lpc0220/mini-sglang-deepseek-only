@@ -439,6 +439,47 @@ Shrink the SGLang repository (663K+ lines of code across 1945+ Python files) to 
 - **Total lines removed:** ~367,354 lines (55.4% reduction)
 - **Remaining:** ~295,646 lines from original ~663K
 
+## Primary Benchmarking & Testing Methods
+
+### Production Benchmarking Scripts (DeepSeek-Specific)
+The following scripts in `sglang/benchmark/deepseek_v3/` are the **primary methods** for launching and testing SGLang servers with DeepSeek models:
+
+1. **bench_offline_throughput.py**
+   - Offline throughput benchmarking
+   - Tests model without server overhead
+   - Measures pure inference performance
+
+2. **bench_one_batch_server.py**
+   - Single batch server benchmarking
+   - Tests server launch and request handling
+   - Validates server boot process
+
+3. **bench_serving.py**
+   - Full serving benchmarking
+   - Multi-request concurrent testing
+   - Production-like workload simulation
+
+4. **bench_one_batch.py**
+   - Single batch inference testing
+   - Quick validation of model loading
+   - Minimal overhead testing
+
+**Key Insight:** These benchmark scripts demonstrate the canonical way SGLang servers are booted up and configured for DeepSeek models. Understanding their server launch patterns is critical for further codebase shrinking.
+
+**Usage for Validation:**
+```bash
+cd sglang/benchmark/deepseek_v3/
+
+# Test offline throughput
+python bench_offline_throughput.py --model nvidia/DeepSeek-V3-0324-FP4
+
+# Test server launch
+python bench_one_batch_server.py --model nvidia/DeepSeek-V3-0324-FP4
+
+# Test serving under load
+python bench_serving.py --model nvidia/DeepSeek-V3-0324-FP4
+```
+
 ## Testing Strategy (Mac Environment)
 
 ### Challenges:
