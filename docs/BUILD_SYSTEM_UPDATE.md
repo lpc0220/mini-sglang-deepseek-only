@@ -60,7 +60,7 @@ $ ls csrc/sgl_diffusion csrc/grammar csrc/mamba csrc/quantization/gguf
 
 ### 3. Removed Platform-Specific Build Configs
 
-**Files Deleted from `sglang/sgl-kernel/`:**
+**Files Deleted from `sglang/sgl-kernel/` (3 files, ~180 lines):**
 1. `pyproject_cpu.toml` (36 lines)
    - CPU-only build configuration
    - References non-existent `csrc/cpu/` directory
@@ -71,9 +71,26 @@ $ ls csrc/sgl_diffusion csrc/grammar csrc/mamba csrc/quantization/gguf
 3. `setup_rocm.py`
    - ROCm-specific setup script
 
+**Files Deleted from `sglang/python/` (3 files, ~319 lines):**
+1. `pyproject_cpu.toml` (140 lines)
+   - CPU-only Python package build
+   - No CUDA/GPU support
+   - References `intel-openmp` for x86_64
+
+2. `pyproject_xpu.toml` (144 lines)
+   - Intel XPU build configuration
+   - References external `sgl-kernel-xpu` Git repository
+   - Commented out xgrammar (CUDA-only dependency)
+
+3. `pyproject_other.toml` (179 lines)
+   - Multi-platform build with optional extras
+   - Explicit platform extras: `srt_hip`, `srt_npu`, `srt_hpu`
+   - Minimal dependencies, platform-specific at install time
+
 **Why Safe to Remove:**
 - `csrc/cpu/` directory doesn't exist (already deleted in earlier phases)
 - ROCm/HIP platform support completely removed in Phase 3C
+- NPU/XPU/HPU backends removed in Phase 3B/3C
 - Only NVIDIA CUDA builds remain (via main `pyproject.toml` and `CMakeLists.txt`)
 
 ### 4. Build Configuration Verification
@@ -170,10 +187,16 @@ option(SGL_KERNEL_ENABLE_SM100A "Enable SM100A" OFF) # Auto-enabled for CUDA 12.
 1. `sglang/sgl-kernel/CMakeLists.txt` - Removed 4 source file references
 2. `CLAUDE.md` - Updated file organization section
 
-### Files Deleted: 3
-1. `sglang/sgl-kernel/pyproject_cpu.toml`
-2. `sglang/sgl-kernel/pyproject_rocm.toml`
-3. `sglang/sgl-kernel/setup_rocm.py`
+### Files Deleted: 6
+**From `sglang/sgl-kernel/`:**
+1. `pyproject_cpu.toml`
+2. `pyproject_rocm.toml`
+3. `setup_rocm.py`
+
+**From `sglang/python/`:**
+4. `pyproject_cpu.toml`
+5. `pyproject_xpu.toml`
+6. `pyproject_other.toml`
 
 ### Directories Created: 2
 1. `docs/project_tracking/`
@@ -183,9 +206,10 @@ option(SGL_KERNEL_ENABLE_SM100A "Enable SM100A" OFF) # Auto-enabled for CUDA 12.
 - 5 files to `docs/project_tracking/`
 - 6 files to `docs/phase_reports/`
 
-### Lines Removed: ~180 lines
+### Lines Removed: ~500 lines
 - CMakeLists.txt: 4 lines (source file references)
-- Platform build configs: ~176 lines
+- sgl-kernel platform configs: ~180 lines
+- Python platform configs: ~319 lines
 
 ## Verification Steps
 
