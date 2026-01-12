@@ -1,0 +1,4 @@
+[submodule "sglang"]
+	path = sglang
+	url = git@github.com:lpc0220/sglang.git
+	branch = deepseek-only

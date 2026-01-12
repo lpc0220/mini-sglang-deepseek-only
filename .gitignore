@@ -1,6 +1,3 @@
-# Exclude sglang subdirectory (has its own git repo)
-sglang/
-
 # Python
 __pycache__/
 *.py[cod]
