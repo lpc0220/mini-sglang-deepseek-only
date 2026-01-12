@@ -16,11 +16,17 @@ Remove DeepSeek's FlashMLA implementation from sglang/sgl-kernel and use NVIDIA'
 - **Purpose:** CUDA kernels for Multi-head Latent Attention (MLA)
 - **Status:** Superseded by NVIDIA's implementation
 
-### NVIDIA's MLA Implementation
-- **Performance:** Faster than DeepSeek's FlashMLA
-- **Platform:** Optimized for NVIDIA GPUs (GB200, H100, etc.)
-- **Source:** NVIDIA's optimized kernels (likely in DeepSeek-R1-NVFP4-v2 model)
-- **Advantage:** Better hardware optimization, maintained by NVIDIA
+### NVIDIA's MLA Implementations
+- **TRTLLM MLA:** TensorRT-LLM optimized for Blackwell/Hopper
+  - Page size: 32, 64
+  - Supports topk > 1
+  - FP8 MLA support
+  - Best performance on GB200
+- **Cutlass MLA:** NVIDIA Cutlass-based implementation
+  - Page size: 128
+  - Alternative NVIDIA implementation
+- **Performance:** Both faster than DeepSeek's FlashMLA
+- **Advantage:** Hardware vendor optimizations, officially maintained
 
 ## Rationale
 
@@ -81,17 +87,30 @@ Remove FlashMLA compilation targets and source files.
 
 ## What to Keep
 
-### ✅ NVIDIA MLA Implementation
-- Keep NVIDIA's optimized MLA kernels (if integrated)
-- Keep MLA architecture code (the algorithm itself)
-- Keep MLA configuration options (just switch backend)
+### ✅ NVIDIA MLA Implementations (Primary)
+- **TRTLLM MLA** - TensorRT-LLM implementation (best for GB200/Blackwell)
+- **Cutlass MLA** - NVIDIA Cutlass-based implementation
+- MLA architecture code (the algorithm itself)
+- MLA configuration options
+
+### ✅ FlashInfer MLA (Keep as Fallback)
+- **FlashInfer MLA** - Community implementation with broad compatibility
+- Page size: 1
+- Supports topk = 1
+- Useful for environments where TensorRT-LLM not available
+- Portable across different NVIDIA GPU generations
 
 ### ✅ MLA Architecture in DeepSeek Models
 - `sglang/srt/models/deepseek_common/mla.py` - The MLA layer itself
 - MLA forward/backward logic
 - MLA configuration (latent dimensions, etc.)
 
-**Important:** Only remove the **kernel implementation** (FlashMLA), not the MLA architecture logic.
+### ❌ What to Remove
+- **DeepSeek FlashMLA only** - Specifically the github.com/deepseek-ai/FlashMLA implementation
+- Slower than NVIDIA's TRTLLM MLA
+- Superseded by better alternatives
+
+**Important:** Only remove **DeepSeek's FlashMLA** (the specific implementation), not FlashInfer MLA or the MLA architecture logic.
 
 ## Implementation Strategy
 
@@ -162,9 +181,10 @@ python_files_to_modify = [
 - **Hardware utilization:** Better tensor core usage on Blackwell/Hopper
 
 ### Maintenance
-- One MLA implementation (NVIDIA's) instead of two
-- Maintained by NVIDIA, not community/DeepSeek
+- Remove duplicate/slower MLA implementation (DeepSeek's FlashMLA)
+- Keep NVIDIA's TRTLLM MLA (best performance) + FlashInfer MLA (fallback)
 - Less code to audit and maintain
+- Focus on best-performing implementations
 
 ## Verification Steps
 
