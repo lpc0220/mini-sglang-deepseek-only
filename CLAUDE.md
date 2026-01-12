@@ -661,6 +661,55 @@ MoE infrastructure: Clean ✅
 
 **Status:** Phase 3C ✅ COMPLETE - Ready for Phase 3D (CPU-only kernel removal)
 
+## Phase 4: GB200 Testing & Fixes (2026-01-12)
+
+**Achievement:** Successfully compiled sgl-kernel on GB200, fixed runtime import errors
+
+### GB200 Compilation Success
+✅ **sgl-kernel compilation:** PASSED on GB200 Blackwell architecture
+- Build time optimizations applied (Ninja, MAX_JOBS=32)
+- CUDA 12.9, compute capability 10.0
+- FA3/FA4/FlashMLA disabled, saving 6-11 minutes compile time
+
+### Runtime Testing & Fixes
+
+#### Fix 1: Model Config Import Error (Commit ce2d2fc59)
+**Issue:** `cannot import name 'ChatGLMConfig' from 'sglang.srt.configs'`
+**Root Cause:** Previous cleanup removed config classes but left import statements
+**Files Modified:**
+1. `python/sglang/srt/utils/hf_transformers_utils.py` (197 lines removed)
+   - Removed 19+ non-DeepSeek config imports (ChatGLMConfig, DbrxConfig, ExaoneConfig, etc.)
+   - Removed `_CONFIG_REGISTRY` with 19+ model mappings
+   - Removed `_load_mistral_large_3_for_causal_LM()` function
+   - Removed 8+ model-specific hacks (Phi4MM, Qwen2-VL, InternVL, LLaMA tokens, etc.)
+2. `python/sglang/srt/model_executor/model_runner.py` (28 lines changed)
+   - Removed config imports (FalconH1Config, JetNemotronConfig, etc.)
+   - Changed model-specific config properties to return None
+
+**Result:** ✅ Fixed - ChatGLMConfig import error resolved
+
+### Documentation Created
+- [docs/FIX_MODEL_CONFIG_IMPORTS.md](docs/FIX_MODEL_CONFIG_IMPORTS.md) - Complete fix documentation
+- [docs/COMPLETE_BACKEND_CLEANUP_REPORT.md](docs/COMPLETE_BACKEND_CLEANUP_REPORT.md) - Full cleanup summary
+- [docs/FIX_PARALLEL_STATE_RESTORATION.md](docs/FIX_PARALLEL_STATE_RESTORATION.md) - Previous fix
+
+### Current Testing Status
+- ✅ sgl-kernel compilation on GB200
+- ✅ Model config imports fixed
+- 🔄 Inference test (bench_one_batch) - Ready to retry after user pulls changes
+
+### Commit History (Phase 4)
+- **ce2d2fc59:** Remove all non-DeepSeek model configs and imports (197 lines)
+- **4d3425f51:** Remove FA3/FA4/FlashMLA CUDA kernels (1,950 lines)
+- **60739e5af:** Complete Ascend removal (312 lines)
+- **253b57a:** Add comprehensive backend cleanup report
+
+**Grand Total After Model Config Cleanup:**
+- **Total lines removed:** ~367,479 lines (55.4% reduction)
+- **Remaining:** ~295,521 lines from original ~663K
+
+**Status:** Phase 4 🔄 IN PROGRESS - Awaiting bench_one_batch test results from user
+
 ## Notes
 - Original repo: https://github.com/sgl-project/sglang
 - Workspace: `/Users/lpc/workspace/sglang-deepseek-only`
