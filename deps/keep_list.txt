@@ -79,6 +79,12 @@
    └── ...                                             # Other runtime components
 
 # ============================================
+# CRITICAL INFRASTRUCTURE (MUST KEEP)
+# ============================================
+✅ sgl-model-gateway/                                   # PD serving gateway for DeepSeek (CRITICAL)
+✅ sgl-kernel/                                          # Custom CUDA kernels (MLA, MoE, flash attention)
+
+# ============================================
 # HARDWARE SUPPORT (NVIDIA GPU only)
 # ============================================
 ✅ All NVIDIA CUDA kernels and optimizations

@@ -289,10 +289,13 @@ Shrink the SGLang repository (663K+ lines of code across 1945+ Python files) to 
 
 ### File Organization:
 - **CLAUDE.md** (this file) - Master plan and context
-- **DECISIONS.md** - Detailed technical decisions
-- **REMOVED_FILES.md** - Complete log of removed code
-- **DEPENDENCIES.md** - DeepSeek dependency graph
-- **TESTING.md** - Test strategy and results
+- **docs/** - All documentation organized by category
+  - **docs/README.md** - Documentation index
+  - **docs/project_tracking/** - Current status and tracking
+    - STATUS.md, QUICK_STATUS.md, PROGRESS_SUMMARY.md
+    - DEPENDENCIES.md, REMOVED_FILES.md
+  - **docs/phase_reports/** - Detailed phase completion reports
+    - PHASE3_PLAN.md, PHASE3B_SUMMARY.md, PHASE3C_*.md
 
 ## Current Status
 - **Phase:** Phase 3 + Kernel Cleanup - COMPLETE ✅
