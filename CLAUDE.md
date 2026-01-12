@@ -410,6 +410,32 @@ Shrink the SGLang repository (663K+ lines of code across 1945+ Python files) to 
 - **Total lines removed:** ~367,282 lines (55.4% reduction)
 - **Remaining:** ~295,718 lines from original ~663K
 
+### 2026-01-11: Transformers Backend Removal
+**Achievement:** Removed all dead code related to non-existent Transformers backend
+
+**Context:**
+- DeepSeek models have native SGLang implementations (deepseek.py, deepseek_v2.py, deepseek_nextn.py)
+- ModelImpl.TRANSFORMERS enum existed but had NO actual implementation
+- TransformersForCausalLM class never existed in codebase
+- Fallback logic was unused dead code
+
+**Removed Code (72 lines):**
+1. **model_config.py** (-1 line) - Removed TRANSFORMERS from ModelImpl enum
+2. **server_args.py** (-3 lines net) - Updated --model-impl help text, removed Transformers documentation
+3. **model_loader/utils.py** (-62 lines net) - Deleted resolve_transformers_arch() function (52 lines), removed unused imports
+4. **models/registry.py** (-3 lines) - Removed TransformersForCausalLM fallback from _normalize_archs()
+
+**Result:**
+✅ Simplified model loading path (direct to native SGLang)
+✅ Removed unused transformers library imports
+✅ Clearer documentation (only SGLang implementations supported)
+✅ No Transformers backend references remain
+
+**Final Grand Total:**
+- **Total files modified:** 1,562 files (1,558 + 4 new)
+- **Total lines removed:** ~367,354 lines (55.4% reduction)
+- **Remaining:** ~295,646 lines from original ~663K
+
 ## Testing Strategy (Mac Environment)
 
 ### Challenges:
