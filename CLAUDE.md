@@ -67,14 +67,14 @@ Shrink the SGLang repository (663K+ lines of code across 1945+ Python files) to 
 4. **Benchmarks:** All non-DeepSeek benchmarks (keep `sglang/benchmark/deepseek_v3/` only)
 
 ### What We Keep (ALL Optimizations for NVIDIA GPU):
-✅ **ALL Quantization Methods** (DeepSeek R1 uses these):
+✅ **Quantization Methods** (DeepSeek R1 uses these):
    - **MXFP4** (Mixed Precision FP4) - Primary quantization for DeepSeek-R1
    - **FP8** (8-bit floating point) - Used in DeepSeek models
-   - **AWQ** (Activation-aware Weight Quantization)
    - **GPTQ** (Generative Pre-trained Transformer Quantization)
-   - **GGUF** quantization support
    - **W8A8** (8-bit weights, 8-bit activations)
    - All CUDA quantization kernels and implementations
+   - **REMOVED:** AWQ (not needed for DeepSeek R1 FP4/FP8)
+   - **REMOVED:** GGUF (kernels not compiled)
 
 ✅ **ALL NVIDIA GPU Optimizations:**
    - Flash Attention (FA3, FA4)
@@ -298,10 +298,10 @@ Shrink the SGLang repository (663K+ lines of code across 1945+ Python files) to 
     - PHASE3_PLAN.md, PHASE3B_SUMMARY.md, PHASE3C_*.md
 
 ## Current Status
-- **Phase:** Phase 3 + Kernel Cleanup - COMPLETE ✅
-- **Last Updated:** 2026-01-11 (Night)
-- **Lines of Code:** ~295,718 (From original ~663K, 55.4% reduction)
-- **Next Action:** Phase 4 - Testing & Validation
+- **Phase:** Phase 4 - Testing & Validation
+- **Last Updated:** 2026-01-12
+- **Lines of Code:** ~295,000 (From original ~663K, ~55.5% reduction)
+- **Next Action:** Continue GB200 inference testing
 
 ### Round 1 Progress (2026-01-11)
 ✅ Created dependency tracking structure (DEPENDENCIES.md, deps/)
@@ -629,7 +629,7 @@ Since deployment target is multi-node NVIDIA GPU:
 ✅ Preserved 100% of CUDA functionality
 ✅ Preserved 100% of DeepSeek model support
 ✅ Preserved 100% of MoE infrastructure
-✅ Preserved 100% of quantization support (FP8, AWQ, MXFP4)
+✅ Preserved quantization support (FP8, MXFP4, GPTQ, W8A8)
 
 ### Execution Summary
 - **Stage 1:** Automated cleanup - 51 files, 105 branches removed
@@ -709,6 +709,52 @@ MoE infrastructure: Clean ✅
 - **Remaining:** ~295,521 lines from original ~663K
 
 **Status:** Phase 4 🔄 IN PROGRESS - Awaiting bench_one_batch test results from user
+
+### 2026-01-12: Runtime Fixes & AWQ Removal
+
+#### Fix 2: ColumnParallelLinear Missing (Commit 5493bf82c)
+**Issue:** `ColumnParallelLinear is not defined` at linear.py line 325
+**Root Cause:** ColumnParallelLinear and MergedColumnParallelLinear classes were accidentally deleted during platform cleanup
+**Fix:** Restored both classes (~400 lines) from main branch, cleaned for CUDA-only
+**Files Modified:**
+- `python/sglang/srt/layers/linear.py` - Restored ColumnParallelLinear (lines 248-424) and MergedColumnParallelLinear (lines 427-723)
+
+#### Fix 3: NSA Module Restoration (Commit 8cfd85df4)
+**Issue:** `no module named 'sglang.srt.layers.attention.nsa'`
+**Decision:** User requested restoration for future DeepSeek V3.2 support
+**Fix:** Restored NSA (Native Sparse Attention) module - 10 files, 6464 lines
+**Files Restored:**
+- `python/sglang/srt/layers/attention/nsa/` - 9 files
+- `python/sglang/srt/layers/attention/nsa_backend.py`
+
+#### AWQ Quantization Removal
+**Issue:** `cannot import name 'AWQMarlinConfig'`
+**User Decision:** Remove AWQ entirely - DeepSeek R1 uses FP4/FP8 only, AWQ not needed
+**Files Deleted:**
+- `python/sglang/srt/layers/quantization/awq.py` (entire file)
+
+**Files Modified (AWQ references removed):**
+- `python/sglang/srt/layers/quantization/__init__.py`
+- `python/sglang/srt/layers/quantization/moe_wna16.py`
+- `python/sglang/srt/layers/quantization/auto_round.py`
+- `python/sglang/srt/layers/linear.py`
+- `python/sglang/srt/models/deepseek_v2.py`
+- `python/sglang/srt/configs/model_config.py`
+- `python/sglang/srt/server_args.py`
+- `python/sglang/srt/layers/modelopt_utils.py`
+- `python/sglang/srt/layers/attention/attention_registry.py`
+
+**Cleanup:** Removed all "# REMOVED" comments from codebase for cleaner code
+
+**Quantization Methods After AWQ Removal:**
+✅ FP8 (8-bit floating point)
+✅ MXFP4 (Mixed Precision FP4) - Primary for DeepSeek R1
+✅ GPTQ (Generative Pre-trained Transformer Quantization)
+✅ W8A8 (8-bit weights, 8-bit activations)
+✅ BitsAndBytes
+✅ ModelOpt (FP4, FP8)
+❌ AWQ (removed - not needed for DeepSeek R1)
+❌ GGUF (not compiled)
 
 ## Notes
 - Original repo: https://github.com/sgl-project/sglang
