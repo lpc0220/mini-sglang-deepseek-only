@@ -183,6 +183,29 @@ python3 -m py_compile python/sglang/srt/model_executor/model_runner.py
 - ✅ Model config imports: FIXED
 - 🔄 Inference test (bench_one_batch): READY TO RETRY
 
+## Follow-Up Fix: timestep_embedding Undefined Symbol (Commit c50324911)
+
+**Additional error discovered:** `undefined symbol _Z18timestep_embeddingRKN2at6TensorERS0_lbddl`
+
+**Root Cause:**
+- Python wrapper for `timestep_embedding` was removed in earlier cleanup (commit 816de75c7)
+- But C++ declaration and registration remained in `common_extension.cc` and `sgl_kernel_ops.h`
+- The CUDA implementation (`timestep_embedding.cu`) was never compiled (not in CMakeLists.txt)
+- Result: Symbol declared but never defined → undefined symbol error at module load
+
+**Solution Applied:**
+1. Removed `timestep_embedding` declaration from `sgl_kernel_ops.h`
+2. Removed `timestep_embedding` registration from `common_extension.cc`
+3. Deleted `sgl-kernel/csrc/sgl_diffusion/elementwise/timestep_embedding.cu` (136 lines)
+4. Deleted `sgl-kernel/tests/sgl_diffusion/test_timestep_embedding.py` (114 lines)
+
+**Impact:**
+- ✅ Fixed undefined symbol error
+- ✅ Removed 267 lines of diffusion model code (not used by DeepSeek)
+- ✅ Clean module loading
+
+**Note:** `timestep_embedding` is only used for diffusion models (Stable Diffusion, etc.), not for DeepSeek language models.
+
 ## Next Steps for User
 
 ### 1. Pull Latest Changes (On GB200 Cluster)
@@ -192,14 +215,22 @@ cd /path/to/sglang
 git pull origin deepseek-only
 ```
 
-### 2. Reinstall Python Package
+### 2. Recompile sgl-kernel (Required for C++ changes)
 
 ```bash
-cd python
+cd sgl-kernel
+rm -rf build/  # Clean build directory
+pip install -e .
+```
+
+### 3. Reinstall Python Package
+
+```bash
+cd ../python
 pip install -e ".[srt]"
 ```
 
-### 3. Retry Inference Test
+### 4. Retry Inference Test
 
 ```bash
 # Your original test command:
