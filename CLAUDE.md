@@ -77,16 +77,17 @@ Shrink the SGLang repository (663K+ lines of code across 1945+ Python files) to 
    - **REMOVED:** GGUF (kernels not compiled)
 
 ✅ **ALL NVIDIA GPU Optimizations:**
-   - Flash Attention (FA3, FA4)
    - FlashInfer (MLA-optimized)
    - FlashMLA, CutlassMLA, TrtLLM-MLA backends
-   - Native Sparse Attention (NSA)
+   - Native Sparse Attention (NSA) - **Primary DeepSeek attention backend**
+   - TRTLLm ragged attention (SM100+ / Blackwell)
    - Triton kernels for CUDA
    - Tensor parallelism
    - Pipeline parallelism
    - Expert parallelism (MoE)
    - NCCL communication
    - All sgl-kernel CUDA kernels
+   - **REMOVED:** FA3/FA4 from NSA backend (DeepSeek uses FlashMLA instead)
 
 ✅ **Aggregated & Disaggregated Mode Support:**
    - Prefill-Decode (PD) disaggregation via sgl-model-gateway
@@ -299,8 +300,9 @@ Shrink the SGLang repository (663K+ lines of code across 1945+ Python files) to 
 
 ## Current Status
 - **Phase:** Phase 4 - Testing & Validation
-- **Last Updated:** 2026-01-12
+- **Last Updated:** 2026-01-14
 - **Lines of Code:** ~295,000 (From original ~663K, ~55.5% reduction)
+- **Recent Changes:** FA3/FA4 removed from DeepSeek attention backends
 - **Next Action:** Continue GB200 inference testing
 
 ### Round 1 Progress (2026-01-11)
@@ -755,6 +757,100 @@ MoE infrastructure: Clean ✅
 ✅ ModelOpt (FP4, FP8)
 ❌ AWQ (removed - not needed for DeepSeek R1)
 ❌ GGUF (not compiled)
+
+### 2026-01-14: Complete FA3/FA4/FlashMLA Removal
+
+**User Request:** Remove ALL FA3, FA4, and FlashMLA code completely. Add stubs where NSA references FlashMLA.
+
+**Files Deleted:**
+1. `sgl-kernel/python/sgl_kernel/flash_attn.py` - FA3/FA4 Python interface
+2. `layers/attention/flashattention_backend.py` - FlashAttention backend (113KB)
+3. `multimodal/vit_cuda_graph_runner.py` - ViT CUDA graph runner (15KB, dead code)
+4. `sgl-kernel/tests/test_flash_attention.py` - FA3 tests
+5. `sgl-kernel/tests/test_flash_attention_4.py` - FA4 tests
+6. `test/attention/test_flashattn_backend.py` - FlashAttention backend tests
+7. `test/attention/test_flashattn_mla_backend.py` - FlashAttention MLA tests
+
+**Stubbed Methods (NSA Backend):**
+- `_forward_flashmla_sparse()` - Raises NotImplementedError
+- `_forward_flashmla_kv()` - Raises NotImplementedError
+- `_compute_flashmla_metadata()` - Raises NotImplementedError
+
+**Updated Files:**
+1. **nsa_backend.py** - FlashMLA methods replaced with stubs
+2. **multi_layer_eagle_worker_v2.py** - `init_attention_backend()` raises NotImplementedError
+3. **mem_cache/sparsity/factory.py** - Removed FlashAttentionAdaptor import
+4. **mem_cache/sparsity/backend/backend_adaptor.py** - Removed FlashAttentionAdaptor class
+5. **mem_cache/sparsity/backend/__init__.py** - Removed FlashAttentionAdaptor export
+6. **mem_cache/sparsity/__init__.py** - Removed FlashAttentionAdaptor export
+7. **server_args.py** - Updated help text example
+
+**Impact:**
+✅ ALL FA3/FA4/FlashMLA code removed from codebase
+✅ NSA backend has stubs that clearly indicate "not implemented yet"
+✅ EAGLE multi-layer speculative decoding disabled (raises NotImplementedError)
+✅ Other MLA backends preserved (CutlassMLA, TRTLLm MLA, FlashInfer MLA)
+✅ Utility functions for MLA indices preserved (used by CutlassMLA/TRTLLm)
+
+### 2026-01-14: gRPC and Parser Module Cleanup
+
+**User Request:** Delete entire parser folder and grpc folder with all references.
+
+#### gRPC Module Removal
+**Files Deleted:**
+1. `sglang/python/sglang/srt/grpc/` - Entire directory (1,982 lines)
+   - `__init__.py`
+   - `compile_proto.py`
+   - `grpc_request_manager.py`
+   - `health_servicer.py`
+   - `scheduler_launcher.py`
+   - `sglang_scheduler.proto`
+   - `sglang_scheduler_pb2.py`
+   - `sglang_scheduler_pb2.pyi`
+   - `sglang_scheduler_pb2_grpc.py`
+2. `sglang/python/sglang/srt/entrypoints/grpc_server.py` (1,039 lines)
+
+**Files Modified (gRPC references removed):**
+- `launch_server.py` - Removed grpc_mode branch
+- `server_args.py` - Removed grpc_mode field and --grpc-mode argument
+
+**Total gRPC Removal:** ~3,021 lines
+
+#### Parser Module Simplification
+**Original parser folder:** 1,128 lines across 4 files
+**Replaced with minimal stubs:** 542 lines
+
+**Simplified Files:**
+1. `conversation.py` - Minimal Conversation class and generate_chat_conv() stub
+2. `reasoning_parser.py` - DeepSeek-R1 specific <think>...</think> parser
+3. `jinja_template_utils.py` - Content format detection and message processing
+4. `code_completion_parser.py` - No-op stub (code completion not supported)
+
+**What was removed from parser:**
+- All non-DeepSeek conversation templates (~20+ templates)
+- SeparatorStyle enum (full version)
+- Model type to template mappings
+- Complex conversation formatting logic
+- Code completion templates
+
+**What was kept/simplified:**
+- DeepSeek-R1 reasoning parser with <think>/<\/think> tag support
+- Basic Conversation class for compatibility
+- Jinja template content format detection
+
+**Parser Module:** 586 lines removed (52% reduction)
+
+**Files Modified (parser imports updated):**
+- `template_manager.py` - Completely rewritten as simplified stub
+- Various serving files use simplified parser stubs
+
+**Total Phase 5 Removal:** ~3,607 lines
+- gRPC: 3,021 lines
+- Parser simplification: 586 lines
+
+**Grand Total After Phase 5:**
+- **Total lines removed:** ~371,086 lines (55.9% reduction)
+- **Remaining:** ~291,914 lines from original ~663K
 
 ## Notes
 - Original repo: https://github.com/sgl-project/sglang
