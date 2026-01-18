@@ -146,7 +146,26 @@ When user says:
 - **Last Updated:** 2026-01-16
 - **Lines of Code:** ~291,000 (From original ~663K, ~56% reduction)
 
-## Working Milestone
+## Working Milestones
+
+### Milestone 2: AWQ/GPTQ/Marlin Removal (Current)
+
+**Commit:** `d1acc3ac1` (2026-01-17)
+**Branch:** `deepseek-only`
+
+Removed unused quantization backends:
+- AWQ: awq_triton.py, auto_round.py, sgl-kernel AWQ tests/benchmarks
+- GPTQ: gptq.py, marlin_utils.py, marlin_utils_fp8.py, moe_wna16.py
+- Compressed Tensors: entire directory (kept only utils.py for should_ignore_layer)
+- Marlin MoE: moe_runner/marlin.py, fused_marlin_moe.py
+- FP8 Marlin: removed fallback path
+- Flex Attention: removed from attention_registry.py and server_args.py
+
+**Tested on GB200:** WORKING ✅
+
+---
+
+### Milestone 1: Initial GB200 Deployment
 
 **Commit:** `79db3fde9` (2026-01-16)
 **Branch:** `deepseek-only`
