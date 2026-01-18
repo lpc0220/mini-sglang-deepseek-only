@@ -46,157 +46,71 @@ DeepSeek Models: [deepseek.py](sglang/python/sglang/srt/models/deepseek.py), [de
 
 #### MLA Attention (Cutlass Backend)
 
-**Call Chain:**
-```
-deepseek_v2.py:1553 forward_absorb_core()
-  └─> attention_backend_handler.py AttentionBackendRegistry
-      └─> cutlass_mla_backend.py:27 CutlassMLABackend
-          └─> sgl-kernel: attention.py:48 cutlass_mla_decode()
-```
-
-**Links:**
-- [deepseek_v2.py:1553](sglang/python/sglang/srt/models/deepseek_v2.py#L1553) `forward_absorb_core()`
-- [attention_backend_handler.py](sglang/python/sglang/srt/models/deepseek_common/attention_backend_handler.py) `AttentionBackendRegistry`
-- [cutlass_mla_backend.py:27](sglang/python/sglang/srt/layers/attention/cutlass_mla_backend.py#L27) `CutlassMLABackend`
-- [attention.py:48](sglang/sgl-kernel/python/sgl_kernel/attention.py#L48) `cutlass_mla_decode()`
-
-**Source:** sgl-kernel
+[deepseek_v2.py:1553](sglang/python/sglang/srt/models/deepseek_v2.py#L1553) `forward_absorb_core()`
+└─> [attention_backend_handler.py](sglang/python/sglang/srt/models/deepseek_common/attention_backend_handler.py) `AttentionBackendRegistry`
+    └─> [cutlass_mla_backend.py:27](sglang/python/sglang/srt/layers/attention/cutlass_mla_backend.py#L27) `CutlassMLABackend`
+        └─> [attention.py:48](sglang/sgl-kernel/python/sgl_kernel/attention.py#L48) `cutlass_mla_decode()` *(sgl-kernel)*
 
 ---
 
 #### MLA Attention (FlashInfer Backend)
 
-**Call Chain:**
-```
-deepseek_v2.py:1553 forward_absorb_core()
-  └─> flashinfer_mla_backend.py:49 FlashInferMLABackend
-      └─> flashinfer: mla.py:142 BatchMLAPagedAttentionWrapper
-          └─> flashinfer: mla.py:522 trtllm_batch_decode_with_kv_cache_mla()
-```
-
-**Links:**
-- [deepseek_v2.py:1553](sglang/python/sglang/srt/models/deepseek_v2.py#L1553) `forward_absorb_core()`
-- [flashinfer_mla_backend.py:49](sglang/python/sglang/srt/layers/attention/flashinfer_mla_backend.py#L49) `FlashInferMLABackend`
-- [mla.py:142](flashinfer/flashinfer/mla.py#L142) `BatchMLAPagedAttentionWrapper`
-- [mla.py:522](flashinfer/flashinfer/mla.py#L522) `trtllm_batch_decode_with_kv_cache_mla()`
-
-**Source:** flashinfer
+[deepseek_v2.py:1553](sglang/python/sglang/srt/models/deepseek_v2.py#L1553) `forward_absorb_core()`
+└─> [flashinfer_mla_backend.py:49](sglang/python/sglang/srt/layers/attention/flashinfer_mla_backend.py#L49) `FlashInferMLABackend`
+    └─> [mla.py:142](flashinfer/flashinfer/mla.py#L142) `BatchMLAPagedAttentionWrapper` *(flashinfer)*
+        └─> [mla.py:522](flashinfer/flashinfer/mla.py#L522) `trtllm_batch_decode_with_kv_cache_mla()` *(flashinfer)*
 
 ---
 
 #### MLA Attention (TRT-LLM Backend)
 
-**Call Chain:**
-```
-deepseek_v2.py:1553 forward_absorb_core()
-  └─> trtllm_mla_backend.py:256 TrtllmMLABackend
-      └─> sgl-kernel: elementwise.py:376 concat_mla_absorb_q()
-      └─> flashinfer: mla.py:522 trtllm_batch_decode_with_kv_cache_mla()
-```
-
-**Links:**
-- [deepseek_v2.py:1553](sglang/python/sglang/srt/models/deepseek_v2.py#L1553) `forward_absorb_core()`
-- [trtllm_mla_backend.py:256](sglang/python/sglang/srt/layers/attention/trtllm_mla_backend.py#L256) `TrtllmMLABackend`
-- [elementwise.py:376](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L376) `concat_mla_absorb_q()`
-- [mla.py:522](flashinfer/flashinfer/mla.py#L522) `trtllm_batch_decode_with_kv_cache_mla()`
-
-**Source:** sgl-kernel + flashinfer
+[deepseek_v2.py:1553](sglang/python/sglang/srt/models/deepseek_v2.py#L1553) `forward_absorb_core()`
+└─> [trtllm_mla_backend.py:256](sglang/python/sglang/srt/layers/attention/trtllm_mla_backend.py#L256) `TrtllmMLABackend`
+    ├─> [elementwise.py:376](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L376) `concat_mla_absorb_q()` *(sgl-kernel)*
+    └─> [mla.py:522](flashinfer/flashinfer/mla.py#L522) `trtllm_batch_decode_with_kv_cache_mla()` *(flashinfer)*
 
 ---
 
 #### Triton Prefill Attention
 
-**Call Chain:**
-```
-deepseek_v2.py forward()
-  └─> triton_backend.py TritonAttnBackend
-      └─> triton: prefill_attention.py:33 @triton.jit prefill_attention_kernel()
-```
-
-**Links:**
-- [deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `forward()`
-- [triton_backend.py](sglang/python/sglang/srt/layers/attention/triton_backend.py) `TritonAttnBackend`
-- [prefill_attention.py:33](sglang/python/sglang/srt/layers/attention/triton_ops/prefill_attention.py#L33) `@triton.jit`
-
-**Source:** triton
+[deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `forward()`
+└─> [triton_backend.py](sglang/python/sglang/srt/layers/attention/triton_backend.py) `TritonAttnBackend`
+    └─> [prefill_attention.py:33](sglang/python/sglang/srt/layers/attention/triton_ops/prefill_attention.py#L33) `@triton.jit prefill_attention_kernel()` *(triton)*
 
 ---
 
 #### Triton Decode Attention
 
-**Call Chain:**
-```
-deepseek_v2.py forward()
-  └─> triton_backend.py TritonAttnBackend
-      └─> triton: decode_attention.py:35 @triton.jit decode_attention_fwd_kernel()
-      └─> triton: decode_attention.py:244 @triton.jit decode_attention_fwd_kernel_mqa()
-```
-
-**Links:**
-- [deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `forward()`
-- [triton_backend.py](sglang/python/sglang/srt/layers/attention/triton_backend.py) `TritonAttnBackend`
-- [decode_attention.py:35](sglang/python/sglang/srt/layers/attention/triton_ops/decode_attention.py#L35) `decode_attention_fwd_kernel()`
-- [decode_attention.py:244](sglang/python/sglang/srt/layers/attention/triton_ops/decode_attention.py#L244) `decode_attention_fwd_kernel_mqa()`
-
-**Source:** triton
+[deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `forward()`
+└─> [triton_backend.py](sglang/python/sglang/srt/layers/attention/triton_backend.py) `TritonAttnBackend`
+    ├─> [decode_attention.py:35](sglang/python/sglang/srt/layers/attention/triton_ops/decode_attention.py#L35) `@triton.jit decode_attention_fwd_kernel()` *(triton)*
+    └─> [decode_attention.py:244](sglang/python/sglang/srt/layers/attention/triton_ops/decode_attention.py#L244) `@triton.jit decode_attention_fwd_kernel_mqa()` *(triton)*
 
 ---
 
 #### Triton Extend Attention
 
-**Call Chain:**
-```
-deepseek_v2.py forward()
-  └─> triton_backend.py TritonAttnBackend
-      └─> triton: extend_attention.py:94 @triton.jit _fwd_kernel()
-      └─> triton: extend_attention.py:206 @triton.jit _fwd_kernel_q_inner()
-```
-
-**Links:**
-- [deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `forward()`
-- [triton_backend.py](sglang/python/sglang/srt/layers/attention/triton_backend.py) `TritonAttnBackend`
-- [extend_attention.py:94](sglang/python/sglang/srt/layers/attention/triton_ops/extend_attention.py#L94) `_fwd_kernel()`
-- [extend_attention.py:206](sglang/python/sglang/srt/layers/attention/triton_ops/extend_attention.py#L206) `_fwd_kernel_q_inner()`
-
-**Source:** triton
+[deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `forward()`
+└─> [triton_backend.py](sglang/python/sglang/srt/layers/attention/triton_backend.py) `TritonAttnBackend`
+    ├─> [extend_attention.py:94](sglang/python/sglang/srt/layers/attention/triton_ops/extend_attention.py#L94) `@triton.jit _fwd_kernel()` *(triton)*
+    └─> [extend_attention.py:206](sglang/python/sglang/srt/layers/attention/triton_ops/extend_attention.py#L206) `@triton.jit _fwd_kernel_q_inner()` *(triton)*
 
 ---
 
 #### NSA (Native Sparse Attention)
 
-**Call Chain:**
-```
-deepseek_v2.py:57 dequantize_k_cache_paged
-  └─> nsa_indexer.py:99 Indexer
-      └─> sgl-kernel: hadamard.py hadamard_transform()
-  └─> nsa_backend.py:182 NSABackend
-      └─> triton: triton_kernel.py:9 @triton.jit nsa_triton_kernel()
-```
-
-**Links:**
-- [deepseek_v2.py:57](sglang/python/sglang/srt/models/deepseek_v2.py#L57) `dequantize_k_cache_paged`
-- [nsa_indexer.py:99](sglang/python/sglang/srt/layers/attention/nsa/nsa_indexer.py#L99) `Indexer`
-- [hadamard.py](sglang/sgl-kernel/python/sgl_kernel/hadamard.py) `hadamard_transform()`
-- [nsa_backend.py:182](sglang/python/sglang/srt/layers/attention/nsa_backend.py#L182) `NSABackend`
-- [triton_kernel.py:9](sglang/python/sglang/srt/layers/attention/nsa/triton_kernel.py#L9) `nsa_triton_kernel()`
-
-**Source:** sgl-kernel + triton
+[deepseek_v2.py:57](sglang/python/sglang/srt/models/deepseek_v2.py#L57) `dequantize_k_cache_paged`
+├─> [nsa_indexer.py:99](sglang/python/sglang/srt/layers/attention/nsa/nsa_indexer.py#L99) `Indexer`
+│   └─> [hadamard.py](sglang/sgl-kernel/python/sgl_kernel/hadamard.py) `hadamard_transform()` *(sgl-kernel)*
+└─> [nsa_backend.py:182](sglang/python/sglang/srt/layers/attention/nsa_backend.py#L182) `NSABackend`
+    └─> [triton_kernel.py:9](sglang/python/sglang/srt/layers/attention/nsa/triton_kernel.py#L9) `@triton.jit nsa_triton_kernel()` *(triton)*
 
 ---
 
 #### Attention State Merge
 
-**Call Chain:**
-```
-merge_state.py:4
-  └─> sgl-kernel: attention.py:25 merge_state_v2()
-```
-
-**Links:**
-- [merge_state.py:4](sglang/python/sglang/srt/layers/attention/merge_state.py#L4)
-- [attention.py:25](sglang/sgl-kernel/python/sgl_kernel/attention.py#L25) `merge_state_v2()`
-
-**Source:** sgl-kernel
+[merge_state.py:4](sglang/python/sglang/srt/layers/attention/merge_state.py#L4)
+└─> [attention.py:25](sglang/sgl-kernel/python/sgl_kernel/attention.py#L25) `merge_state_v2()` *(sgl-kernel)*
 
 ---
 
@@ -204,110 +118,51 @@ merge_state.py:4
 
 #### Fused MoE (Triton)
 
-**Call Chain:**
-```
-deepseek_v2.py:96 FusedMoE
-  └─> layer.py FusedMoE.forward()
-      └─> fused_moe.py invoke_fused_moe_kernel()
-          └─> triton: fused_moe_triton_kernels.py:68 @triton.jit moe_gemm_reduce_scatter_triton()
-          └─> triton: fused_moe_triton_kernels.py:320 @triton.jit fused_moe_kernel()
-```
-
-**Links:**
-- [deepseek_v2.py:96](sglang/python/sglang/srt/models/deepseek_v2.py#L96) `FusedMoE`
-- [layer.py](sglang/python/sglang/srt/layers/moe/fused_moe_triton/layer.py) `FusedMoE.forward()`
-- [fused_moe.py](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py) `invoke_fused_moe_kernel()`
-- [fused_moe_triton_kernels.py:68](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels.py#L68) `moe_gemm_reduce_scatter_triton()`
-- [fused_moe_triton_kernels.py:320](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels.py#L320) `fused_moe_kernel()`
-
-**Source:** triton
+[deepseek_v2.py:96](sglang/python/sglang/srt/models/deepseek_v2.py#L96) `FusedMoE`
+└─> [layer.py](sglang/python/sglang/srt/layers/moe/fused_moe_triton/layer.py) `FusedMoE.forward()`
+    └─> [fused_moe.py](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py) `invoke_fused_moe_kernel()`
+        ├─> [fused_moe_triton_kernels.py:68](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels.py#L68) `@triton.jit moe_gemm_reduce_scatter_triton()` *(triton)*
+        └─> [fused_moe_triton_kernels.py:320](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels.py#L320) `@triton.jit fused_moe_kernel()` *(triton)*
 
 ---
 
 #### MoE Align Block Size
 
-**Call Chain:**
-```
-moe_align_block_size.py:13
-  └─> sgl-kernel: moe.py moe_align_block_size()
-```
-
-**Links:**
-- [moe_align_block_size.py:13](sglang/python/sglang/srt/layers/moe/fused_moe_triton/moe_align_block_size.py#L13)
-- [moe.py](sglang/sgl-kernel/python/sgl_kernel/moe.py) `moe_align_block_size()`
-
-**Source:** sgl-kernel
+[moe_align_block_size.py:13](sglang/python/sglang/srt/layers/moe/fused_moe_triton/moe_align_block_size.py#L13)
+└─> [moe.py](sglang/sgl-kernel/python/sgl_kernel/moe.py) `moe_align_block_size()` *(sgl-kernel)*
 
 ---
 
 #### MoE TopK / Gating
 
-**Call Chain:**
-```
-deepseek_v2.py DeepseekV2MoE
-  └─> topk.py:65 TopK
-      └─> sgl-kernel: moe.py moe_fused_gate()
-      └─> sgl-kernel: top_k.py topk_softmax()
-      └─> sgl-kernel: top_k.py topk_sigmoid()
-```
-
-**Links:**
-- [deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `DeepseekV2MoE`
-- [topk.py:65](sglang/python/sglang/srt/layers/moe/topk.py#L65) `TopK`
-- [moe.py](sglang/sgl-kernel/python/sgl_kernel/moe.py) `moe_fused_gate()`
-- [top_k.py](sglang/sgl-kernel/python/sgl_kernel/top_k.py) `topk_softmax()`, `topk_sigmoid()`
-
-**Source:** sgl-kernel
+[deepseek_v2.py](sglang/python/sglang/srt/models/deepseek_v2.py) `DeepseekV2MoE`
+└─> [topk.py:65](sglang/python/sglang/srt/layers/moe/topk.py#L65) `TopK`
+    ├─> [moe.py](sglang/sgl-kernel/python/sgl_kernel/moe.py) `moe_fused_gate()` *(sgl-kernel)*
+    ├─> [top_k.py](sglang/sgl-kernel/python/sgl_kernel/top_k.py) `topk_softmax()` *(sgl-kernel)*
+    └─> [top_k.py](sglang/sgl-kernel/python/sgl_kernel/top_k.py) `topk_sigmoid()` *(sgl-kernel)*
 
 ---
 
 #### MoE Sum Reduce
 
-**Call Chain:**
-```
-fused_moe.py:33
-  └─> sgl-kernel: moe.py moe_sum_reduce()
-```
-
-**Links:**
-- [fused_moe.py:33](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py#L33)
-- [moe.py](sglang/sgl-kernel/python/sgl_kernel/moe.py) `moe_sum_reduce()`
-
-**Source:** sgl-kernel
+[fused_moe.py:33](sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py#L33)
+└─> [moe.py](sglang/sgl-kernel/python/sgl_kernel/moe.py) `moe_sum_reduce()` *(sgl-kernel)*
 
 ---
 
 #### Cutlass MoE
 
-**Call Chain:**
-```
-cutlass_moe.py:12
-  └─> sgl-kernel: cutlass_moe.py cutlass_moe_gemm()
-```
-
-**Links:**
-- [cutlass_moe.py:12](sglang/python/sglang/srt/layers/moe/cutlass_moe.py#L12)
-- [cutlass_moe.py](sglang/sgl-kernel/python/sgl_kernel/cutlass_moe.py) `cutlass_moe_gemm()`
-
-**Source:** sgl-kernel
+[cutlass_moe.py:12](sglang/python/sglang/srt/layers/moe/cutlass_moe.py#L12)
+└─> [cutlass_moe.py](sglang/sgl-kernel/python/sgl_kernel/cutlass_moe.py) `cutlass_moe_gemm()` *(sgl-kernel)*
 
 ---
 
 #### FlashInfer TRT-LLM MoE
 
-**Call Chain:**
-```
-flashinfer_trtllm.py:127
-  └─> flashinfer: fused_moe/ trtllm_fp8_per_tensor_scale_moe()
-  └─> flashinfer: fused_moe/ trtllm_bf16_moe()
-  └─> flashinfer: fused_moe/ trtllm_fp4_block_scale_moe()
-```
-
-**Links:**
-- [flashinfer_trtllm.py:127](sglang/python/sglang/srt/layers/moe/moe_runner/flashinfer_trtllm.py#L127)
-- [fused_moe/](flashinfer/flashinfer/fused_moe/)
-
-**Source:** flashinfer
+[flashinfer_trtllm.py:127](sglang/python/sglang/srt/layers/moe/moe_runner/flashinfer_trtllm.py#L127)
+├─> [fused_moe/](flashinfer/flashinfer/fused_moe/) `trtllm_fp8_per_tensor_scale_moe()` *(flashinfer)*
+├─> [fused_moe/](flashinfer/flashinfer/fused_moe/) `trtllm_bf16_moe()` *(flashinfer)*
+└─> [fused_moe/](flashinfer/flashinfer/fused_moe/) `trtllm_fp4_block_scale_moe()` *(flashinfer)*
 
 ---
 
@@ -315,37 +170,17 @@ flashinfer_trtllm.py:127
 
 #### SiLU and Mul
 
-**Call Chain:**
-```
-deepseek_v2.py:56 SiluAndMul
-  └─> activation.py:39
-      └─> sgl-kernel: elementwise.py:172 silu_and_mul()
-```
-
-**Links:**
-- [deepseek_v2.py:56](sglang/python/sglang/srt/models/deepseek_v2.py#L56) `SiluAndMul`
-- [activation.py:39](sglang/python/sglang/srt/layers/activation.py#L39)
-- [elementwise.py:172](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L172) `silu_and_mul()`
-
-**Source:** sgl-kernel
+[deepseek_v2.py:56](sglang/python/sglang/srt/models/deepseek_v2.py#L56) `SiluAndMul`
+└─> [activation.py:39](sglang/python/sglang/srt/layers/activation.py#L39)
+    └─> [elementwise.py:172](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L172) `silu_and_mul()` *(sgl-kernel)*
 
 ---
 
 #### GELU and Mul
 
-**Call Chain:**
-```
-activation.py:39
-  └─> sgl-kernel: elementwise.py:202 gelu_and_mul()
-  └─> sgl-kernel: elementwise.py:187 gelu_tanh_and_mul()
-```
-
-**Links:**
-- [activation.py:39](sglang/python/sglang/srt/layers/activation.py#L39)
-- [elementwise.py:202](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L202) `gelu_and_mul()`
-- [elementwise.py:187](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L187) `gelu_tanh_and_mul()`
-
-**Source:** sgl-kernel
+[activation.py:39](sglang/python/sglang/srt/layers/activation.py#L39)
+├─> [elementwise.py:202](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L202) `gelu_and_mul()` *(sgl-kernel)*
+└─> [elementwise.py:187](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L187) `gelu_tanh_and_mul()` *(sgl-kernel)*
 
 ---
 
@@ -353,23 +188,11 @@ activation.py:39
 
 #### RMSNorm
 
-**Call Chain:**
-```
-deepseek_v2.py:82 RMSNorm
-  └─> layernorm.py:47
-      └─> sgl-kernel: elementwise.py:10 rmsnorm()
-      └─> sgl-kernel: elementwise.py:49 fused_add_rmsnorm()
-      └─> flashinfer: norm.py layernorm()
-```
-
-**Links:**
-- [deepseek_v2.py:82](sglang/python/sglang/srt/models/deepseek_v2.py#L82) `RMSNorm`
-- [layernorm.py:47](sglang/python/sglang/srt/layers/layernorm.py#L47)
-- [elementwise.py:10](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L10) `rmsnorm()`
-- [elementwise.py:49](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L49) `fused_add_rmsnorm()`
-- [norm.py](flashinfer/flashinfer/norm.py) `layernorm()`
-
-**Source:** sgl-kernel + flashinfer
+[deepseek_v2.py:82](sglang/python/sglang/srt/models/deepseek_v2.py#L82) `RMSNorm`
+└─> [layernorm.py:47](sglang/python/sglang/srt/layers/layernorm.py#L47)
+    ├─> [elementwise.py:10](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L10) `rmsnorm()` *(sgl-kernel)*
+    ├─> [elementwise.py:49](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L49) `fused_add_rmsnorm()` *(sgl-kernel)*
+    └─> [norm.py](flashinfer/flashinfer/norm.py) `layernorm()` *(flashinfer)*
 
 ---
 
@@ -377,21 +200,10 @@ deepseek_v2.py:82 RMSNorm
 
 #### Rotary Position Embedding
 
-**Call Chain:**
-```
-deepseek_v2.py:126 get_rope_wrapper
-  └─> rotary_embedding.py:19
-      └─> sgl-kernel: elementwise.py:249 apply_rope_with_cos_sin_cache_inplace()
-      └─> sgl-kernel: elementwise.py:335 rotary_embedding()
-```
-
-**Links:**
-- [deepseek_v2.py:126](sglang/python/sglang/srt/models/deepseek_v2.py#L126) `get_rope_wrapper`
-- [rotary_embedding.py:19](sglang/python/sglang/srt/layers/rotary_embedding.py#L19)
-- [elementwise.py:249](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L249) `apply_rope_with_cos_sin_cache_inplace()`
-- [elementwise.py:335](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L335) `rotary_embedding()`
-
-**Source:** sgl-kernel
+[deepseek_v2.py:126](sglang/python/sglang/srt/models/deepseek_v2.py#L126) `get_rope_wrapper`
+└─> [rotary_embedding.py:19](sglang/python/sglang/srt/layers/rotary_embedding.py#L19)
+    ├─> [elementwise.py:249](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L249) `apply_rope_with_cos_sin_cache_inplace()` *(sgl-kernel)*
+    └─> [elementwise.py:335](sglang/sgl-kernel/python/sgl_kernel/elementwise.py#L335) `rotary_embedding()` *(sgl-kernel)*
 
 ---
 
@@ -399,96 +211,44 @@ deepseek_v2.py:126 get_rope_wrapper
 
 #### FP8 GEMM
 
-**Call Chain:**
-```
-deepseek_v2.py:109 Fp8Config
-  └─> fp8.py Fp8LinearMethod.apply()
-      └─> fp8_utils.py:55
-          └─> sgl-kernel: gemm.py:29 fp8_scaled_mm()
-          └─> sgl-kernel: gemm.py:19 fp8_blockwise_scaled_mm()
-```
-
-**Links:**
-- [deepseek_v2.py:109](sglang/python/sglang/srt/models/deepseek_v2.py#L109) `Fp8Config`
-- [fp8.py](sglang/python/sglang/srt/layers/quantization/fp8.py) `Fp8LinearMethod.apply()`
-- [fp8_utils.py:55](sglang/python/sglang/srt/layers/quantization/fp8_utils.py#L55)
-- [gemm.py:29](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L29) `fp8_scaled_mm()`
-- [gemm.py:19](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L19) `fp8_blockwise_scaled_mm()`
-
-**Source:** sgl-kernel
+[deepseek_v2.py:109](sglang/python/sglang/srt/models/deepseek_v2.py#L109) `Fp8Config`
+└─> [fp8.py](sglang/python/sglang/srt/layers/quantization/fp8.py) `Fp8LinearMethod.apply()`
+    └─> [fp8_utils.py:55](sglang/python/sglang/srt/layers/quantization/fp8_utils.py#L55)
+        ├─> [gemm.py:29](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L29) `fp8_scaled_mm()` *(sgl-kernel)*
+        └─> [gemm.py:19](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L19) `fp8_blockwise_scaled_mm()` *(sgl-kernel)*
 
 ---
 
 #### FP8 Per-Token Quantization
 
-**Call Chain:**
-```
-fp8_kernel.py:39
-  └─> sgl-kernel: gemm.py:149 sgl_per_token_quant_fp8()
-  └─> sgl-kernel: gemm.py:94 sgl_per_token_group_quant_8bit()
-```
-
-**Links:**
-- [fp8_kernel.py:39](sglang/python/sglang/srt/layers/quantization/fp8_kernel.py#L39)
-- [gemm.py:149](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L149) `sgl_per_token_quant_fp8()`
-- [gemm.py:94](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L94) `sgl_per_token_group_quant_8bit()`
-
-**Source:** sgl-kernel
+[fp8_kernel.py:39](sglang/python/sglang/srt/layers/quantization/fp8_kernel.py#L39)
+├─> [gemm.py:149](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L149) `sgl_per_token_quant_fp8()` *(sgl-kernel)*
+└─> [gemm.py:94](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L94) `sgl_per_token_group_quant_8bit()` *(sgl-kernel)*
 
 ---
 
 #### INT8 GEMM
 
-**Call Chain:**
-```
-w8a8_int8.py:35
-  └─> sgl-kernel: gemm.py:8 int8_scaled_mm()
-```
-
-**Links:**
-- [w8a8_int8.py:35](sglang/python/sglang/srt/layers/quantization/w8a8_int8.py#L35)
-- [gemm.py:8](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L8) `int8_scaled_mm()`
-
-**Source:** sgl-kernel
+[w8a8_int8.py:35](sglang/python/sglang/srt/layers/quantization/w8a8_int8.py#L35)
+└─> [gemm.py:8](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L8) `int8_scaled_mm()` *(sgl-kernel)*
 
 ---
 
 #### FP4 Quantization (ModelOpt/MXFP4)
 
-**Call Chain:**
-```
-modelopt_quant.py:71
-  └─> sgl-kernel: gemm.py:174 scaled_fp4_quant()
-  └─> sgl-kernel: gemm.py:157 cutlass_scaled_fp4_mm()
-  └─> flashinfer: fp4_quantization.py fp4_quantize()
-  └─> flashinfer: quantization.py mm_fp4()
-```
-
-**Links:**
-- [modelopt_quant.py:71](sglang/python/sglang/srt/layers/quantization/modelopt_quant.py#L71)
-- [gemm.py:174](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L174) `scaled_fp4_quant()`
-- [gemm.py:157](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L157) `cutlass_scaled_fp4_mm()`
-- [fp4_quantization.py](flashinfer/flashinfer/fp4_quantization.py) `fp4_quantize()`
-- [quantization.py](flashinfer/flashinfer/quantization.py) `mm_fp4()`
-
-**Source:** sgl-kernel + flashinfer
+[modelopt_quant.py:71](sglang/python/sglang/srt/layers/quantization/modelopt_quant.py#L71)
+├─> [gemm.py:174](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L174) `scaled_fp4_quant()` *(sgl-kernel)*
+├─> [gemm.py:157](sglang/sgl-kernel/python/sgl_kernel/gemm.py#L157) `cutlass_scaled_fp4_mm()` *(sgl-kernel)*
+├─> [fp4_quantization.py](flashinfer/flashinfer/fp4_quantization.py) `fp4_quantize()` *(flashinfer)*
+└─> [quantization.py](flashinfer/flashinfer/quantization.py) `mm_fp4()` *(flashinfer)*
 
 ---
 
 #### MXFP4 Quantization
 
-**Call Chain:**
-```
-mxfp4.py:60
-  └─> flashinfer: quantization.py mxfp4_quantize()
-  └─> flashinfer: quantization.py nvfp4_block_scale_interleave()
-```
-
-**Links:**
-- [mxfp4.py:60](sglang/python/sglang/srt/layers/quantization/mxfp4.py#L60)
-- [quantization.py](flashinfer/flashinfer/quantization.py) `mxfp4_quantize()`, `nvfp4_block_scale_interleave()`
-
-**Source:** flashinfer
+[mxfp4.py:60](sglang/python/sglang/srt/layers/quantization/mxfp4.py#L60)
+├─> [quantization.py](flashinfer/flashinfer/quantization.py) `mxfp4_quantize()` *(flashinfer)*
+└─> [quantization.py](flashinfer/flashinfer/quantization.py) `nvfp4_block_scale_interleave()` *(flashinfer)*
 
 ---
 
@@ -496,21 +256,10 @@ mxfp4.py:60
 
 #### Top-K/Top-P Sampling
 
-**Call Chain:**
-```
-sampler.py:20
-  └─> sgl-kernel: sampling.py:21 top_k_renorm_prob()
-  └─> sgl-kernel: sampling.py:69 top_p_renorm_prob()
-  └─> sgl-kernel: sampling.py:219 top_k_top_p_sampling_from_probs()
-```
-
-**Links:**
-- [sampler.py:20](sglang/python/sglang/srt/layers/sampler.py#L20)
-- [sampling.py:21](sglang/sgl-kernel/python/sgl_kernel/sampling.py#L21) `top_k_renorm_prob()`
-- [sampling.py:69](sglang/sgl-kernel/python/sgl_kernel/sampling.py#L69) `top_p_renorm_prob()`
-- [sampling.py:219](sglang/sgl-kernel/python/sgl_kernel/sampling.py#L219) `top_k_top_p_sampling_from_probs()`
-
-**Source:** sgl-kernel
+[sampler.py:20](sglang/python/sglang/srt/layers/sampler.py#L20)
+├─> [sampling.py:21](sglang/sgl-kernel/python/sgl_kernel/sampling.py#L21) `top_k_renorm_prob()` *(sgl-kernel)*
+├─> [sampling.py:69](sglang/sgl-kernel/python/sgl_kernel/sampling.py#L69) `top_p_renorm_prob()` *(sgl-kernel)*
+└─> [sampling.py:219](sglang/sgl-kernel/python/sgl_kernel/sampling.py#L219) `top_k_top_p_sampling_from_probs()` *(sgl-kernel)*
 
 ---
 
@@ -518,21 +267,12 @@ sampler.py:20
 
 #### KV Cache I/O
 
-**Call Chain:**
-```
-memory_pool_host.py:25
-  └─> sgl-kernel: kvcacheio.py
-      - load_fp8_kv_cache()
-      - store_fp8_kv_cache()
-      - load_int8_kv_cache()
-      - store_int8_kv_cache()
-```
-
-**Links:**
-- [memory_pool_host.py:25](sglang/python/sglang/srt/mem_cache/memory_pool_host.py#L25)
-- [kvcacheio.py](sglang/sgl-kernel/python/sgl_kernel/kvcacheio.py)
-
-**Source:** sgl-kernel
+[memory_pool_host.py:25](sglang/python/sglang/srt/mem_cache/memory_pool_host.py#L25)
+└─> [kvcacheio.py](sglang/sgl-kernel/python/sgl_kernel/kvcacheio.py) *(sgl-kernel)*
+    ├─> `load_fp8_kv_cache()`
+    ├─> `store_fp8_kv_cache()`
+    ├─> `load_int8_kv_cache()`
+    └─> `store_int8_kv_cache()`
 
 ---
 
@@ -540,33 +280,15 @@ memory_pool_host.py:25
 
 #### Custom All-Reduce
 
-**Call Chain:**
-```
-custom_all_reduce_ops.py:18
-  └─> sgl-kernel: allreduce.py
-```
-
-**Links:**
-- [custom_all_reduce_ops.py:18](sglang/python/sglang/srt/distributed/device_communicators/custom_all_reduce_ops.py#L18)
-- [allreduce.py](sglang/sgl-kernel/python/sgl_kernel/allreduce.py)
-
-**Source:** sgl-kernel
+[custom_all_reduce_ops.py:18](sglang/python/sglang/srt/distributed/device_communicators/custom_all_reduce_ops.py#L18)
+└─> [allreduce.py](sglang/sgl-kernel/python/sgl_kernel/allreduce.py) *(sgl-kernel)*
 
 ---
 
 #### FlashInfer Communication Fusion
 
-**Call Chain:**
-```
-flashinfer_comm_fusion.py:18
-  └─> flashinfer: comm.py
-```
-
-**Links:**
-- [flashinfer_comm_fusion.py:18](sglang/python/sglang/srt/layers/flashinfer_comm_fusion.py#L18)
-- [comm.py](flashinfer/flashinfer/comm.py)
-
-**Source:** flashinfer
+[flashinfer_comm_fusion.py:18](sglang/python/sglang/srt/layers/flashinfer_comm_fusion.py#L18)
+└─> [comm.py](flashinfer/flashinfer/comm.py) *(flashinfer)*
 
 ---
 
