@@ -2,3 +2,6 @@
 	path = sglang
 	url = git@github.com:lpc0220/sglang.git
 	branch = deepseek-only
+[submodule "flashinfer"]
+	path = flashinfer
+	url = https://github.com/lpc0220/flashinfer.git

@@ -2,7 +2,7 @@
 
 When user says "do deepseek kernel tracing", follow these steps to trace all kernel calls from DeepSeek models back to their source definitions.
 
-**Output:** `tools/kernel_traces.md` - A file containing all kernel call chains from use to definition.
+**Output:** `results/deepseek_kernel_traces.md` - A file containing all kernel call chains from use to definition.
 
 ---
 
@@ -30,9 +30,13 @@ ls sglang/sgl-kernel/python/sgl_kernel/*.py
 # Key modules: attention, moe, gemm, quantization, sampling, etc.
 ```
 
-### 2.2 FlashInfer
+### 2.2 FlashInfer (local repo)
 ```bash
-# External library, imported as:
+# Local flashinfer repo at: flashinfer/
+# Python API: flashinfer/python/flashinfer/
+# CUDA kernels: flashinfer/src/, flashinfer/include/
+
+# Find imports in sglang
 grep -rn "from flashinfer\|import flashinfer" --include="*.py" sglang/python/
 ```
 
@@ -117,14 +121,14 @@ For each kernel, document the call chain in this format:
 ```
 
 **Source:** [sgl-kernel | flashinfer | triton | torch.ops]
-**File:** [path to kernel definition]
+**Definition File:** [path to kernel definition]
 ```
 
 ---
 
 ## Step 5: Generate Output File
 
-Create `tools/kernel_traces.md` with:
+Create `results/deepseek_kernel_traces.md` with:
 
 1. **Summary Table** - List of all kernels with their source
 2. **Detailed Traces** - Full call chain for each kernel
@@ -163,14 +167,14 @@ DeepSeek Models: deepseek.py, deepseek_v2.py, deepseek_nextn.py
 
 ## Kernel Source Breakdown
 
-### sgl-kernel
-- [list of kernels]
+### sgl-kernel (sglang/sgl-kernel/)
+- [list of kernels with paths]
 
-### FlashInfer
-- [list of kernels]
+### FlashInfer (flashinfer/)
+- [list of kernels with paths to flashinfer/python/ or flashinfer/src/]
 
-### Triton JIT
-- [list of kernels]
+### Triton JIT (sglang/python/)
+- [list of kernels with paths]
 
 ### torch.ops
 - [list of kernels]
@@ -184,7 +188,7 @@ After generating the trace file:
 
 ```bash
 # Verify all referenced files exist
-grep -o "sglang/[^:]*" tools/kernel_traces.md | sort -u | while read f; do
+grep -o "sglang/[^:]*\|flashinfer/[^:]*" results/deepseek_kernel_traces.md | sort -u | while read f; do
   test -f "$f" || echo "MISSING: $f"
 done
 ```
@@ -202,7 +206,18 @@ grep -rn "^from\|^import" sglang/python/sglang/srt/models/deepseek*.py | grep -v
 
 # Find sgl_kernel function calls
 grep -rn "sgl_kernel\." --include="*.py" sglang/python/sglang/srt/
+
+# Find flashinfer function calls
+grep -rn "flashinfer\." --include="*.py" sglang/python/sglang/srt/
 ```
+
+---
+
+## Repository Locations
+
+- **sglang:** `sglang/` (git submodule)
+- **flashinfer:** `flashinfer/` (cloned from https://github.com/lpc0220/flashinfer)
+- **sgl-kernel:** `sglang/sgl-kernel/`
 
 ---
 
@@ -212,3 +227,4 @@ grep -rn "sgl_kernel\." --include="*.py" sglang/python/sglang/srt/
 - Include both **forward** and **backward** paths if applicable
 - Note any **conditional paths** (e.g., different backends based on config)
 - Track **quantization variants** (FP8, INT8, etc.)
+- For FlashInfer kernels, trace to both Python API (`flashinfer/python/`) and CUDA source (`flashinfer/src/`, `flashinfer/include/`)

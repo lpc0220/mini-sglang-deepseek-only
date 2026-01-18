@@ -1,0 +1,41 @@
+TODO:
+claude tools - Done.
+claude skills - Done.
+plugins - done.
+* plugins are different than skills.
+* code-simplier is a plugin. have tried it.
+code-simplifier - Done.
+
+Next, 
+* add agent.
+* multi-agent cowork.
+
+Tools                                                                                                 
+  - Built-in capabilities I can invoke (Bash, Read, Write, Edit, Grep, Glob, Task, WebFetch, etc.)      
+  - Core functionality that comes with Claude Code                                                      
+  - Always available, no setup needed                                                                   
+                                                                                                        
+  Skills (Slash Commands)                                                                               
+  - Invoked via /command syntax (e.g., /commit, /review-pr)                                             
+  - Pre-defined workflows or prompts                                                                    
+  - Can be built-in or user-defined                                                                     
+  - Accessed via the Skill tool                                                                         
+                                                                                                        
+  Plugins (Custom Agents)                                                                               
+  - External agent extensions (like your code-simplifier)                                               
+  - Add specialized agent types to the Task tool                                                        
+  - Installed separately, show up in /context under "Custom agents"                                     
+  - Have their own tool access and specialized prompts                                                  
+                                                                                                        
+  MCP Tools                                                                                             
+  - Tools provided by MCP (Model Context Protocol) servers                                              
+  - IDE integrations like mcp__ide__getDiagnostics                                                      
+  - Can be added/configured via /mcp                                                                    
+                                                                                                        
+  From your /context output:                                                                            
+  System tools: 16.1k tokens    ← Built-in tools                                                        
+  MCP tools: 293 tokens         ← IDE integration (getDiagnostics, executeCode)                         
+  Custom agents: 49 tokens      ← Plugins (code-simplifier)                                             
+  Memory files: 2.7k tokens     ← CLAUDE.md context                                                     
+                                                                                                        
+  So: Tools = core capabilities, Skills = slash command workflows, Plugins = custom agents you install.
