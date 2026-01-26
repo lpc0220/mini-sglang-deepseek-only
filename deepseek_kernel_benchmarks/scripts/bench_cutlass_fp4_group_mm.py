@@ -5,12 +5,24 @@ Source: sgl-kernel
 Category: MoE (Compute-bound)
 Ops: experts (gate_up), experts (down) - grouped GEMM for MoE
 
+API from sgl_kernel/moe.py:
+    cutlass_fp4_group_mm(
+        a_fp4,          # [m_topk, k//2] uint8 packed FP4
+        b_fp4,          # [num_experts, n, k//2] uint8 packed FP4
+        a_blockscale,   # [m_topk, k//16] fp8_e4m3
+        b_blockscale,   # [num_experts, n, k//16] fp8_e4m3
+        alphas,         # [num_experts] float32 - scale factors
+        out_dtype,      # torch.dtype
+        device,         # str
+        params: Dict[str, Any],  # Contains problem_sizes, expert_offsets, sf_offsets, etc.
+    )
+
 Usage:
     python bench_cutlass_fp4_group_mm.py --output ../results/
 """
 
 import argparse
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 import torch
 
@@ -39,31 +51,71 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
     FLOAT4_E2M1_MAX = 6.0
     FLOAT8_E4M3_MAX = torch.finfo(torch.float8_e4m3fn).max
 
-    # For gate_up: [total_expert_tokens, hidden_size] x [num_experts, hidden_size, 2*intermediate_size]
-    # For down: [total_expert_tokens, intermediate_size] x [num_experts, intermediate_size, hidden_size]
-
+    # For gate_up: [total_expert_tokens, hidden_size] x [num_experts, 2*intermediate_size, hidden_size]
+    # For down: [total_expert_tokens, intermediate_size] x [num_experts, hidden_size, intermediate_size]
     if op_name == "gate_up":
         M, K_dim, N = total_expert_tokens, hidden_size, 2 * intermediate_size
     else:  # down
         M, K_dim, N = total_expert_tokens, intermediate_size, hidden_size
 
-    # Simplified: benchmark single group GEMM (actual kernel handles multiple experts)
+    # Create input tensors in bf16
     a = torch.randn((M, K_dim), dtype=torch.bfloat16, device=device)
-    b = torch.randn((N, K_dim), dtype=torch.bfloat16, device=device)
+    b = torch.randn((num_experts, N, K_dim), dtype=torch.bfloat16, device=device)
 
-    a_global_scale = (FLOAT8_E4M3_MAX * FLOAT4_E2M1_MAX) / torch.amax(a.flatten())
-    b_global_scale = (FLOAT8_E4M3_MAX * FLOAT4_E2M1_MAX) / torch.amax(b.flatten())
-    alpha = 1.0 / (a_global_scale.to(torch.float32) * b_global_scale.to(torch.float32))
+    # Calculate global scales
+    a_global_scale = (FLOAT8_E4M3_MAX * FLOAT4_E2M1_MAX) / torch.amax(a.abs()).clamp(min=1e-12)
+    b_global_scale = (FLOAT8_E4M3_MAX * FLOAT4_E2M1_MAX) / torch.amax(b.abs()).clamp(min=1e-12)
 
-    a_fp4, a_scale = scaled_fp4_quant(a, a_global_scale.to(torch.float32))
-    b_fp4, b_scale = scaled_fp4_quant(b, b_global_scale.to(torch.float32))
+    # Quantize to FP4
+    a_fp4, a_blockscale = scaled_fp4_quant(a, a_global_scale.to(torch.float32))
+    # For b, we need to quantize each expert separately
+    b_fp4_list = []
+    b_blockscale_list = []
+    for i in range(num_experts):
+        b_i_fp4, b_i_scale = scaled_fp4_quant(b[i], b_global_scale.to(torch.float32))
+        b_fp4_list.append(b_i_fp4)
+        b_blockscale_list.append(b_i_scale)
+    b_fp4 = torch.stack(b_fp4_list)
+    b_blockscale = torch.stack(b_blockscale_list)
 
-    # Expert assignment (which expert handles which token)
-    expert_ids = torch.randint(0, num_experts, (total_expert_tokens,), dtype=torch.int32, device=device)
+    # Per-expert alpha (scale factors)
+    alphas = torch.ones(num_experts, dtype=torch.float32, device=device)
+    alphas *= 1.0 / (a_global_scale.to(torch.float32) * b_global_scale.to(torch.float32))
+
+    # Distribute tokens evenly across experts
+    tokens_per_expert = total_expert_tokens // num_experts
+    expert_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * tokens_per_expert
+    expert_offsets[-1] = total_expert_tokens
+
+    # Scale factor offsets (each token has K_dim//16 scale factors)
+    sf_per_token = K_dim // 16
+    sf_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * (tokens_per_expert * sf_per_token)
+    sf_offsets[-1] = total_expert_tokens * sf_per_token
+
+    # Problem sizes for each expert: [M_per_expert, N, K]
+    problem_sizes = torch.zeros((num_experts, 3), dtype=torch.int32, device=device)
+    for i in range(num_experts):
+        m_i = tokens_per_expert if i < num_experts - 1 else total_expert_tokens - i * tokens_per_expert
+        problem_sizes[i] = torch.tensor([m_i, N, K_dim], dtype=torch.int32)
+
+    # Build params dict
+    params: Dict[str, Any] = {
+        "problem_sizes": problem_sizes,
+        "expert_offsets": expert_offsets,
+        "sf_offsets": sf_offsets,
+    }
 
     def kernel_fn():
-        # Note: actual API may differ
-        cutlass_fp4_group_mm(a_fp4, b_fp4, a_scale, b_scale, alpha, expert_ids, torch.bfloat16)
+        cutlass_fp4_group_mm(
+            a_fp4,
+            b_fp4,
+            a_blockscale,
+            b_blockscale,
+            alphas,
+            torch.bfloat16,  # out_dtype
+            device,
+            params,
+        )
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)
@@ -77,7 +129,7 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
         return None
 
     flops = compute_gemm_flops(M, N, K_dim)
-    bytes_transferred = int(M * K_dim * 0.5 + K_dim * N * 0.5 + M * N * 2)  # FP4 inputs, bf16 output
+    bytes_transferred = int(M * K_dim * 0.5 + num_experts * K_dim * N * 0.5 + M * N * 2)  # FP4 inputs, bf16 output
     gflops = flops / (latency_ms * 1e-3) / 1e9
     tflops = gflops / 1000
     bandwidth_gbs = bytes_transferred / (latency_ms * 1e-3) / 1e9

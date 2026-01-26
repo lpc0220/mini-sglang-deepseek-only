@@ -5,8 +5,13 @@ Source: sgl-kernel
 Category: MoE (Memory-bound)
 Ops: Scatter and weighted sum of expert outputs
 
-NOTE: This kernel may not have a standalone benchmark in sgl-kernel.
-      This file provides a template for when the kernel is exposed.
+API from sgl_kernel/moe.py:
+    apply_shuffle_mul_sum(
+        input,       # [total_expert_tokens, hidden_size] - expert outputs
+        output,      # [tokens, hidden_size] - final output (modified in place)
+        permutation, # [total_expert_tokens] - maps expert tokens back to original tokens
+        factors,     # [total_expert_tokens] - weights for each expert output
+    )
 
 Usage:
     python bench_apply_shuffle_mul_sum.py --output ../results/
@@ -38,16 +43,21 @@ def bench_apply_shuffle_mul_sum(sgl_kernel, B: int, S: int, hidden_size: int,
     total_expert_tokens = tokens * topk
 
     # Expert outputs: [total_expert_tokens, hidden_size]
-    expert_outputs = torch.randn(total_expert_tokens, hidden_size, dtype=torch.bfloat16, device=device)
-    # Expert weights: [tokens, topk]
-    expert_weights = torch.randn(tokens, topk, dtype=torch.float32, device=device)
-    # Token indices for scattering
-    token_indices = torch.arange(tokens, dtype=torch.int32, device=device).repeat_interleave(topk)
-    # Output: [tokens, hidden_size]
+    input_tensor = torch.randn(total_expert_tokens, hidden_size, dtype=torch.bfloat16, device=device)
+
+    # Output: [tokens, hidden_size] - will be modified in place
     output = torch.zeros(tokens, hidden_size, dtype=torch.bfloat16, device=device)
 
+    # Permutation: maps each expert token to its original token index
+    # For token i with topk experts, expert outputs are at indices i*topk to (i+1)*topk-1
+    permutation = torch.arange(tokens, dtype=torch.int32, device=device).repeat_interleave(topk)
+
+    # Factors: weights for each expert output (softmax of routing scores)
+    factors = torch.randn(total_expert_tokens, dtype=torch.float32, device=device)
+    factors = factors.view(tokens, topk).softmax(dim=-1).flatten()
+
     def kernel_fn():
-        apply_shuffle_mul_sum(expert_outputs, expert_weights, token_indices, output)
+        apply_shuffle_mul_sum(input_tensor, output, permutation, factors)
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)
@@ -60,8 +70,8 @@ def bench_apply_shuffle_mul_sum(sgl_kernel, B: int, S: int, hidden_size: int,
             pass
         return None
 
-    # Memory: read expert_outputs, weights, indices; write output
-    bytes_read = expert_outputs.numel() * 2 + expert_weights.numel() * 4 + token_indices.numel() * 4
+    # Memory: read input, permutation, factors; write output
+    bytes_read = input_tensor.numel() * 2 + permutation.numel() * 4 + factors.numel() * 4
     bytes_write = output.numel() * 2
     bytes_transferred = bytes_read + bytes_write
     flops = total_expert_tokens * hidden_size * 2  # multiply + accumulate

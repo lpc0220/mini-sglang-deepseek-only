@@ -5,6 +5,18 @@ Source: sgl-kernel
 Category: MoE (Memory-bound)
 Ops: Align MoE expert assignments to block size for efficient processing
 
+API from sgl_kernel/moe.py:
+    moe_align_block_size(
+        topk_ids,              # [tokens, topk] int32 - expert indices
+        num_experts,           # int
+        block_size,            # int
+        sorted_token_ids,      # [tokens * topk + padding] int32 - output
+        experts_ids,           # [num_blocks] int32 - output
+        num_tokens_post_pad,   # [1] int32 - output
+        cumsum_buffer,         # [num_experts + 1] int32 - workspace
+        pad_sorted_token_ids=False,
+    )
+
 Usage:
     python bench_moe_align_block_size.py --output ../results/
 """
@@ -32,11 +44,36 @@ def bench_moe_align_block_size(sgl_kernel, B: int, S: int, num_experts: int,
         return None
 
     tokens = B * S if phase == "prefill" else B
-    # Expert indices: [tokens, topk]
-    expert_indices = torch.randint(0, num_experts, (tokens, topk), dtype=torch.int32, device=device)
+    total_expert_tokens = tokens * topk
+
+    # Input: Expert indices [tokens, topk]
+    topk_ids = torch.randint(0, num_experts, (tokens, topk), dtype=torch.int32, device=device)
+
+    # Calculate max possible size after padding
+    # Each expert's tokens are padded to block_size boundary
+    max_num_tokens_padded = total_expert_tokens + num_experts * block_size
+
+    # Output tensors
+    sorted_token_ids = torch.zeros(max_num_tokens_padded, dtype=torch.int32, device=device)
+    # Number of blocks = ceil(tokens_per_expert / block_size) for each expert
+    max_num_blocks = (max_num_tokens_padded + block_size - 1) // block_size
+    experts_ids = torch.zeros(max_num_blocks, dtype=torch.int32, device=device)
+    num_tokens_post_pad = torch.zeros(1, dtype=torch.int32, device=device)
+
+    # Workspace buffer
+    cumsum_buffer = torch.zeros(num_experts + 1, dtype=torch.int32, device=device)
 
     def kernel_fn():
-        moe_align_block_size(expert_indices, num_experts, block_size)
+        moe_align_block_size(
+            topk_ids,
+            num_experts,
+            block_size,
+            sorted_token_ids,
+            experts_ids,
+            num_tokens_post_pad,
+            cumsum_buffer,
+            pad_sorted_token_ids=False,
+        )
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)
@@ -49,9 +86,9 @@ def bench_moe_align_block_size(sgl_kernel, B: int, S: int, num_experts: int,
             pass
         return None
 
-    # Memory: read expert_indices, write aligned indices and metadata
-    bytes_read = expert_indices.numel() * 4
-    bytes_write = expert_indices.numel() * 4 + num_experts * 4  # aligned indices + expert counts
+    # Memory: read topk_ids, write sorted_token_ids, experts_ids, num_tokens_post_pad
+    bytes_read = topk_ids.numel() * 4
+    bytes_write = (sorted_token_ids.numel() + experts_ids.numel() + 1 + cumsum_buffer.numel()) * 4
     bytes_transferred = bytes_read + bytes_write
     flops = tokens * topk * 5  # sorting/alignment ops
     gflops = flops / (latency_ms * 1e-3) / 1e9

@@ -5,8 +5,15 @@ Source: sgl-kernel
 Category: MoE (Memory-bound)
 Ops: Quantize expert inputs to FP4 with per-expert scaling
 
-NOTE: This kernel may not have a standalone benchmark in sgl-kernel.
-      This file provides a template for when the kernel is exposed.
+API from sgl_kernel/gemm.py:
+    scaled_fp4_experts_quant(
+        input_tensor: torch.Tensor,      # [m, k] - expert inputs
+        input_global_scale: torch.Tensor, # scalar
+        expert_offsets: torch.Tensor,     # [num_experts + 1]
+        blockscale_offsets: torch.Tensor, # [num_experts + 1]
+        topk: int,
+        expert_map: Optional[torch.Tensor] = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]
 
 Usage:
     python bench_scaled_fp4_experts_quant.py --output ../results/
@@ -40,8 +47,33 @@ def bench_scaled_fp4_experts_quant(sgl_kernel, B: int, S: int, hidden_size: int,
     # Expert inputs: [total_expert_tokens, hidden_size]
     expert_inputs = torch.randn(total_expert_tokens, hidden_size, dtype=torch.bfloat16, device=device)
 
+    # Calculate global scale factor for FP4 quantization
+    FLOAT4_E2M1_MAX = 6.0
+    FLOAT8_E4M3_MAX = torch.finfo(torch.float8_e4m3fn).max
+    input_amax = expert_inputs.abs().max().to(torch.float32)
+    input_global_scale = (FLOAT8_E4M3_MAX * FLOAT4_E2M1_MAX) / input_amax.clamp(min=1e-12)
+
+    # Expert offsets: [num_experts + 1] - cumulative token counts per expert
+    # For simplicity, distribute tokens evenly across experts
+    tokens_per_expert = total_expert_tokens // num_experts
+    expert_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * tokens_per_expert
+    expert_offsets[-1] = total_expert_tokens  # Fix rounding
+
+    # Blockscale offsets: similar structure for scale factors
+    # Each token has hidden_size/16 scale factors (16 elements per block)
+    sf_per_token = hidden_size // 16
+    blockscale_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * (tokens_per_expert * sf_per_token)
+    blockscale_offsets[-1] = total_expert_tokens * sf_per_token
+
     def kernel_fn():
-        scaled_fp4_experts_quant(expert_inputs)
+        scaled_fp4_experts_quant(
+            expert_inputs,
+            input_global_scale,
+            expert_offsets,
+            blockscale_offsets,
+            topk,
+            expert_map=None,
+        )
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)
@@ -56,7 +88,7 @@ def bench_scaled_fp4_experts_quant(sgl_kernel, B: int, S: int, hidden_size: int,
 
     # Memory: read bf16 inputs, write fp4 outputs + scales
     bytes_read = expert_inputs.numel() * 2  # bf16
-    bytes_write = expert_inputs.numel() // 2 + total_expert_tokens * 4  # fp4 + scales
+    bytes_write = expert_inputs.numel() // 2 + total_expert_tokens * sf_per_token  # fp4 + fp8 scales
     bytes_transferred = bytes_read + bytes_write
     flops = expert_inputs.numel() * 2  # quantization ops
     gflops = flops / (latency_ms * 1e-3) / 1e9
