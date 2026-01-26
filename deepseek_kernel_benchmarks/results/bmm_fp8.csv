@@ -1,0 +1,17 @@
+kernel,op,phase,B,S,M,N,K,latency_ms,gflops,peak_pct,bandwidth_gbs,arith_intensity,bound
+bmm_fp8,q_nope*w_kc,decode,1,1,1,512,128,0.005486,3058.31,0.07,1544.09,1.9807,compute
+bmm_fp8,q_nope*w_kc,decode,2,1,2,512,128,0.005480,6122.81,0.14,1560.60,3.9234,compute
+bmm_fp8,q_nope*w_kc,decode,4,1,4,512,128,0.005681,11813.00,0.26,1534.31,7.6992,compute
+bmm_fp8,q_nope*w_kc,decode,8,1,8,512,128,0.005488,24458.69,0.54,1648.10,14.8406,compute
+bmm_fp8,q_nope*w_kc,decode,16,1,16,512,128,0.005609,47857.38,1.06,1729.22,27.6757,compute
+bmm_fp8,q_nope*w_kc,decode,32,1,32,512,128,0.005735,93612.30,2.08,1919.78,48.7619,compute
+bmm_fp8,q_nope*w_kc,decode,64,1,64,512,128,0.006101,176007.74,3.91,2234.47,78.7692,compute
+bmm_fp8,q_nope*w_kc,decode,128,1,128,512,128,0.006935,309636.87,6.88,2721.42,113.7778,compute
+bmm_fp8,attn*w_vc,decode,1,1,1,128,512,0.002748,6104.77,0.14,3082.19,1.9807,compute
+bmm_fp8,attn*w_vc,decode,2,1,2,128,512,0.002816,11915.49,0.26,3037.05,3.9234,compute
+bmm_fp8,attn*w_vc,decode,4,1,4,128,512,0.002750,24402.92,0.54,3169.52,7.6992,compute
+bmm_fp8,attn*w_vc,decode,8,1,8,128,512,0.002763,48580.34,1.08,3273.48,14.8406,compute
+bmm_fp8,attn*w_vc,decode,16,1,16,128,512,0.003138,85533.39,1.90,3090.56,27.6757,compute
+bmm_fp8,attn*w_vc,decode,32,1,32,128,512,0.003186,168497.84,3.74,3455.52,48.7619,compute
+bmm_fp8,attn*w_vc,decode,64,1,64,128,512,0.003348,320705.61,7.13,4071.46,78.7692,compute
+bmm_fp8,attn*w_vc,decode,128,1,128,128,512,0.003751,572570.29,12.72,5032.36,113.7778,compute

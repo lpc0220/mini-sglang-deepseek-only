@@ -1,10 +1,10 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-25 22:08:37
+**Generated:** 2026-01-25 22:29:55
 
 **Total Kernels:** 23
-**Kernels Run:** 8
-**Kernels Failed:** 15
+**Kernels Run:** 10
+**Kernels Failed:** 13
 
 ## Kernel Status
 
@@ -13,9 +13,9 @@
 | 1 | `rmsnorm` | Norm | Memory | OK |
 | 2 | `fused_add_rmsnorm` | Norm | Memory | OK |
 | 3 | `cutlass_scaled_fp4_mm` | GEMM | Compute | OK |
-| 4 | `dsv3_fused_a_gemm` | GEMM | Compute | FAILED |
+| 4 | `dsv3_fused_a_gemm` | GEMM | Compute | OK |
 | 5 | `dsv3_router_gemm` | GEMM | Compute | FAILED |
-| 6 | `bmm_fp8` | BMM | Compute | FAILED |
+| 6 | `bmm_fp8` | BMM | Compute | OK |
 | 7 | `cutlass_mla_decode` | Attention | Mixed | FAILED |
 | 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | OK |
 | 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | OK |
@@ -37,8 +37,10 @@
 ## CSV Files Generated
 
 - `all_kernels.csv`
+- `bmm_fp8.csv`
 - `concat_mla_mha_k.csv`
 - `cutlass_scaled_fp4_mm.csv`
+- `dsv3_fused_a_gemm.csv`
 - `fused_add_rmsnorm.csv`
 - `mla_rope_quantize_fp8.csv`
 - `rmsnorm.csv`
