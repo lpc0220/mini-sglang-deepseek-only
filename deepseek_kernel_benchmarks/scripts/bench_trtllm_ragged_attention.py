@@ -5,6 +5,8 @@ Source: flashinfer (TensorRT-LLM kernel)
 Category: Attention (Mixed bound)
 Ops: Prefill attention with ragged batching
 
+Based on: flashinfer/tests/attention/test_trtllm_ragged_kv_stride.py
+
 Usage:
     python bench_trtllm_ragged_attention.py --output ../results/
 """
@@ -15,38 +17,26 @@ from typing import List, Optional
 import torch
 
 from bench_utils import (
-    Nh, Lkv, Dr, Dv,
+    Nh,
     BenchmarkResult, PEAK_BANDWIDTH_GBS, PEAK_TFLOPS_FP16, RIDGE_FP16,
     benchmark_kernel, save_results, check_flashinfer
 )
 
+# DeepSeek MLA dimensions (from flashinfer test)
+NUM_KV_HEADS = Nh  # 128 (same as Q heads for this kernel)
+HEAD_DIM_QK = 192  # 128 + 64
+HEAD_DIM_VO = 128  # value/output dimension
 
-def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
+
+def bench_trtllm_ragged_attention(flashinfer, batch_size: int, max_seq_len: int,
                                    device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark TensorRT-LLM ragged attention for DeepSeek.
 
-    API signature:
-        trtllm_ragged_attention_deepseek(
-            query,              # [num_tokens, num_heads, 192]  (q_nope + q_rope)
-            key,                # [num_tokens, num_heads, 192]
-            value,              # [num_tokens, num_heads, 128]
-            workspace_buffer,
-            seq_lens,           # [B]
-            max_q_len,          # int
-            max_kv_len,         # int
-            bmm1_scale,         # float
-            bmm2_scale,         # float
-            o_sf_scale,         # float
-            batch_size,         # int
-            window_left,        # int
-            cum_seq_lens_q,     # [B+1]
-            cum_seq_lens_kv,    # [B+1]
-            enable_pdl,         # bool
-            is_causal,          # bool
-            return_lse,         # bool
-        )
-
-    Note: query.shape[2] == 192, key.shape[2] == 192, value.shape[2] == 128
+    Based on flashinfer/tests/attention/test_trtllm_ragged_kv_stride.py:
+        - query: [total_q, num_kv_heads, head_dim_qk]
+        - key: [total_kv, num_kv_heads, head_dim_qk]
+        - value: [total_kv, num_kv_heads, head_dim_vo]
+        - workspace_buffer: 128MB as uint8
     """
     try:
         from flashinfer.prefill import trtllm_ragged_attention_deepseek
@@ -54,58 +44,70 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
         print("Warning: trtllm_ragged_attention_deepseek not available (requires flashinfer)")
         return None
 
-    # DeepSeek MLA dimensions
-    head_dim_qk = 192  # 128 + 64
-    head_dim_v = Dv    # 128
+    torch.manual_seed(42)
 
-    tokens = B * S
+    # Construct ragged Q with varying sequence lengths
+    seq_lens_q = torch.randint(
+        low=max(1, max_seq_len // 2), high=max_seq_len,
+        size=(batch_size,), device=device, dtype=torch.int32
+    )
+    cum_seq_lens_q = torch.cat([
+        torch.zeros(1, device=device, dtype=torch.int32),
+        torch.cumsum(seq_lens_q, dim=0, dtype=torch.int32),
+    ], dim=0)
+    total_q = int(cum_seq_lens_q[-1].item())
+    max_q_len = int(seq_lens_q.max().item())
 
-    # Query: [num_tokens, num_heads, 192]
-    query = torch.randn(tokens, Nh, head_dim_qk, dtype=torch.bfloat16, device=device)
-    # Key: [num_tokens, num_heads, 192]
-    key = torch.randn(tokens, Nh, head_dim_qk, dtype=torch.bfloat16, device=device)
-    # Value: [num_tokens, num_heads, 128]
-    value = torch.randn(tokens, Nh, head_dim_v, dtype=torch.bfloat16, device=device)
+    q = torch.randn(
+        total_q, NUM_KV_HEADS, HEAD_DIM_QK,
+        device=device, dtype=torch.bfloat16
+    )
 
-    # Sequence lengths: [B]
-    seq_lens_tensor = torch.full((B,), S, dtype=torch.int32, device=device)
-
-    # Cumulative sequence lengths: [B+1]
-    cum_seq_lens_q = torch.arange(0, tokens + 1, S, dtype=torch.int32, device=device)
+    # Construct ragged KV (use same length as Q for simplicity)
+    seq_lens_kv = seq_lens_q.clone()
     cum_seq_lens_kv = cum_seq_lens_q.clone()
+    total_kv = total_q
+    max_kv_len = max_q_len
 
-    # Workspace buffer - needs ~8MB for trtllm kernels
-    workspace_size_bytes = 16 * 1024 * 1024  # 16MB to be safe
-    workspace_buffer = torch.zeros(workspace_size_bytes // 4, dtype=torch.int32, device=device)
+    k = torch.randn(
+        total_kv, NUM_KV_HEADS, HEAD_DIM_QK,
+        device=device, dtype=torch.bfloat16
+    )
+    v = torch.randn(
+        total_kv, NUM_KV_HEADS, HEAD_DIM_VO,
+        device=device, dtype=torch.bfloat16
+    )
 
-    # Scale factors
-    sm_scale = 1.0 / (head_dim_qk ** 0.5)
+    # Workspace buffer - 128MB as uint8 (from official test)
+    workspace_buffer = torch.zeros(128 * 1024 * 1024, dtype=torch.uint8, device=device)
+
+    scale = float(1.0 / (HEAD_DIM_QK ** 0.5))
 
     def kernel_fn():
         trtllm_ragged_attention_deepseek(
-            query,
-            key,
-            value,
-            workspace_buffer,
-            seq_lens_tensor,
-            S,  # max_q_len
-            S,  # max_kv_len
-            sm_scale,  # bmm1_scale
-            1.0,  # bmm2_scale
-            1.0,  # o_sf_scale
-            B,  # batch_size
-            -1,  # window_left (-1 for no windowing)
-            cum_seq_lens_q,
-            cum_seq_lens_kv,
-            False,  # enable_pdl
-            True,   # is_causal
-            False,  # return_lse
+            query=q,
+            key=k,
+            value=v,
+            workspace_buffer=workspace_buffer,
+            seq_lens=seq_lens_kv,
+            max_q_len=max_q_len,
+            max_kv_len=max_kv_len,
+            bmm1_scale=scale,
+            bmm2_scale=1.0,
+            o_sf_scale=1.0,
+            batch_size=batch_size,
+            window_left=-1,  # No windowing
+            cum_seq_lens_q=cum_seq_lens_q,
+            cum_seq_lens_kv=cum_seq_lens_kv,
+            enable_pdl=False,
+            is_causal=True,
+            return_lse=False,
         )
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)
     except Exception as e:
-        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        print(f"Warning: Kernel failed for B={batch_size}, S={max_seq_len}: {e}")
         try:
             torch.cuda.synchronize()
             torch.cuda.empty_cache()
@@ -113,10 +115,11 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
             pass
         return None
 
-    # Approximate FLOPS for attention: 4 * tokens * seq_len * head_dim (simplified)
-    flops = 4 * tokens * S * head_dim_qk
-    q_bytes = query.numel() * 2
-    kv_bytes = (key.numel() + value.numel()) * 2
+    # Approximate FLOPS for attention: 4 * total_q * avg_kv_len * head_dim
+    avg_seq_len = total_q / batch_size
+    flops = 4 * total_q * avg_seq_len * HEAD_DIM_QK
+    q_bytes = q.numel() * q.element_size()
+    kv_bytes = (k.numel() + v.numel()) * k.element_size()
     bytes_transferred = q_bytes + kv_bytes
     gflops = flops / (latency_ms * 1e-3) / 1e9
     bandwidth_gbs = bytes_transferred / (latency_ms * 1e-3) / 1e9
@@ -132,8 +135,8 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
         kernel="trtllm_ragged_attention_deepseek",
         op="prefill_attn",
         phase="prefill",
-        B=B, S=S,
-        M=tokens * Nh, N=S, K_dim=head_dim_qk,
+        B=batch_size, S=max_seq_len,
+        M=total_q * NUM_KV_HEADS, N=max_seq_len, K_dim=HEAD_DIM_QK,
         latency_ms=latency_ms,
         gflops=gflops,
         peak_pct=peak_pct,
@@ -153,12 +156,12 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     results = []
 
     print("\n=== Prefill Phase (TRT-LLM Ragged Attention) ===")
-    for B in batch_sizes[:4]:
-        for S in seq_lens:
-            result = bench_trtllm_ragged_attention(flashinfer, B, S)
+    for batch_size in batch_sizes:
+        for seq_len in seq_lens:
+            result = bench_trtllm_ragged_attention(flashinfer, batch_size, seq_len)
             if result:
                 results.append(result)
-                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, "
+                print(f"  B={batch_size}, S={seq_len}: {result.latency_ms:.4f} ms, "
                       f"{result.gflops:.1f} GFLOPS, {result.bound}")
 
     save_results(results, output_dir, "trtllm_ragged_attention_deepseek")
@@ -167,9 +170,9 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
 def main():
     parser = argparse.ArgumentParser(description="Benchmark trtllm_ragged_attention kernel")
     parser.add_argument("--output", type=str, default="../results/", help="Output directory")
-    parser.add_argument("--batch-sizes", type=str, default="1,2,4,8",
+    parser.add_argument("--batch-sizes", type=str, default="1,4,8,16",
                         help="Comma-separated batch sizes")
-    parser.add_argument("--seq-lens", type=str, default="128,256,512,1024,2048",
+    parser.add_argument("--seq-lens", type=str, default="256,512,1024,2048,4096",
                         help="Comma-separated sequence lengths")
     args = parser.parse_args()
 
