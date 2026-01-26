@@ -170,11 +170,22 @@ def run_benchmarks(token_counts: List[int], output_dir: str):
 def main():
     parser = argparse.ArgumentParser(description="Benchmark mla_rope_quantize_fp8 kernel")
     parser.add_argument("--output", type=str, default="../results/", help="Output directory")
-    parser.add_argument("--token-counts", type=str, default="1,2,4,8,16,32,64,128,256,384,512,768",
-                        help="Comma-separated token counts")
+    parser.add_argument("--batch-sizes", type=str, default="1,2,4,8,16,32,64,128",
+                        help="Comma-separated batch sizes")
+    parser.add_argument("--seq-lens", type=str, default="1,128,256,512",
+                        help="Comma-separated sequence lengths")
     args = parser.parse_args()
 
-    token_counts = [int(x) for x in args.token_counts.split(",")]
+    batch_sizes = [int(x) for x in args.batch_sizes.split(",")]
+    seq_lens = [int(x) for x in args.seq_lens.split(",")]
+
+    # Generate token counts from batch_sizes * seq_lens combinations
+    token_counts = []
+    for B in batch_sizes:
+        for S in seq_lens:
+            token_counts.append(B * S)
+    # Remove duplicates and sort
+    token_counts = sorted(set(token_counts))
 
     print("=" * 60)
     print("Benchmark: rope_quantize_fp8 (MLA config) (Kernel #10)")

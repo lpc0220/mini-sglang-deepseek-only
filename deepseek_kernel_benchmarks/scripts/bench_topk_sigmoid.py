@@ -62,7 +62,7 @@ def bench_topk_sigmoid(sgl_kernel, B: int, S: int, num_experts: int, topk: int, 
         return None
 
     # Memory: read logits, write topk indices and weights
-    bytes_read = router_logits.numel() * 4  # float32
+    bytes_read = gating_output.numel() * 4  # float32
     bytes_write = tokens * topk * (4 + 4)  # indices (int32) + weights (float32)
     bytes_transferred = bytes_read + bytes_write
     flops = tokens * num_experts * 5  # sigmoid + topk ops

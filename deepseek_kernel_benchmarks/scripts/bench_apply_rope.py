@@ -23,7 +23,18 @@ from bench_utils import (
 
 def bench_apply_rope(sgl_kernel, B: int, S: int,
                      device: str = "cuda") -> Optional[BenchmarkResult]:
-    """Benchmark apply_rope_with_cos_sin_cache_inplace kernel."""
+    """Benchmark apply_rope_with_cos_sin_cache_inplace kernel.
+
+    API from sgl_kernel/elementwise.py:
+        apply_rope_with_cos_sin_cache_inplace(
+            positions: [nnz],
+            query: [nnz, num_q_heads * head_size],
+            key: [nnz, num_k_heads * head_size],
+            head_size: int,
+            cos_sin_cache: [max_seq_len, rotary_dim],  # cos first half, sin second half
+            is_neox: bool = True,
+        )
+    """
     try:
         from sgl_kernel import apply_rope_with_cos_sin_cache_inplace
     except ImportError:
@@ -32,20 +43,36 @@ def bench_apply_rope(sgl_kernel, B: int, S: int,
 
     tokens = B * S
     head_dim = Dr  # 64
+    rotary_dim = head_dim  # Full head dimension for RoPE
 
-    # Query tensor: [tokens, Nh, head_dim]
-    q = torch.randn(tokens, Nh, head_dim, dtype=torch.bfloat16, device=device)
-    # Key tensor: [tokens, Nh, head_dim] (for standard attention, but MLA uses compressed)
-    k = torch.randn(tokens, Nh, head_dim, dtype=torch.bfloat16, device=device)
+    # Query tensor: [tokens, num_q_heads * head_size] - 2D!
+    q = torch.randn(tokens, Nh * head_dim, dtype=torch.bfloat16, device=device)
+    # Key tensor: [tokens, num_k_heads * head_size] - 2D!
+    k = torch.randn(tokens, Nh * head_dim, dtype=torch.bfloat16, device=device)
 
-    # RoPE cos/sin cache - MUST be float32
+    # Positions: [tokens]
     max_seq_len = max(S, 2048)
-    cos_cache = torch.randn(max_seq_len, head_dim // 2, dtype=torch.float32, device=device)
-    sin_cache = torch.randn(max_seq_len, head_dim // 2, dtype=torch.float32, device=device)
-    positions = torch.arange(tokens, dtype=torch.int64, device=device) % S
+    positions = (torch.arange(tokens, dtype=torch.int64, device=device) % S)
+
+    # cos_sin_cache: [max_seq_len, rotary_dim] - combined cos and sin
+    # First half is cos, second half is sin
+    # MUST be float32!
+    inv_freq = 1.0 / (10000 ** (torch.arange(0, rotary_dim, 2, dtype=torch.float32) / rotary_dim))
+    t = torch.arange(max_seq_len, dtype=torch.float32)
+    freqs = torch.einsum("i,j->ij", t, inv_freq)  # [max_seq_len, rotary_dim//2]
+    cos = freqs.cos()
+    sin = freqs.sin()
+    cos_sin_cache = torch.cat([cos, sin], dim=-1).to(device)  # [max_seq_len, rotary_dim]
 
     def kernel_fn():
-        apply_rope_with_cos_sin_cache_inplace(q, k, cos_cache, sin_cache, positions)
+        apply_rope_with_cos_sin_cache_inplace(
+            positions,
+            q,
+            k,
+            head_dim,
+            cos_sin_cache,
+            is_neox=True,
+        )
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)
@@ -58,8 +85,8 @@ def bench_apply_rope(sgl_kernel, B: int, S: int,
             pass
         return None
 
-    # Memory-bound: read q, k, cos, sin, positions; write q, k
-    bytes_read = (q.numel() + k.numel()) * 2 + (cos_cache.numel() + sin_cache.numel()) * 4 + positions.numel() * 8
+    # Memory-bound: read q, k, cos_sin, positions; write q, k
+    bytes_read = (q.numel() + k.numel()) * 2 + cos_sin_cache.numel() * 4 + positions.numel() * 8
     bytes_write = (q.numel() + k.numel()) * 2
     bytes_transferred = bytes_read + bytes_write
     flops = tokens * Nh * head_dim * 4  # RoPE ops
