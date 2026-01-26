@@ -39,7 +39,16 @@ def bench_dsv3_fused_a_gemm(sgl_kernel, B: int, phase: str,
     def kernel_fn():
         dsv3_fused_a_gemm(mat_a, mat_b)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     flops = compute_gemm_flops(M, N, K)
     bytes_transferred = compute_gemm_bytes(M, N, K, dtype_size=2, weight_dtype_size=2)

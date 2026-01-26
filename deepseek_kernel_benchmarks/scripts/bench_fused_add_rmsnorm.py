@@ -32,7 +32,16 @@ def bench_fused_add_rmsnorm(sgl_kernel, B: int, S: int, hidden_size: int, phase:
     def kernel_fn():
         sgl_kernel.fused_add_rmsnorm(x, residual, weight, 1e-6)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Fused: read x, read residual, write x, write residual
     flops = compute_norm_flops(tokens * hidden_size) + tokens * hidden_size  # add + norm

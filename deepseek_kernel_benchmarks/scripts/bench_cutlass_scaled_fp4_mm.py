@@ -48,7 +48,16 @@ def bench_cutlass_fp4_gemm(sgl_kernel, B: int, S: int, M: int, N: int, K: int,
     def kernel_fn():
         cutlass_scaled_fp4_mm(a_fp4, b_fp4, a_scale, b_scale, alpha, dtype)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}, op={op_name}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     flops = compute_gemm_flops(M, N, K)
     bytes_transferred = compute_gemm_bytes(M, N, K, dtype_size=2, weight_dtype_size=0.5)

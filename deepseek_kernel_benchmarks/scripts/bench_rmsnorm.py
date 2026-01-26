@@ -32,7 +32,16 @@ def bench_rmsnorm(sgl_kernel, B: int, S: int, hidden_size: int, phase: str,
     def kernel_fn():
         sgl_kernel.rmsnorm(x, weight, 1e-6, out=out)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     flops = compute_norm_flops(tokens * hidden_size)
     bytes_transferred = compute_norm_bytes(tokens * hidden_size)

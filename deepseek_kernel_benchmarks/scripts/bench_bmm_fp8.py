@@ -45,7 +45,16 @@ def bench_bmm_fp8(sgl_kernel, B: int, phase: str, op_name: str,
     def kernel_fn():
         bmm_fp8(a_fp8, b_fp8, a_scale, b_scale, torch.bfloat16)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, op={op_name}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     flops = compute_bmm_flops(batch, M, N, K)
     bytes_transferred = batch * (M * K + K * N + M * N)  # FP8 = 1 byte
