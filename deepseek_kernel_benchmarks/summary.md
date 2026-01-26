@@ -54,6 +54,25 @@
 
 ---
 
+## Kernel Limitations & Notes
+
+| Kernel | Limitation | Notes |
+|--------|------------|-------|
+| `dsv3_fused_a_gemm` | B ≤ 16 | Low-latency path optimized for small batch decode |
+| `dsv3_router_gemm` | num_tokens ≤ 16 | Hard limit in kernel; prefill phase skipped |
+| `cutlass_mla_decode` | B × seq_len ≤ 16384 | Larger sizes may cause CUDA illegal memory access |
+| `trtllm_*` kernels | flashinfer required | May not be available on all installations |
+| `mla_rope_quantize_fp8` | flashinfer required | Requires flashinfer.triton.mla module |
+| `concat_mla_mha_k` | May not be exported | Internal API - may show "not available" |
+| `prepare_moe_input` | May not be exported | Internal API - may show "not available" |
+| `scaled_fp4_experts_quant` | May not be exported | Internal API - may show "not available" |
+| `apply_shuffle_mul_sum` | May not be exported | Internal API - may show "not available" |
+| `cutlass_fp4_group_mm` | API may differ | Actual kernel API may differ from benchmark |
+
+**Error Handling:** All benchmarks have try/except blocks around `benchmark_kernel()` calls to prevent CUDA context corruption from affecting subsequent benchmarks. After each kernel (success or failure), CUDA context is reset with `torch.cuda.synchronize()` and `torch.cuda.empty_cache()`.
+
+---
+
 ## Model Configuration
 
 | Parameter | Value | Symbol |
