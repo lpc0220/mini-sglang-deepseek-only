@@ -5,6 +5,8 @@ Source: flashinfer (TensorRT-LLM kernel)
 Category: MoE (Mixed bound)
 Ops: Fused MoE with FP4 block-scaled weights
 
+Based on: flashinfer/benchmarks/routines/moe.py testTrtllmFp4BlockScaleMoe
+
 Usage:
     python bench_trtllm_fp4_block_scale_moe.py --output ../results/
 """
@@ -21,39 +23,185 @@ from bench_utils import (
     benchmark_kernel, save_results, check_flashinfer
 )
 
+# DeepSeek MoE configuration
+N_GROUP = 8  # Number of expert groups for DeepSeek routing
+TOPK_GROUP = 4  # Number of groups for top-k routing
+ROUTED_SCALING_FACTOR = 2.5  # DeepSeek V3 scaling factor
+ROUTING_METHOD_DEEPSEEK_V3 = 2  # DeepSeek V3 routing method type
+
+
+def calculate_fp4_global_scale_factor(tensor: torch.Tensor) -> torch.Tensor:
+    """Calculate global scale factor for FP4 quantization."""
+    tensor_amax = tensor.abs().max().to(torch.float32)
+    # FLOAT8_E4M3_MAX = 448, FLOAT4_E2M1_MAX = 6
+    global_scale = (448.0 * 6.0) / tensor_amax.clamp(min=1e-12)
+    return global_scale
+
+
+def quant_fp4_simple(a: torch.Tensor, a_global_sf: torch.Tensor,
+                     use_ue8m0: bool = False, is_sf_swizzled_layout: bool = True):
+    """
+    FP4 quantization for benchmarking.
+    Uses flashinfer's fp4_quantize function.
+    """
+    from flashinfer import fp4_quantize
+    sf_vec_size = 16
+    a_fp4, a_sf = fp4_quantize(a, a_global_sf, sf_vec_size, use_ue8m0, is_sf_swizzled_layout)
+    return a_fp4, a_sf, a_global_sf
+
+
+def quant_fp4_batches_simple(a: torch.Tensor, num_experts: int,
+                              use_ue8m0: bool = False, is_sf_swizzled_layout: bool = True):
+    """FP4 batch quantization for benchmarking."""
+    quant_a = []
+    sfs = []
+    global_sfs = []
+    for i in range(num_experts):
+        a_global_sf = calculate_fp4_global_scale_factor(a[i])
+        a_fp4, a_sf, _ = quant_fp4_simple(a[i], a_global_sf, use_ue8m0, is_sf_swizzled_layout)
+        quant_a.append(a_fp4)
+        sfs.append(a_sf)
+        global_sfs.append(a_global_sf)
+
+    result_quant_a = torch.stack(quant_a)
+    result_sfs = torch.stack(sfs)
+    result_global_sfs = torch.stack(global_sfs)
+
+    return result_quant_a, result_sfs, result_global_sfs
+
 
 def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: int,
                                       num_experts: int, topk: int, intermediate_size: int,
                                       phase: str, device: str = "cuda") -> Optional[BenchmarkResult]:
-    """Benchmark TRT-LLM FP4 block-scaled MoE kernel."""
+    """Benchmark TRT-LLM FP4 block-scaled MoE kernel.
+
+    Based on flashinfer/benchmarks/routines/moe.py testTrtllmFp4BlockScaleMoe:
+        - Requires FP4 quantized weights (uint8 packed)
+        - Requires FP8 scale tensors
+        - Uses routing_logits, not pre-computed expert indices
+        - DeepSeek V3 routing method
+    """
     try:
         from flashinfer.fused_moe import trtllm_fp4_block_scale_moe
+        from flashinfer import fp4_quantize
     except ImportError:
         print("Warning: trtllm_fp4_block_scale_moe not available (requires flashinfer)")
         return None
 
     tokens = B * S if phase == "prefill" else B
+    local_num_experts = num_experts
+    local_expert_offset = 0
 
-    # Hidden states: [tokens, hidden_size]
-    hidden_states = torch.randn(tokens, hidden_size, dtype=torch.bfloat16, device=device)
+    torch.manual_seed(42)
 
-    # Expert routing
-    expert_indices = torch.randint(0, num_experts, (tokens, topk), dtype=torch.int32, device=device)
-    expert_weights = torch.randn(tokens, topk, dtype=torch.float32, device=device)
-    expert_weights = torch.softmax(expert_weights, dim=-1)
+    # Routing logits: [tokens, num_experts] - float32 for DeepSeek V3
+    routing_logits = torch.randn(tokens, num_experts, dtype=torch.float32, device=device)
+    routing_bias = None  # Optional for DeepSeek V3
 
-    # FP4 weights (simplified - actual format is more complex)
-    # gate_up: [num_experts, hidden_size, 2*intermediate_size]
-    # down: [num_experts, intermediate_size, hidden_size]
-    gate_up_weight = torch.randn(num_experts, hidden_size, 2 * intermediate_size,
-                                  dtype=torch.bfloat16, device=device)
-    down_weight = torch.randn(num_experts, intermediate_size, hidden_size,
-                               dtype=torch.bfloat16, device=device)
+    # Hidden states: [tokens, hidden_size] - start with bfloat16 for quantization
+    hidden_states_bf16 = 2 * torch.randn(tokens, hidden_size, dtype=torch.bfloat16, device=device)
+
+    # Create weights: [num_experts, 2 * intermediate_size, hidden_size] for gemm1
+    #                 [num_experts, hidden_size, intermediate_size] for gemm2
+    gemm1_weights = torch.randn(
+        num_experts, 2 * intermediate_size, hidden_size,
+        dtype=torch.bfloat16, device=device
+    )
+    gemm2_weights = torch.randn(
+        num_experts, hidden_size, intermediate_size,
+        dtype=torch.bfloat16, device=device
+    )
+
+    # FP4 quantization setup
+    use_ue8m0 = False
+
+    # Calculate global scale factor for hidden states
+    hidden_states_scale_global = calculate_fp4_global_scale_factor(hidden_states_bf16)
+
+    # Quantize weights
+    gemm1_weights_fp4_bytes, gemm1_scales_fp4_bytes, gemm1_scales_global = (
+        quant_fp4_batches_simple(gemm1_weights, num_experts, use_ue8m0, True)
+    )
+    gemm2_weights_fp4_bytes, gemm2_scales_fp4_bytes, gemm2_scales_global = (
+        quant_fp4_batches_simple(gemm2_weights, num_experts, use_ue8m0, True)
+    )
+
+    # Quantize hidden states
+    hidden_states_fp4_bytes, hidden_states_scale_fp4_bytes, _ = quant_fp4_simple(
+        hidden_states_bf16, hidden_states_scale_global, use_ue8m0, True
+    )
+
+    # Reshape hidden states for the kernel (pack 2 FP4 values into 1 byte)
+    hidden_states_fp4 = hidden_states_fp4_bytes.view(torch.uint8).reshape(
+        tokens, hidden_size // 2
+    )
+    # Hidden-states scale for FP4 must be 2D: [num_tokens, hidden_size // 16]
+    hidden_states_scale_linear_fp4 = hidden_states_scale_fp4_bytes.view(torch.float8_e4m3fn)
+    expected_scale_elems = (tokens * hidden_size) // 16
+    if hidden_states_scale_linear_fp4.numel() != expected_scale_elems:
+        hidden_states_scale_linear_fp4 = torch.ones(
+            expected_scale_elems, device=device, dtype=torch.float8_e4m3fn
+        )
+    hidden_states_scale_linear_fp4 = hidden_states_scale_linear_fp4.reshape(
+        tokens, hidden_size // 16
+    )
+
+    # Prepare weights for kernel (uint8 packed format)
+    gemm1_weights_fp4 = gemm1_weights_fp4_bytes.view(torch.uint8).reshape(
+        num_experts, 2 * intermediate_size, hidden_size // 2
+    )
+    gemm1_weights_scale = gemm1_scales_fp4_bytes.view(torch.float8_e4m3fn).reshape(
+        num_experts, 2 * intermediate_size, hidden_size // 16
+    )
+
+    gemm2_weights_fp4 = gemm2_weights_fp4_bytes.view(torch.uint8).reshape(
+        num_experts, hidden_size, intermediate_size // 2
+    )
+    gemm2_weights_scale = gemm2_scales_fp4_bytes.view(torch.float8_e4m3fn).reshape(
+        num_experts, hidden_size, intermediate_size // 16
+    )
+
+    # Optional parameters (None for benchmarking)
+    gemm1_bias = None
+    gemm1_alpha = None
+    gemm1_beta = None
+    gemm1_clamp_limit = None
+    gemm2_bias = None
+
+    # Create scale scalars
+    output1_scale_scalar = torch.ones(local_num_experts, device=device, dtype=torch.float32)
+    output1_scale_gate_scalar = torch.ones(local_num_experts, device=device, dtype=torch.float32)
+    output2_scale_scalar = torch.ones(local_num_experts, device=device, dtype=torch.float32)
 
     def kernel_fn():
         trtllm_fp4_block_scale_moe(
-            hidden_states, gate_up_weight, down_weight,
-            expert_indices, expert_weights
+            routing_logits=routing_logits,
+            routing_bias=routing_bias,
+            hidden_states=hidden_states_fp4,
+            hidden_states_scale=hidden_states_scale_linear_fp4,
+            gemm1_weights=gemm1_weights_fp4,
+            gemm1_weights_scale=gemm1_weights_scale,
+            gemm1_bias=gemm1_bias,
+            gemm1_alpha=gemm1_alpha,
+            gemm1_beta=gemm1_beta,
+            gemm1_clamp_limit=gemm1_clamp_limit,
+            gemm2_weights=gemm2_weights_fp4,
+            gemm2_weights_scale=gemm2_weights_scale,
+            gemm2_bias=gemm2_bias,
+            output1_scale_scalar=output1_scale_scalar,
+            output1_scale_gate_scalar=output1_scale_gate_scalar,
+            output2_scale_scalar=output2_scale_scalar,
+            num_experts=num_experts,
+            top_k=topk,
+            n_group=N_GROUP,
+            topk_group=TOPK_GROUP,
+            intermediate_size=intermediate_size,
+            local_expert_offset=local_expert_offset,
+            local_num_experts=local_num_experts,
+            routed_scaling_factor=ROUTED_SCALING_FACTOR,
+            routing_method_type=ROUTING_METHOD_DEEPSEEK_V3,
+            gated_act_type=0,  # SwiGLU
+            do_finalize=True,
         )
 
     try:
@@ -73,10 +221,13 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
     flops_down = compute_gemm_flops(total_expert_tokens, hidden_size, intermediate_size)
     flops = flops_gate_up + flops_down
 
-    # Memory: inputs, weights, outputs
-    bytes_input = hidden_states.numel() * 2
-    bytes_weights = (gate_up_weight.numel() + down_weight.numel()) * 0.5  # FP4
-    bytes_output = hidden_states.numel() * 2
+    # Memory: inputs (FP4), weights (FP4), outputs (BF16)
+    bytes_input = tokens * hidden_size * 0.5  # FP4
+    bytes_weights = (
+        num_experts * 2 * intermediate_size * hidden_size * 0.5 +  # gemm1 FP4
+        num_experts * hidden_size * intermediate_size * 0.5  # gemm2 FP4
+    )
+    bytes_output = tokens * hidden_size * 2  # BF16
     bytes_transferred = int(bytes_input + bytes_weights + bytes_output)
 
     gflops = flops / (latency_ms * 1e-3) / 1e9
