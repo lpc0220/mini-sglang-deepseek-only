@@ -1,11 +1,11 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-26 11:02:21
+**Generated:** 2026-01-26 11:17:50
 
 **Total Kernels:** 23
 **Kernels Run:** 23
-**Successful:** 9
-**Failed:** 14
+**Successful:** 12
+**Failed:** 11
 
 **Note:** Each kernel runs in a separate subprocess for isolation.
 CUDA crashes in one kernel do not affect other kernels.
@@ -21,15 +21,15 @@ CUDA crashes in one kernel do not affect other kernels.
 | 5 | `dsv3_router_gemm` | GEMM | Compute | ✓ OK | OK |
 | 6 | `bmm_fp8` | BMM | Compute | ✓ OK | OK |
 | 7 | `cutlass_mla_decode` | Attention | Mixed | ✓ OK | OK |
-| 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✗ FAILED | CSV empty (no successful runs) |
-| 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | ✗ FAILED | CSV empty (no successful runs) |
-| 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✗ FAILED | CSV empty (no successful runs) |
+| 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✓ OK | OK |
+| 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | ✓ OK | OK |
+| 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✗ FAILED | Exit code 2 |
 | 11 | `apply_rope_with_cos_sin_cache_inplace` | RoPE | Memory | ✗ FAILED | CSV empty (no successful runs) |
 | 12 | `concat_mla_k` | Concat | Memory | ✓ OK | OK |
 | 13 | `silu_and_mul` | Activation | Memory | ✓ OK | OK |
-| 14 | `topk_softmax` | MoE Routing | Memory | ✗ FAILED | CSV empty (no successful runs) |
-| 15 | `topk_sigmoid` | MoE Routing | Memory | ✗ FAILED | CSV empty (no successful runs) |
-| 16 | `moe_fused_gate` | MoE Routing | Memory | ✗ FAILED | CSV empty (no successful runs) |
+| 14 | `topk_softmax` | MoE Routing | Memory | ✗ FAILED | Exit code 1 |
+| 15 | `topk_sigmoid` | MoE Routing | Memory | ✗ FAILED | Exit code 1 |
+| 16 | `moe_fused_gate` | MoE Routing | Memory | ✓ OK | OK |
 | 17 | `prepare_moe_input` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
 | 18 | `scaled_fp4_experts_quant` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
 | 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
@@ -44,7 +44,6 @@ CUDA crashes in one kernel do not affect other kernels.
 - `apply_rope_with_cos_sin_cache_inplace.csv`
 - `bmm_fp8.csv`
 - `concat_mla_k.csv`
-- `concat_mla_mha_k.csv`
 - `cutlass_mla_decode.csv`
 - `cutlass_scaled_fp4_mm.csv`
 - `dsv3_fused_a_gemm.csv`
