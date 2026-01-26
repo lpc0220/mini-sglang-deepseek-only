@@ -1,0 +1,541 @@
+======================================================================
+DeepSeek-R1-NVFP4-v2 Kernel Benchmarks
+======================================================================
+Kernels to run: 23
+Batch sizes: 1,2,4,8,16,32,64,128
+Sequence lengths: 128,256,512,1024,2048
+Output directory: deepseek_kernel_benchmarks/results/
+======================================================================
+
+======================================================================
+Running: rmsnorm (Norm, Memory)
+======================================================================
+
+=== Decode Phase ===
+  B=1: 0.0020 ms, 14.4 GB/s, 0.2% peak
+  B=2: 0.0020 ms, 28.7 GB/s, 0.4% peak
+  B=4: 0.0020 ms, 57.8 GB/s, 0.7% peak
+  B=8: 0.0020 ms, 115.4 GB/s, 1.4% peak
+  B=16: 0.0020 ms, 230.1 GB/s, 2.9% peak
+  B=32: 0.0020 ms, 460.3 GB/s, 5.8% peak
+  B=64: 0.0020 ms, 909.2 GB/s, 11.4% peak
+  B=128: 0.0021 ms, 1776.3 GB/s, 22.2% peak
+
+=== Prefill Phase ===
+  B=1, S=128: 0.0021 ms, 1778.2 GB/s, 22.2% peak
+  B=1, S=256: 0.0027 ms, 2755.8 GB/s, 34.4% peak
+  B=1, S=512: 0.0046 ms, 3192.1 GB/s, 39.9% peak
+  B=1, S=1024: 0.0081 ms, 3630.2 GB/s, 45.4% peak
+  B=1, S=2048: 0.0149 ms, 3932.6 GB/s, 49.2% peak
+  B=2, S=128: 0.0027 ms, 2750.8 GB/s, 34.4% peak
+  B=2, S=256: 0.0046 ms, 3184.3 GB/s, 39.8% peak
+  B=2, S=512: 0.0081 ms, 3629.1 GB/s, 45.4% peak
+  B=2, S=1024: 0.0151 ms, 3894.3 GB/s, 48.7% peak
+  B=2, S=2048: 0.0359 ms, 3273.1 GB/s, 40.9% peak
+  B=4, S=128: 0.0046 ms, 3190.7 GB/s, 39.9% peak
+  B=4, S=256: 0.0081 ms, 3625.5 GB/s, 45.3% peak
+  B=4, S=512: 0.0149 ms, 3940.7 GB/s, 49.3% peak
+  B=4, S=1024: 0.0365 ms, 3219.7 GB/s, 40.2% peak
+  B=4, S=2048: 0.0701 ms, 3348.5 GB/s, 41.9% peak
+  B=8, S=128: 0.0081 ms, 3624.5 GB/s, 45.3% peak
+  B=8, S=256: 0.0149 ms, 3939.1 GB/s, 49.2% peak
+  B=8, S=512: 0.0364 ms, 3230.7 GB/s, 40.4% peak
+  B=8, S=1024: 0.0701 ms, 3350.0 GB/s, 41.9% peak
+  B=8, S=2048: 0.1370 ms, 3428.8 GB/s, 42.9% peak
+Saved deepseek_kernel_benchmarks/results/rmsnorm.csv
+
+======================================================================
+Running: fused_add_rmsnorm (Norm, Memory)
+======================================================================
+
+=== Decode Phase ===
+  B=1: 0.0024 ms, 23.4 GB/s, 0.3% peak
+  B=2: 0.0024 ms, 46.8 GB/s, 0.6% peak
+  B=4: 0.0024 ms, 94.4 GB/s, 1.2% peak
+  B=8: 0.0024 ms, 187.7 GB/s, 2.3% peak
+  B=16: 0.0024 ms, 376.3 GB/s, 4.7% peak
+  B=32: 0.0025 ms, 726.8 GB/s, 9.1% peak
+  B=64: 0.0025 ms, 1481.4 GB/s, 18.5% peak
+  B=128: 0.0025 ms, 2885.5 GB/s, 36.1% peak
+
+=== Prefill Phase ===
+  B=1, S=128: 0.0025 ms, 2885.7 GB/s, 36.1% peak
+  B=1, S=256: 0.0045 ms, 3280.5 GB/s, 41.0% peak
+  B=1, S=512: 0.0080 ms, 3648.9 GB/s, 45.6% peak
+  B=1, S=1024: 0.0143 ms, 4105.1 GB/s, 51.3% peak
+  B=1, S=2048: 0.0266 ms, 4410.7 GB/s, 55.1% peak
+  B=2, S=128: 0.0045 ms, 3277.8 GB/s, 41.0% peak
+  B=2, S=256: 0.0081 ms, 3645.9 GB/s, 45.6% peak
+  B=2, S=512: 0.0142 ms, 4143.2 GB/s, 51.8% peak
+  B=2, S=1024: 0.0274 ms, 4282.7 GB/s, 53.5% peak
+  B=2, S=2048: 0.0668 ms, 3516.3 GB/s, 44.0% peak
+  B=4, S=128: 0.0080 ms, 3649.6 GB/s, 45.6% peak
+  B=4, S=256: 0.0142 ms, 4135.7 GB/s, 51.7% peak
+  B=4, S=512: 0.0268 ms, 4386.9 GB/s, 54.8% peak
+  B=4, S=1024: 0.0671 ms, 3503.1 GB/s, 43.8% peak
+  B=4, S=2048: 0.1317 ms, 3566.9 GB/s, 44.6% peak
+  B=8, S=128: 0.0142 ms, 4139.9 GB/s, 51.7% peak
+  B=8, S=256: 0.0277 ms, 4246.4 GB/s, 53.1% peak
+  B=8, S=512: 0.0677 ms, 3469.8 GB/s, 43.4% peak
+  B=8, S=1024: 0.1310 ms, 3584.9 GB/s, 44.8% peak
+  B=8, S=2048: 0.2590 ms, 3627.7 GB/s, 45.3% peak
+Saved deepseek_kernel_benchmarks/results/fused_add_rmsnorm.csv
+
+======================================================================
+Running: cutlass_scaled_fp4_mm (GEMM, Compute)
+======================================================================
+
+=== Decode Phase ===
+  q_b_proj B=1: 0.0063 ms, 11924.6 GFLOPS, 0.13% peak
+  kv_b_proj B=1: 0.0051 ms, 6522.3 GFLOPS, 0.07% peak
+  o_proj B=1: 0.0295 ms, 7953.7 GFLOPS, 0.09% peak
+  q_b_proj B=2: 0.0063 ms, 23778.9 GFLOPS, 0.26% peak
+  kv_b_proj B=2: 0.0050 ms, 13320.6 GFLOPS, 0.15% peak
+  o_proj B=2: 0.0296 ms, 15867.9 GFLOPS, 0.18% peak
+  q_b_proj B=4: 0.0062 ms, 48434.2 GFLOPS, 0.54% peak
+  kv_b_proj B=4: 0.0050 ms, 26770.1 GFLOPS, 0.30% peak
+  o_proj B=4: 0.0296 ms, 31766.0 GFLOPS, 0.35% peak
+  q_b_proj B=8: 0.0063 ms, 96351.5 GFLOPS, 1.07% peak
+  kv_b_proj B=8: 0.0051 ms, 53080.0 GFLOPS, 0.59% peak
+  o_proj B=8: 0.0296 ms, 63540.4 GFLOPS, 0.71% peak
+  q_b_proj B=16: 0.0062 ms, 193624.1 GFLOPS, 2.15% peak
+  kv_b_proj B=16: 0.0049 ms, 108552.9 GFLOPS, 1.21% peak
+  o_proj B=16: 0.0296 ms, 126902.6 GFLOPS, 1.41% peak
+  q_b_proj B=32: 0.0063 ms, 385929.2 GFLOPS, 4.29% peak
+  kv_b_proj B=32: 0.0050 ms, 215745.8 GFLOPS, 2.40% peak
+  o_proj B=32: 0.0297 ms, 253257.9 GFLOPS, 2.81% peak
+  q_b_proj B=64: 0.0063 ms, 764975.2 GFLOPS, 8.50% peak
+  kv_b_proj B=64: 0.0050 ms, 427615.9 GFLOPS, 4.75% peak
+  o_proj B=64: 0.0235 ms, 639853.2 GFLOPS, 7.11% peak
+  q_b_proj B=128: 0.0068 ms, 1430587.7 GFLOPS, 15.90% peak
+  kv_b_proj B=128: 0.0054 ms, 796428.1 GFLOPS, 8.85% peak
+  o_proj B=128: 0.0239 ms, 1257850.4 GFLOPS, 13.98% peak
+
+=== Prefill Phase ===
+  q_b_proj B=1, S=128: 0.0068 ms, 1429000.0 GFLOPS, 15.88% peak
+  kv_b_proj B=1, S=128: 0.0054 ms, 797351.0 GFLOPS, 8.86% peak
+  o_proj B=1, S=128: 0.0239 ms, 1258483.2 GFLOPS, 13.98% peak
+  q_b_proj B=1, S=256: 0.0087 ms, 2213592.6 GFLOPS, 24.60% peak
+  kv_b_proj B=1, S=256: 0.0070 ms, 1225854.8 GFLOPS, 13.62% peak
+  o_proj B=1, S=256: 0.0218 ms, 2754831.2 GFLOPS, 30.61% peak
+  q_b_proj B=1, S=512: 0.0118 ms, 3288618.5 GFLOPS, 36.54% peak
+  kv_b_proj B=1, S=512: 0.0099 ms, 1742294.4 GFLOPS, 19.36% peak
+  o_proj B=1, S=512: 0.0227 ms, 5293751.9 GFLOPS, 58.82% peak
+  q_b_proj B=1, S=1024: 0.0191 ms, 4044414.8 GFLOPS, 44.94% peak
+  kv_b_proj B=1, S=1024: 0.0147 ms, 2341410.2 GFLOPS, 26.02% peak
+  o_proj B=1, S=1024: 0.0496 ms, 4850064.3 GFLOPS, 53.89% peak
+  q_b_proj B=1, S=2048: 0.0402 ms, 3842376.3 GFLOPS, 42.69% peak
+  kv_b_proj B=1, S=2048: 0.0282 ms, 2436789.4 GFLOPS, 27.08% peak
+  o_proj B=1, S=2048: 0.1028 ms, 4680510.2 GFLOPS, 52.01% peak
+  q_b_proj B=2, S=128: 0.0087 ms, 2215598.5 GFLOPS, 24.62% peak
+  kv_b_proj B=2, S=128: 0.0070 ms, 1227080.9 GFLOPS, 13.63% peak
+  o_proj B=2, S=128: 0.0222 ms, 2713954.4 GFLOPS, 30.16% peak
+  q_b_proj B=2, S=256: 0.0118 ms, 3275727.6 GFLOPS, 36.40% peak
+  kv_b_proj B=2, S=256: 0.0099 ms, 1742378.4 GFLOPS, 19.36% peak
+  o_proj B=2, S=256: 0.0226 ms, 5332952.8 GFLOPS, 59.26% peak
+  q_b_proj B=2, S=512: 0.0193 ms, 3996736.0 GFLOPS, 44.41% peak
+  kv_b_proj B=2, S=512: 0.0148 ms, 2326562.9 GFLOPS, 25.85% peak
+  o_proj B=2, S=512: 0.0498 ms, 4827677.8 GFLOPS, 53.64% peak
+  q_b_proj B=2, S=1024: 0.0403 ms, 3834827.6 GFLOPS, 42.61% peak
+  kv_b_proj B=2, S=1024: 0.0280 ms, 2456435.2 GFLOPS, 27.29% peak
+  o_proj B=2, S=1024: 0.1012 ms, 4751073.6 GFLOPS, 52.79% peak
+  q_b_proj B=2, S=2048: 0.0746 ms, 4147812.9 GFLOPS, 46.09% peak
+  kv_b_proj B=2, S=2048: 0.0528 ms, 2604163.3 GFLOPS, 28.94% peak
+  o_proj B=2, S=2048: 0.1877 ms, 5125494.6 GFLOPS, 56.95% peak
+  q_b_proj B=4, S=128: 0.0119 ms, 3246807.0 GFLOPS, 36.08% peak
+  kv_b_proj B=4, S=128: 0.0099 ms, 1742134.1 GFLOPS, 19.36% peak
+  o_proj B=4, S=128: 0.0229 ms, 5257429.3 GFLOPS, 58.42% peak
+  q_b_proj B=4, S=256: 0.0193 ms, 3998531.3 GFLOPS, 44.43% peak
+  kv_b_proj B=4, S=256: 0.0146 ms, 2345753.2 GFLOPS, 26.06% peak
+  o_proj B=4, S=256: 0.0489 ms, 4916431.5 GFLOPS, 54.63% peak
+  q_b_proj B=4, S=512: 0.0403 ms, 3836965.2 GFLOPS, 42.63% peak
+  kv_b_proj B=4, S=512: 0.0286 ms, 2400570.0 GFLOPS, 26.67% peak
+  o_proj B=4, S=512: 0.1004 ms, 4791829.7 GFLOPS, 53.24% peak
+  q_b_proj B=4, S=1024: 0.0742 ms, 4167255.0 GFLOPS, 46.30% peak
+  kv_b_proj B=4, S=1024: 0.0542 ms, 2535033.8 GFLOPS, 28.17% peak
+  o_proj B=4, S=1024: 0.1882 ms, 5110943.5 GFLOPS, 56.79% peak
+  q_b_proj B=4, S=2048: 0.1474 ms, 4196236.9 GFLOPS, 46.62% peak
+  kv_b_proj B=4, S=2048: 0.1017 ms, 2704009.8 GFLOPS, 30.04% peak
+  o_proj B=4, S=2048: 0.3701 ms, 5198686.4 GFLOPS, 57.76% peak
+  q_b_proj B=8, S=128: 0.0198 ms, 3908297.7 GFLOPS, 43.43% peak
+  kv_b_proj B=8, S=128: 0.0148 ms, 2324801.2 GFLOPS, 25.83% peak
+  o_proj B=8, S=128: 0.0483 ms, 4983549.2 GFLOPS, 55.37% peak
+  q_b_proj B=8, S=256: 0.0404 ms, 3828283.2 GFLOPS, 42.54% peak
+  kv_b_proj B=8, S=256: 0.0285 ms, 2413817.0 GFLOPS, 26.82% peak
+  o_proj B=8, S=256: 0.1010 ms, 4761174.7 GFLOPS, 52.90% peak
+  q_b_proj B=8, S=512: 0.0743 ms, 4160630.8 GFLOPS, 46.23% peak
+  kv_b_proj B=8, S=512: 0.0538 ms, 2556785.0 GFLOPS, 28.41% peak
+  o_proj B=8, S=512: 0.1877 ms, 5124252.3 GFLOPS, 56.94% peak
+  q_b_proj B=8, S=1024: 0.1472 ms, 4200562.9 GFLOPS, 46.67% peak
+  kv_b_proj B=8, S=1024: 0.1017 ms, 2703189.9 GFLOPS, 30.04% peak
+  o_proj B=8, S=1024: 0.3650 ms, 5271981.3 GFLOPS, 58.58% peak
+  q_b_proj B=8, S=2048: 0.2982 ms, 4147754.3 GFLOPS, 46.09% peak
+  kv_b_proj B=8, S=2048: 0.2075 ms, 2648985.5 GFLOPS, 29.43% peak
+  o_proj B=8, S=2048: 0.7372 ms, 5220494.8 GFLOPS, 58.01% peak
+Saved deepseek_kernel_benchmarks/results/cutlass_scaled_fp4_mm.csv
+
+======================================================================
+Running: dsv3_fused_a_gemm (GEMM, Compute)
+======================================================================
+Error running bench_dsv3_fused_a_gemm: run_benchmarks() takes 2 positional arguments but 3 were given
+
+======================================================================
+Running: dsv3_router_gemm (GEMM, Compute)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_dsv3_router_gemm: mat_a and mat_b must have the same hidden_dim
+
+======================================================================
+Running: bmm_fp8 (BMM, Compute)
+======================================================================
+Error running bench_bmm_fp8: run_benchmarks() takes 2 positional arguments but 3 were given
+
+======================================================================
+Running: cutlass_mla_decode (Attention, Mixed)
+======================================================================
+
+=== Decode Phase (MLA Attention) ===
+  B=1, seq_len=128: 0.0185 ms, 16.0 GB/s, memory
+  B=1, seq_len=256: 0.0296 ms, 15.0 GB/s, memory
+  B=1, seq_len=512: 0.0307 ms, 24.0 GB/s, memory
+  B=1, seq_len=1024: 0.0302 ms, 43.9 GB/s, memory
+  B=1, seq_len=2048: 0.0324 ms, 77.3 GB/s, memory
+  B=2, seq_len=128: 0.0184 ms, 32.1 GB/s, memory
+  B=2, seq_len=256: 0.0296 ms, 29.9 GB/s, memory
+  B=2, seq_len=512: 0.0295 ms, 50.0 GB/s, memory
+  B=2, seq_len=1024: 0.0306 ms, 86.9 GB/s, memory
+Error running bench_cutlass_mla_decode: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: trtllm_batch_decode_with_kv_cache_mla (Attention, Mixed)
+======================================================================
+
+=== Decode Phase (TRT-LLM MLA Attention) ===
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Warning: trtllm_batch_decode_with_kv_cache_mla not available
+Saved deepseek_kernel_benchmarks/results/trtllm_batch_decode_with_kv_cache_mla.csv
+
+======================================================================
+Running: trtllm_ragged_attention_deepseek (Attention, Mixed)
+======================================================================
+
+=== Prefill Phase (TRT-LLM Ragged Attention) ===
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Warning: trtllm_ragged_attention_deepseek not available
+Saved deepseek_kernel_benchmarks/results/trtllm_ragged_attention_deepseek.csv
+
+======================================================================
+Running: mla_rope_quantize_fp8 (Attention, Memory)
+======================================================================
+
+=== Decode Phase ===
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+
+=== Prefill Phase ===
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Warning: mla_rope_quantize_fp8 not available
+Saved deepseek_kernel_benchmarks/results/mla_rope_quantize_fp8.csv
+
+======================================================================
+Running: apply_rope_with_cos_sin_cache_inplace (RoPE, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_apply_rope: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: concat_mla_mha_k (Concat, Memory)
+======================================================================
+
+=== Decode Phase ===
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+
+=== Prefill Phase ===
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Warning: concat_mla_mha_k not available
+Saved deepseek_kernel_benchmarks/results/concat_mla_mha_k.csv
+
+======================================================================
+Running: silu_and_mul (Activation, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_silu_and_mul: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: topk_softmax (MoE Routing, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_topk_softmax: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: topk_sigmoid (MoE Routing, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_topk_sigmoid: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: moe_fused_gate (MoE Routing, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_moe_fused_gate: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: prepare_moe_input (MoE, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_prepare_moe_input: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: scaled_fp4_experts_quant (MoE, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_scaled_fp4_experts_quant: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: cutlass_fp4_group_mm (MoE, Compute)
+======================================================================
+
+=== Decode Phase: gate_up ===
+Error running bench_cutlass_fp4_group_mm: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: apply_shuffle_mul_sum (MoE, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_apply_shuffle_mul_sum: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: moe_align_block_size (MoE, Memory)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_moe_align_block_size: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+======================================================================
+Running: trtllm_fp4_block_scale_moe (MoE, Mixed)
+======================================================================
+
+=== Decode Phase ===
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+
+=== Prefill Phase ===
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+Warning: trtllm_fp4_block_scale_moe not available
+
+No results - kernel not available
+
+======================================================================
+Running: fused_moe_kernel (MoE, Mixed)
+======================================================================
+
+=== Decode Phase ===
+Error running bench_fused_moe_kernel: CUDA error: an illegal instruction was encountered
+Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+Aggregated results saved to deepseek_kernel_benchmarks/results/all_kernels.csv
+Total benchmark results: 140
+
+Summary saved to deepseek_kernel_benchmarks/results/benchmark_summary.md
+
+======================================================================
+Benchmark Complete!
+Successful: 8/23
+Failed: ['dsv3_fused_a_gemm', 'dsv3_router_gemm', 'bmm_fp8', 'cutlass_mla_decode', 'apply_rope_with_cos_sin_cache_inplace', 'silu_and_mul', 'topk_softmax', 'topk_sigmoid', 'moe_fused_gate', 'prepare_moe_input', 'scaled_fp4_experts_quant', 'cutlass_fp4_group_mm', 'apply_shuffle_mul_sum', 'moe_align_block_size', 'fused_moe_kernel']
