@@ -37,7 +37,7 @@
 | 9 | `trtllm_ragged_attention_deepseek` | flashinfer | Attention | Mixed | [bench_trtllm_ragged_attention.py](scripts/bench_trtllm_ragged_attention.py) |
 | 10 | `mla_rope_quantize_fp8` | flashinfer | Attention | Memory | [bench_mla_rope_quantize_fp8.py](scripts/bench_mla_rope_quantize_fp8.py) |
 | 11 | `apply_rope_with_cos_sin_cache_inplace` | sgl-kernel | RoPE | Memory | [bench_apply_rope.py](scripts/bench_apply_rope.py) |
-| 12 | `concat_mla_mha_k` | sgl-kernel | Concat | Memory | [bench_concat_mla_mha_k.py](scripts/bench_concat_mla_mha_k.py) |
+| 12 | `concat_mla_k` | sgl-kernel | Concat | Memory | [bench_concat_mla_mha_k.py](scripts/bench_concat_mla_mha_k.py) |
 | 13 | `silu_and_mul` | sgl-kernel | Activation | Memory | [bench_silu_and_mul.py](scripts/bench_silu_and_mul.py) |
 | 14 | `topk_softmax` | sgl-kernel | MoE Routing | Memory | [bench_topk_softmax.py](scripts/bench_topk_softmax.py) |
 | 15 | `topk_sigmoid` | sgl-kernel | MoE Routing | Memory | [bench_topk_sigmoid.py](scripts/bench_topk_sigmoid.py) |
@@ -60,10 +60,9 @@
 |--------|------------|-------|
 | `dsv3_fused_a_gemm` | B ≤ 16 | Low-latency path optimized for small batch decode |
 | `dsv3_router_gemm` | num_tokens ≤ 16 | Hard limit in kernel; prefill phase skipped |
-| `cutlass_mla_decode` | B × seq_len ≤ 16384 | Larger sizes may cause CUDA illegal memory access |
+| `cutlass_mla_decode` | B × seq_len ≤ 1024 | GB200 crashes at B*seq_len > 1024 with CUDA illegal instruction |
 | `trtllm_*` kernels | flashinfer required | May not be available on all installations |
 | `mla_rope_quantize_fp8` | flashinfer required | Requires flashinfer.triton.mla module |
-| `concat_mla_mha_k` | May not be exported | Internal API - may show "not available" |
 | `prepare_moe_input` | May not be exported | Internal API - may show "not available" |
 | `scaled_fp4_experts_quant` | May not be exported | Internal API - may show "not available" |
 | `apply_shuffle_mul_sum` | May not be exported | Internal API - may show "not available" |

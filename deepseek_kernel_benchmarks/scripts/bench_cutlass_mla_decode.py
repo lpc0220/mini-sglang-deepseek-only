@@ -26,7 +26,8 @@ def bench_cutlass_mla_decode(sgl_kernel, B: int, seq_len: int,
     """Benchmark Cutlass MLA decode kernel.
 
     Note: Large B*seq_len combinations can cause CUDA crashes.
-    Limit to B*seq_len <= 16384 to avoid illegal memory access.
+    On GB200, crashes observed at B=2, seq_len=1024 (B*seq_len=2048).
+    Limit to B*seq_len <= 1024 to avoid illegal instruction errors.
     """
     try:
         from sgl_kernel import cutlass_mla_decode, cutlass_mla_get_workspace_size
@@ -35,8 +36,9 @@ def bench_cutlass_mla_decode(sgl_kernel, B: int, seq_len: int,
         return None
 
     # Skip large combinations that cause CUDA crashes
-    if B * seq_len > 16384:
-        print(f"  Skipping B={B}, seq_len={seq_len}: B*seq_len={B*seq_len} > 16384 (crash risk)")
+    # GB200 crashes at B=2, seq_len=1024 (2048), works at B=2, seq_len=512 (1024)
+    if B * seq_len > 1024:
+        print(f"  Skipping B={B}, seq_len={seq_len}: B*seq_len={B*seq_len} > 1024 (crash risk)")
         return None
 
     d = Lkv + Dr  # 576

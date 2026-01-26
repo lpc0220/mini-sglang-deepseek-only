@@ -3,6 +3,8 @@
 Run all DeepSeek-R1-NVFP4-v2 kernel benchmarks.
 
 This script orchestrates running all 23 kernel benchmarks and aggregates results.
+Each benchmark runs in a SEPARATE SUBPROCESS to prevent CUDA context corruption
+from affecting other benchmarks.
 
 Usage:
     cd deepseek_kernel_benchmarks/scripts
@@ -12,11 +14,11 @@ Usage:
 
 import argparse
 import csv
-import importlib
 import os
+import subprocess
 import sys
 from datetime import datetime
-from typing import List
+from typing import List, Tuple
 
 # All 23 kernels in execution order
 KERNELS = [
@@ -40,7 +42,7 @@ KERNELS = [
 
     # RoPE & Concat (2)
     ("bench_apply_rope", "apply_rope_with_cos_sin_cache_inplace", "RoPE", "Memory"),
-    ("bench_concat_mla_mha_k", "concat_mla_mha_k", "Concat", "Memory"),
+    ("bench_concat_mla_mha_k", "concat_mla_k", "Concat", "Memory"),
 
     # Activation (1)
     ("bench_silu_and_mul", "silu_and_mul", "Activation", "Memory"),
@@ -63,38 +65,48 @@ KERNELS = [
 ]
 
 
-def reset_cuda_context():
-    """Reset CUDA context to clean state."""
+def run_benchmark_subprocess(module_name: str, output_dir: str, batch_sizes: str, seq_lens: str) -> Tuple[bool, str]:
+    """Run a single benchmark in a separate subprocess for isolation.
+
+    This ensures that if one kernel crashes and corrupts the CUDA context,
+    it won't affect subsequent benchmarks.
+    """
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    script_path = os.path.join(script_dir, f"{module_name}.py")
+
+    if not os.path.exists(script_path):
+        return False, f"Script not found: {script_path}"
+
+    cmd = [
+        sys.executable,
+        script_path,
+        "--output", output_dir,
+        "--batch-sizes", batch_sizes,
+        "--seq-lens", seq_lens,
+    ]
+
     try:
-        import torch
-        torch.cuda.synchronize()
-        torch.cuda.empty_cache()
-        # Force garbage collection to release any lingering references
-        import gc
-        gc.collect()
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=600,  # 10 minute timeout per kernel
+        )
+
+        # Print output for visibility
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr, file=sys.stderr)
+
+        if result.returncode != 0:
+            return False, f"Exit code {result.returncode}"
+        return True, "OK"
+
+    except subprocess.TimeoutExpired:
+        return False, "Timeout (10 minutes)"
     except Exception as e:
-        print(f"Warning: CUDA reset failed: {e}")
-
-
-def run_benchmark(module_name: str, output_dir: str, batch_sizes: str, seq_lens: str) -> bool:
-    """Run a single benchmark module."""
-    try:
-        module = importlib.import_module(module_name)
-        batch_list = [int(x) for x in batch_sizes.split(",")]
-        seq_list = [int(x) for x in seq_lens.split(",")]
-
-        # Call the run_benchmarks function
-        if hasattr(module, 'run_benchmarks'):
-            module.run_benchmarks(batch_list, seq_list, output_dir)
-
-        # Clean up CUDA context after each kernel to prevent corruption
-        reset_cuda_context()
-        return True
-    except Exception as e:
-        print(f"Error running {module_name}: {e}")
-        # Try to reset CUDA context after error
-        reset_cuda_context()
-        return False
+        return False, str(e)
 
 
 def aggregate_results(output_dir: str):
@@ -105,13 +117,16 @@ def aggregate_results(output_dir: str):
     for csv_file in sorted(os.listdir(output_dir)):
         if csv_file.endswith('.csv') and csv_file != 'all_kernels.csv':
             csv_path = os.path.join(output_dir, csv_file)
-            with open(csv_path, 'r') as f:
-                reader = csv.reader(f)
-                file_headers = next(reader)
-                if headers is None:
-                    headers = file_headers
-                for row in reader:
-                    all_results.append(row)
+            try:
+                with open(csv_path, 'r') as f:
+                    reader = csv.reader(f)
+                    file_headers = next(reader)
+                    if headers is None:
+                        headers = file_headers
+                    for row in reader:
+                        all_results.append(row)
+            except Exception as e:
+                print(f"Warning: Failed to read {csv_file}: {e}")
 
     if headers and all_results:
         all_csv_path = os.path.join(output_dir, 'all_kernels.csv')
@@ -123,30 +138,33 @@ def aggregate_results(output_dir: str):
         print(f"Total benchmark results: {len(all_results)}")
 
 
-def generate_summary(output_dir: str, kernels_run: List[str], kernels_failed: List[str]):
+def generate_summary(output_dir: str, results: List[Tuple[str, str, str, str, bool, str]]):
     """Generate a summary markdown file."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     summary_path = os.path.join(output_dir, 'benchmark_summary.md')
+
+    successful = sum(1 for r in results if r[4])
+    failed = len(results) - successful
 
     with open(summary_path, 'w') as f:
         f.write("# DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary\n\n")
         f.write(f"**Generated:** {timestamp}\n\n")
         f.write(f"**Total Kernels:** {len(KERNELS)}\n")
-        f.write(f"**Kernels Run:** {len(kernels_run)}\n")
-        f.write(f"**Kernels Failed:** {len(kernels_failed)}\n\n")
+        f.write(f"**Kernels Run:** {len(results)}\n")
+        f.write(f"**Successful:** {successful}\n")
+        f.write(f"**Failed:** {failed}\n\n")
+
+        f.write("**Note:** Each kernel runs in a separate subprocess for isolation.\n")
+        f.write("CUDA crashes in one kernel do not affect other kernels.\n\n")
 
         f.write("## Kernel Status\n\n")
-        f.write("| # | Kernel | Category | Bound | Status |\n")
-        f.write("|---|--------|----------|-------|--------|\n")
+        f.write("| # | Kernel | Category | Bound | Status | Notes |\n")
+        f.write("|---|--------|----------|-------|--------|-------|\n")
 
-        for i, (module, kernel, category, bound) in enumerate(KERNELS, 1):
-            if kernel in kernels_run:
-                status = "OK"
-            elif kernel in kernels_failed:
-                status = "FAILED"
-            else:
-                status = "SKIPPED"
-            f.write(f"| {i} | `{kernel}` | {category} | {bound} | {status} |\n")
+        for i, (module, kernel, category, bound, success, notes) in enumerate(results, 1):
+            status = "✓ OK" if success else "✗ FAILED"
+            notes_short = notes[:50] + "..." if len(notes) > 50 else notes
+            f.write(f"| {i} | `{kernel}` | {category} | {bound} | {status} | {notes_short} |\n")
 
         f.write("\n## CSV Files Generated\n\n")
         for csv_file in sorted(os.listdir(output_dir)):
@@ -192,33 +210,46 @@ def main():
     print(f"Batch sizes: {args.batch_sizes}")
     print(f"Sequence lengths: {args.seq_lens}")
     print(f"Output directory: {args.output}")
+    print("")
+    print("NOTE: Each kernel runs in a separate subprocess for isolation.")
+    print("      CUDA crashes in one kernel will NOT affect other kernels.")
     print("=" * 70)
 
-    kernels_run = []
-    kernels_failed = []
+    results = []
 
     for module_name, kernel_name, category, bound in kernels_to_run:
         print(f"\n{'='*70}")
         print(f"Running: {kernel_name} ({category}, {bound})")
         print(f"{'='*70}")
 
-        success = run_benchmark(module_name, args.output, args.batch_sizes, args.seq_lens)
+        success, notes = run_benchmark_subprocess(
+            module_name, args.output, args.batch_sizes, args.seq_lens
+        )
+        results.append((module_name, kernel_name, category, bound, success, notes))
+
         if success:
-            kernels_run.append(kernel_name)
+            print(f"[OK] {kernel_name} completed successfully")
         else:
-            kernels_failed.append(kernel_name)
+            print(f"[FAILED] {kernel_name}: {notes}")
 
     # Aggregate results
     aggregate_results(args.output)
 
     # Generate summary
-    generate_summary(args.output, kernels_run, kernels_failed)
+    generate_summary(args.output, results)
+
+    # Print final summary
+    successful = sum(1 for r in results if r[4])
+    failed = len(results) - successful
 
     print("\n" + "=" * 70)
     print("Benchmark Complete!")
-    print(f"Successful: {len(kernels_run)}/{len(kernels_to_run)}")
-    if kernels_failed:
-        print(f"Failed: {kernels_failed}")
+    print(f"Successful: {successful}/{len(results)}")
+    if failed > 0:
+        print(f"Failed kernels:")
+        for module, kernel, cat, bound, success, notes in results:
+            if not success:
+                print(f"  - {kernel}: {notes}")
     print("=" * 70)
 
 
