@@ -1,11 +1,11 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-26 10:30:46
+**Generated:** 2026-01-26 10:52:09
 
 **Total Kernels:** 23
 **Kernels Run:** 23
-**Successful:** 17
-**Failed:** 6
+**Successful:** 23
+**Failed:** 0
 
 **Note:** Each kernel runs in a separate subprocess for isolation.
 CUDA crashes in one kernel do not affect other kernels.
@@ -21,11 +21,11 @@ CUDA crashes in one kernel do not affect other kernels.
 | 5 | `dsv3_router_gemm` | GEMM | Compute | ✓ OK | OK |
 | 6 | `bmm_fp8` | BMM | Compute | ✓ OK | OK |
 | 7 | `cutlass_mla_decode` | Attention | Mixed | ✓ OK | OK |
-| 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✗ FAILED | Exit code 1 |
-| 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | ✗ FAILED | Exit code 1 |
-| 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✗ FAILED | Exit code 1 |
+| 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✓ OK | OK |
+| 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | ✓ OK | OK |
+| 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✓ OK | OK |
 | 11 | `apply_rope_with_cos_sin_cache_inplace` | RoPE | Memory | ✓ OK | OK |
-| 12 | `concat_mla_k` | Concat | Memory | ✗ FAILED | Exit code -6 |
+| 12 | `concat_mla_k` | Concat | Memory | ✓ OK | OK |
 | 13 | `silu_and_mul` | Activation | Memory | ✓ OK | OK |
 | 14 | `topk_softmax` | MoE Routing | Memory | ✓ OK | OK |
 | 15 | `topk_sigmoid` | MoE Routing | Memory | ✓ OK | OK |
@@ -35,14 +35,15 @@ CUDA crashes in one kernel do not affect other kernels.
 | 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✓ OK | OK |
 | 20 | `apply_shuffle_mul_sum` | MoE | Memory | ✓ OK | OK |
 | 21 | `moe_align_block_size` | MoE | Memory | ✓ OK | OK |
-| 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✗ FAILED | Exit code 1 |
-| 23 | `fused_moe_kernel` | MoE | Mixed | ✗ FAILED | Exit code 1 |
+| 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✓ OK | OK |
+| 23 | `fused_moe_kernel` | MoE | Mixed | ✓ OK | OK |
 
 ## CSV Files Generated
 
 - `all_kernels.csv`
 - `apply_rope_with_cos_sin_cache_inplace.csv`
 - `bmm_fp8.csv`
+- `concat_mla_k.csv`
 - `concat_mla_mha_k.csv`
 - `cutlass_mla_decode.csv`
 - `cutlass_scaled_fp4_mm.csv`

@@ -1,146 +1,3 @@
-Traceback (most recent call last):
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_mla.py", line 132, in <module>
-    main()
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_mla.py", line 128, in main
-    run_benchmarks(batch_sizes, seq_lens, args.output)
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_mla.py", line 94, in run_benchmarks
-    flashinfer = check_flashinfer()
-                 ^^^^^^^^^^^^^^^^^^
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
-    import flashinfer
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
-    from . import jit as jit
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
-    from . import cubin_loader
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
-    from .core import logger
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
-    from . import env as jit_env
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
-    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
-                                       ^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
-    raise RuntimeError(
-RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
-
-Traceback (most recent call last):
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_ragged_attention.py", line 130, in <module>
-    main()
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_ragged_attention.py", line 126, in main
-    run_benchmarks(batch_sizes, seq_lens, args.output)
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_ragged_attention.py", line 92, in run_benchmarks
-    flashinfer = check_flashinfer()
-                 ^^^^^^^^^^^^^^^^^^
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
-    import flashinfer
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
-    from . import jit as jit
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
-    from . import cubin_loader
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
-    from .core import logger
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
-    from . import env as jit_env
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
-    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
-                                       ^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
-    raise RuntimeError(
-RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
-
-Traceback (most recent call last):
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_mla_rope_quantize_fp8.py", line 133, in <module>
-    main()
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_mla_rope_quantize_fp8.py", line 129, in main
-    run_benchmarks(batch_sizes, seq_lens, args.output)
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_mla_rope_quantize_fp8.py", line 87, in run_benchmarks
-    flashinfer = check_flashinfer()
-                 ^^^^^^^^^^^^^^^^^^
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
-    import flashinfer
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
-    from . import jit as jit
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
-    from . import cubin_loader
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
-    from .core import logger
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
-    from . import env as jit_env
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
-    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
-                                       ^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
-    raise RuntimeError(
-RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
-
-[F126 10:29:52.967366207 concat_mla.cu:78] Check failed: t.dim() == 3 (2 vs. 3) 
-
-Traceback (most recent call last):
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 159, in <module>
-    main()
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 155, in main
-    run_benchmarks(batch_sizes, seq_lens, args.output)
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 110, in run_benchmarks
-    flashinfer = check_flashinfer()
-                 ^^^^^^^^^^^^^^^^^^
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
-    import flashinfer
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
-    from . import jit as jit
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
-    from . import cubin_loader
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
-    from .core import logger
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
-    from . import env as jit_env
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
-    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
-                                       ^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
-    raise RuntimeError(
-RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
-
-Traceback (most recent call last):
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 153, in <module>
-    main()
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 149, in main
-    run_benchmarks(batch_sizes, seq_lens, args.output)
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 114, in run_benchmarks
-    result = bench_fused_moe_kernel(B, 1, H, E, K, I, "decode")
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 30, in bench_fused_moe_kernel
-    from sglang.srt.layers.moe.fused_moe_triton import fused_moe
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/moe/fused_moe_triton/__init__.py", line 4, in <module>
-    from sglang.srt.layers.moe.fused_moe_triton.fused_moe import fused_experts
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py", line 21, in <module>
-    from .fused_moe_triton_kernels import (
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels.py", line 11, in <module>
-    from sglang.srt.layers.quantization.fp8_kernel import (
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/__init__.py", line 7, in <module>
-    from sglang.srt.layers.quantization.blockwise_int8 import BlockInt8Config
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/blockwise_int8.py", line 23, in <module>
-    from sglang.srt.layers.quantization.utils import is_layer_skipped
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/utils.py", line 13, in <module>
-    from sglang.srt.layers.quantization.fp8_kernel import scaled_fp8_quant
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/fp8_kernel.py", line 41, in <module>
-    from sglang.jit_kernel.per_tensor_quant_fp8 import (
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/jit_kernel/per_tensor_quant_fp8.py", line 6, in <module>
-    import flashinfer
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
-    from . import jit as jit
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
-    from . import cubin_loader
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
-    from .core import logger
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
-    from . import env as jit_env
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
-    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
-                                       ^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
-    raise RuntimeError(
-RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
-
 ======================================================================
 DeepSeek-R1-NVFP4-v2 Kernel Benchmarks
 ======================================================================
@@ -161,36 +18,36 @@ Benchmark: rmsnorm (Kernel #1)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0019 ms, 15.5 GB/s, 0.2% peak
-  B=2: 0.0019 ms, 30.3 GB/s, 0.4% peak
-  B=4: 0.0019 ms, 60.8 GB/s, 0.8% peak
-  B=8: 0.0019 ms, 122.3 GB/s, 1.5% peak
-  B=16: 0.0020 ms, 231.4 GB/s, 2.9% peak
-  B=32: 0.0020 ms, 463.5 GB/s, 5.8% peak
-  B=64: 0.0020 ms, 914.8 GB/s, 11.4% peak
-  B=128: 0.0021 ms, 1769.1 GB/s, 22.1% peak
+  B=1: 0.0019 ms, 15.3 GB/s, 0.2% peak
+  B=2: 0.0019 ms, 30.7 GB/s, 0.4% peak
+  B=4: 0.0019 ms, 61.1 GB/s, 0.8% peak
+  B=8: 0.0019 ms, 122.4 GB/s, 1.5% peak
+  B=16: 0.0020 ms, 232.3 GB/s, 2.9% peak
+  B=32: 0.0020 ms, 464.5 GB/s, 5.8% peak
+  B=64: 0.0020 ms, 923.1 GB/s, 11.5% peak
+  B=128: 0.0021 ms, 1775.8 GB/s, 22.2% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0021 ms, 1768.6 GB/s, 22.1% peak
-  B=1, S=256: 0.0027 ms, 2760.9 GB/s, 34.5% peak
-  B=1, S=512: 0.0046 ms, 3179.1 GB/s, 39.7% peak
-  B=1, S=1024: 0.0081 ms, 3619.4 GB/s, 45.2% peak
-  B=1, S=2048: 0.0150 ms, 3906.7 GB/s, 48.8% peak
-  B=2, S=128: 0.0027 ms, 2754.4 GB/s, 34.4% peak
-  B=2, S=256: 0.0046 ms, 3179.6 GB/s, 39.7% peak
-  B=2, S=512: 0.0081 ms, 3619.4 GB/s, 45.2% peak
-  B=2, S=1024: 0.0151 ms, 3885.9 GB/s, 48.6% peak
-  B=2, S=2048: 0.0359 ms, 3271.5 GB/s, 40.9% peak
-  B=4, S=128: 0.0046 ms, 3172.0 GB/s, 39.7% peak
-  B=4, S=256: 0.0081 ms, 3612.8 GB/s, 45.2% peak
-  B=4, S=512: 0.0151 ms, 3883.3 GB/s, 48.5% peak
-  B=4, S=1024: 0.0365 ms, 3215.6 GB/s, 40.2% peak
-  B=4, S=2048: 0.0701 ms, 3351.2 GB/s, 41.9% peak
-  B=8, S=128: 0.0081 ms, 3611.6 GB/s, 45.1% peak
-  B=8, S=256: 0.0150 ms, 3917.1 GB/s, 49.0% peak
-  B=8, S=512: 0.0363 ms, 3235.2 GB/s, 40.4% peak
-  B=8, S=1024: 0.0699 ms, 3360.2 GB/s, 42.0% peak
-  B=8, S=2048: 0.1373 ms, 3420.3 GB/s, 42.8% peak
+  B=1, S=128: 0.0021 ms, 1775.4 GB/s, 22.2% peak
+  B=1, S=256: 0.0027 ms, 2758.3 GB/s, 34.5% peak
+  B=1, S=512: 0.0046 ms, 3180.5 GB/s, 39.8% peak
+  B=1, S=1024: 0.0081 ms, 3619.2 GB/s, 45.2% peak
+  B=1, S=2048: 0.0150 ms, 3922.7 GB/s, 49.0% peak
+  B=2, S=128: 0.0027 ms, 2760.3 GB/s, 34.5% peak
+  B=2, S=256: 0.0046 ms, 3177.9 GB/s, 39.7% peak
+  B=2, S=512: 0.0081 ms, 3618.9 GB/s, 45.2% peak
+  B=2, S=1024: 0.0150 ms, 3916.9 GB/s, 49.0% peak
+  B=2, S=2048: 0.0363 ms, 3231.5 GB/s, 40.4% peak
+  B=4, S=128: 0.0046 ms, 3178.2 GB/s, 39.7% peak
+  B=4, S=256: 0.0081 ms, 3614.4 GB/s, 45.2% peak
+  B=4, S=512: 0.0150 ms, 3914.7 GB/s, 48.9% peak
+  B=4, S=1024: 0.0364 ms, 3226.4 GB/s, 40.3% peak
+  B=4, S=2048: 0.0702 ms, 3345.4 GB/s, 41.8% peak
+  B=8, S=128: 0.0081 ms, 3612.8 GB/s, 45.2% peak
+  B=8, S=256: 0.0150 ms, 3913.2 GB/s, 48.9% peak
+  B=8, S=512: 0.0363 ms, 3235.9 GB/s, 40.4% peak
+  B=8, S=1024: 0.0704 ms, 3337.2 GB/s, 41.7% peak
+  B=8, S=2048: 0.1372 ms, 3423.8 GB/s, 42.8% peak
 Saved ../results/rmsnorm.csv
 
 [OK] rmsnorm completed successfully
@@ -204,35 +61,35 @@ Benchmark: fused_add_rmsnorm (Kernel #2)
 
 === Decode Phase ===
   B=1: 0.0023 ms, 24.7 GB/s, 0.3% peak
-  B=2: 0.0023 ms, 49.4 GB/s, 0.6% peak
+  B=2: 0.0023 ms, 49.2 GB/s, 0.6% peak
   B=4: 0.0023 ms, 99.1 GB/s, 1.2% peak
-  B=8: 0.0023 ms, 197.1 GB/s, 2.5% peak
-  B=16: 0.0024 ms, 383.0 GB/s, 4.8% peak
-  B=32: 0.0024 ms, 757.4 GB/s, 9.5% peak
-  B=64: 0.0024 ms, 1506.1 GB/s, 18.8% peak
-  B=128: 0.0026 ms, 2866.5 GB/s, 35.8% peak
+  B=8: 0.0023 ms, 196.6 GB/s, 2.5% peak
+  B=16: 0.0024 ms, 382.5 GB/s, 4.8% peak
+  B=32: 0.0024 ms, 760.1 GB/s, 9.5% peak
+  B=64: 0.0024 ms, 1499.7 GB/s, 18.7% peak
+  B=128: 0.0026 ms, 2871.7 GB/s, 35.9% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0026 ms, 2866.4 GB/s, 35.8% peak
-  B=1, S=256: 0.0045 ms, 3274.1 GB/s, 40.9% peak
-  B=1, S=512: 0.0081 ms, 3641.3 GB/s, 45.5% peak
-  B=1, S=1024: 0.0143 ms, 4104.6 GB/s, 51.3% peak
-  B=1, S=2048: 0.0273 ms, 4305.1 GB/s, 53.8% peak
-  B=2, S=128: 0.0045 ms, 3235.1 GB/s, 40.4% peak
-  B=2, S=256: 0.0081 ms, 3641.1 GB/s, 45.5% peak
-  B=2, S=512: 0.0142 ms, 4129.3 GB/s, 51.6% peak
-  B=2, S=1024: 0.0274 ms, 4293.7 GB/s, 53.7% peak
-  B=2, S=2048: 0.0675 ms, 3477.8 GB/s, 43.5% peak
-  B=4, S=128: 0.0081 ms, 3640.9 GB/s, 45.5% peak
-  B=4, S=256: 0.0143 ms, 4093.7 GB/s, 51.2% peak
-  B=4, S=512: 0.0272 ms, 4313.5 GB/s, 53.9% peak
-  B=4, S=1024: 0.0680 ms, 3453.7 GB/s, 43.2% peak
-  B=4, S=2048: 0.1312 ms, 3580.5 GB/s, 44.8% peak
-  B=8, S=128: 0.0143 ms, 4111.2 GB/s, 51.4% peak
-  B=8, S=256: 0.0273 ms, 4304.2 GB/s, 53.8% peak
-  B=8, S=512: 0.0680 ms, 3456.7 GB/s, 43.2% peak
-  B=8, S=1024: 0.1318 ms, 3564.6 GB/s, 44.6% peak
-  B=8, S=2048: 0.2578 ms, 3643.7 GB/s, 45.5% peak
+  B=1, S=128: 0.0026 ms, 2872.9 GB/s, 35.9% peak
+  B=1, S=256: 0.0045 ms, 3276.3 GB/s, 41.0% peak
+  B=1, S=512: 0.0081 ms, 3641.0 GB/s, 45.5% peak
+  B=1, S=1024: 0.0143 ms, 4097.9 GB/s, 51.2% peak
+  B=1, S=2048: 0.0272 ms, 4315.6 GB/s, 53.9% peak
+  B=2, S=128: 0.0045 ms, 3278.0 GB/s, 41.0% peak
+  B=2, S=256: 0.0081 ms, 3647.0 GB/s, 45.6% peak
+  B=2, S=512: 0.0142 ms, 4133.2 GB/s, 51.7% peak
+  B=2, S=1024: 0.0273 ms, 4300.4 GB/s, 53.8% peak
+  B=2, S=2048: 0.0670 ms, 3508.2 GB/s, 43.9% peak
+  B=4, S=128: 0.0081 ms, 3644.5 GB/s, 45.6% peak
+  B=4, S=256: 0.0143 ms, 4107.6 GB/s, 51.3% peak
+  B=4, S=512: 0.0272 ms, 4311.2 GB/s, 53.9% peak
+  B=4, S=1024: 0.0675 ms, 3479.4 GB/s, 43.5% peak
+  B=4, S=2048: 0.1310 ms, 3585.3 GB/s, 44.8% peak
+  B=8, S=128: 0.0144 ms, 4088.8 GB/s, 51.1% peak
+  B=8, S=256: 0.0274 ms, 4282.4 GB/s, 53.5% peak
+  B=8, S=512: 0.0673 ms, 3488.2 GB/s, 43.6% peak
+  B=8, S=1024: 0.1313 ms, 3577.6 GB/s, 44.7% peak
+  B=8, S=2048: 0.2588 ms, 3630.8 GB/s, 45.4% peak
 Saved ../results/fused_add_rmsnorm.csv
 
 [OK] fused_add_rmsnorm completed successfully
@@ -245,92 +102,92 @@ Benchmark: cutlass_scaled_fp4_mm (Kernel #3)
 ============================================================
 
 === Decode Phase ===
-  q_b_proj B=1: 0.0063 ms, 11933.3 GFLOPS, 0.13% peak
-  kv_b_proj B=1: 0.0051 ms, 6641.1 GFLOPS, 0.07% peak
-  o_proj B=1: 0.0233 ms, 10071.9 GFLOPS, 0.11% peak
-  q_b_proj B=2: 0.0064 ms, 23649.6 GFLOPS, 0.26% peak
-  kv_b_proj B=2: 0.0051 ms, 13251.2 GFLOPS, 0.15% peak
-  o_proj B=2: 0.0232 ms, 20213.3 GFLOPS, 0.22% peak
-  q_b_proj B=4: 0.0063 ms, 48001.6 GFLOPS, 0.53% peak
-  kv_b_proj B=4: 0.0051 ms, 26524.3 GFLOPS, 0.29% peak
-  o_proj B=4: 0.0234 ms, 40113.3 GFLOPS, 0.45% peak
-  q_b_proj B=8: 0.0063 ms, 95929.3 GFLOPS, 1.07% peak
-  kv_b_proj B=8: 0.0050 ms, 53169.9 GFLOPS, 0.59% peak
-  o_proj B=8: 0.0233 ms, 80526.7 GFLOPS, 0.89% peak
-  q_b_proj B=16: 0.0063 ms, 192469.8 GFLOPS, 2.14% peak
-  kv_b_proj B=16: 0.0050 ms, 107864.7 GFLOPS, 1.20% peak
-  o_proj B=16: 0.0233 ms, 160969.6 GFLOPS, 1.79% peak
-  q_b_proj B=32: 0.0063 ms, 383443.8 GFLOPS, 4.26% peak
-  kv_b_proj B=32: 0.0050 ms, 214168.9 GFLOPS, 2.38% peak
-  o_proj B=32: 0.0234 ms, 321801.1 GFLOPS, 3.58% peak
-  q_b_proj B=64: 0.0064 ms, 755081.6 GFLOPS, 8.39% peak
-  kv_b_proj B=64: 0.0050 ms, 426568.5 GFLOPS, 4.74% peak
-  o_proj B=64: 0.0234 ms, 643221.7 GFLOPS, 7.15% peak
-  q_b_proj B=128: 0.0068 ms, 1426249.8 GFLOPS, 15.85% peak
-  kv_b_proj B=128: 0.0054 ms, 792731.6 GFLOPS, 8.81% peak
-  o_proj B=128: 0.0239 ms, 1257364.0 GFLOPS, 13.97% peak
+  q_b_proj B=1: 0.0064 ms, 11852.1 GFLOPS, 0.13% peak
+  kv_b_proj B=1: 0.0050 ms, 6646.8 GFLOPS, 0.07% peak
+  o_proj B=1: 0.0233 ms, 10089.9 GFLOPS, 0.11% peak
+  q_b_proj B=2: 0.0064 ms, 23718.9 GFLOPS, 0.26% peak
+  kv_b_proj B=2: 0.0051 ms, 13231.0 GFLOPS, 0.15% peak
+  o_proj B=2: 0.0233 ms, 20152.4 GFLOPS, 0.22% peak
+  q_b_proj B=4: 0.0063 ms, 48055.5 GFLOPS, 0.53% peak
+  kv_b_proj B=4: 0.0051 ms, 26533.6 GFLOPS, 0.29% peak
+  o_proj B=4: 0.0232 ms, 40478.6 GFLOPS, 0.45% peak
+  q_b_proj B=8: 0.0063 ms, 95788.4 GFLOPS, 1.06% peak
+  kv_b_proj B=8: 0.0050 ms, 53287.4 GFLOPS, 0.59% peak
+  o_proj B=8: 0.0232 ms, 80823.9 GFLOPS, 0.90% peak
+  q_b_proj B=16: 0.0063 ms, 192132.2 GFLOPS, 2.13% peak
+  kv_b_proj B=16: 0.0050 ms, 107917.7 GFLOPS, 1.20% peak
+  o_proj B=16: 0.0233 ms, 161402.0 GFLOPS, 1.79% peak
+  q_b_proj B=32: 0.0063 ms, 382830.5 GFLOPS, 4.25% peak
+  kv_b_proj B=32: 0.0050 ms, 213984.2 GFLOPS, 2.38% peak
+  o_proj B=32: 0.0234 ms, 321481.0 GFLOPS, 3.57% peak
+  q_b_proj B=64: 0.0064 ms, 758762.4 GFLOPS, 8.43% peak
+  kv_b_proj B=64: 0.0050 ms, 426968.3 GFLOPS, 4.74% peak
+  o_proj B=64: 0.0235 ms, 639762.9 GFLOPS, 7.11% peak
+  q_b_proj B=128: 0.0068 ms, 1424406.2 GFLOPS, 15.83% peak
+  kv_b_proj B=128: 0.0054 ms, 793234.7 GFLOPS, 8.81% peak
+  o_proj B=128: 0.0239 ms, 1257618.7 GFLOPS, 13.97% peak
 
 === Prefill Phase ===
-  q_b_proj B=1, S=128: 0.0068 ms, 1425382.8 GFLOPS, 15.84% peak
-  kv_b_proj B=1, S=128: 0.0054 ms, 793068.2 GFLOPS, 8.81% peak
-  o_proj B=1, S=128: 0.0239 ms, 1257396.3 GFLOPS, 13.97% peak
-  q_b_proj B=1, S=256: 0.0089 ms, 2173693.3 GFLOPS, 24.15% peak
-  kv_b_proj B=1, S=256: 0.0071 ms, 1214821.2 GFLOPS, 13.50% peak
-  o_proj B=1, S=256: 0.0220 ms, 2737260.8 GFLOPS, 30.41% peak
-  q_b_proj B=1, S=512: 0.0123 ms, 3148584.6 GFLOPS, 34.98% peak
-  kv_b_proj B=1, S=512: 0.0100 ms, 1716438.6 GFLOPS, 19.07% peak
-  o_proj B=1, S=512: 0.0235 ms, 5123295.7 GFLOPS, 56.93% peak
-  q_b_proj B=1, S=1024: 0.0200 ms, 3869989.6 GFLOPS, 43.00% peak
-  kv_b_proj B=1, S=1024: 0.0148 ms, 2316234.4 GFLOPS, 25.74% peak
-  o_proj B=1, S=1024: 0.0504 ms, 4775666.8 GFLOPS, 53.06% peak
-  q_b_proj B=1, S=2048: 0.0400 ms, 3866452.5 GFLOPS, 42.96% peak
-  kv_b_proj B=1, S=2048: 0.0287 ms, 2395021.0 GFLOPS, 26.61% peak
-  o_proj B=1, S=2048: 0.0985 ms, 4882567.4 GFLOPS, 54.25% peak
-  q_b_proj B=2, S=128: 0.0104 ms, 1852812.3 GFLOPS, 20.59% peak
-  kv_b_proj B=2, S=128: 0.0071 ms, 1214468.9 GFLOPS, 13.49% peak
-  o_proj B=2, S=128: 0.0222 ms, 2705714.4 GFLOPS, 30.06% peak
-  q_b_proj B=2, S=256: 0.0122 ms, 3157873.0 GFLOPS, 35.09% peak
-  kv_b_proj B=2, S=256: 0.0101 ms, 1695321.1 GFLOPS, 18.84% peak
-  o_proj B=2, S=256: 0.0248 ms, 4848625.9 GFLOPS, 53.87% peak
-  q_b_proj B=2, S=512: 0.0199 ms, 3877213.4 GFLOPS, 43.08% peak
-  kv_b_proj B=2, S=512: 0.0151 ms, 2273605.6 GFLOPS, 25.26% peak
-  o_proj B=2, S=512: 0.0495 ms, 4857282.3 GFLOPS, 53.97% peak
-  q_b_proj B=2, S=1024: 0.0395 ms, 3918337.3 GFLOPS, 43.54% peak
-  kv_b_proj B=2, S=1024: 0.0283 ms, 2425045.1 GFLOPS, 26.94% peak
-  o_proj B=2, S=1024: 0.1006 ms, 4780408.5 GFLOPS, 53.12% peak
-  q_b_proj B=2, S=2048: 0.0751 ms, 4116461.5 GFLOPS, 45.74% peak
-  kv_b_proj B=2, S=2048: 0.0527 ms, 2606394.6 GFLOPS, 28.96% peak
-  o_proj B=2, S=2048: 0.1813 ms, 5307219.6 GFLOPS, 58.97% peak
-  q_b_proj B=4, S=128: 0.0148 ms, 2604227.7 GFLOPS, 28.94% peak
-  kv_b_proj B=4, S=128: 0.0100 ms, 1712917.9 GFLOPS, 19.03% peak
-  o_proj B=4, S=128: 0.0240 ms, 5006825.9 GFLOPS, 55.63% peak
-  q_b_proj B=4, S=256: 0.0197 ms, 3916108.9 GFLOPS, 43.51% peak
-  kv_b_proj B=4, S=256: 0.0148 ms, 2327502.6 GFLOPS, 25.86% peak
-  o_proj B=4, S=256: 0.0500 ms, 4814919.5 GFLOPS, 53.50% peak
-  q_b_proj B=4, S=512: 0.0402 ms, 3848773.5 GFLOPS, 42.76% peak
-  kv_b_proj B=4, S=512: 0.0284 ms, 2417111.1 GFLOPS, 26.86% peak
-  o_proj B=4, S=512: 0.0984 ms, 4889010.7 GFLOPS, 54.32% peak
-  q_b_proj B=4, S=1024: 0.0748 ms, 4135142.9 GFLOPS, 45.95% peak
-  kv_b_proj B=4, S=1024: 0.0528 ms, 2602506.5 GFLOPS, 28.92% peak
-  o_proj B=4, S=1024: 0.1815 ms, 5301371.6 GFLOPS, 58.90% peak
-  q_b_proj B=4, S=2048: 0.1470 ms, 4206417.3 GFLOPS, 46.74% peak
-  kv_b_proj B=4, S=2048: 0.1021 ms, 2691377.1 GFLOPS, 29.90% peak
-  o_proj B=4, S=2048: 0.3608 ms, 5332383.0 GFLOPS, 59.25% peak
-  q_b_proj B=8, S=128: 0.0203 ms, 3814290.5 GFLOPS, 42.38% peak
-  kv_b_proj B=8, S=128: 0.0149 ms, 2305371.0 GFLOPS, 25.62% peak
-  o_proj B=8, S=128: 0.0500 ms, 4814263.0 GFLOPS, 53.49% peak
-  q_b_proj B=8, S=256: 0.0405 ms, 3817218.5 GFLOPS, 42.41% peak
-  kv_b_proj B=8, S=256: 0.0284 ms, 2423361.7 GFLOPS, 26.93% peak
-  o_proj B=8, S=256: 0.0988 ms, 4869519.2 GFLOPS, 54.11% peak
-  q_b_proj B=8, S=512: 0.0727 ms, 4255293.3 GFLOPS, 47.28% peak
-  kv_b_proj B=8, S=512: 0.0535 ms, 2568639.0 GFLOPS, 28.54% peak
-  o_proj B=8, S=512: 0.1881 ms, 5114074.4 GFLOPS, 56.82% peak
-  q_b_proj B=8, S=1024: 0.1483 ms, 4169190.6 GFLOPS, 46.32% peak
-  kv_b_proj B=8, S=1024: 0.1030 ms, 2668886.9 GFLOPS, 29.65% peak
-  o_proj B=8, S=1024: 0.3639 ms, 5287081.9 GFLOPS, 58.75% peak
-  q_b_proj B=8, S=2048: 0.3024 ms, 4089936.3 GFLOPS, 45.44% peak
-  kv_b_proj B=8, S=2048: 0.2072 ms, 2653101.7 GFLOPS, 29.48% peak
-  o_proj B=8, S=2048: 0.7127 ms, 5399343.6 GFLOPS, 59.99% peak
+  q_b_proj B=1, S=128: 0.0068 ms, 1419802.7 GFLOPS, 15.78% peak
+  kv_b_proj B=1, S=128: 0.0054 ms, 793077.7 GFLOPS, 8.81% peak
+  o_proj B=1, S=128: 0.0239 ms, 1257579.3 GFLOPS, 13.97% peak
+  q_b_proj B=1, S=256: 0.0089 ms, 2175208.0 GFLOPS, 24.17% peak
+  kv_b_proj B=1, S=256: 0.0070 ms, 1220603.6 GFLOPS, 13.56% peak
+  o_proj B=1, S=256: 0.0220 ms, 2736463.3 GFLOPS, 30.41% peak
+  q_b_proj B=1, S=512: 0.0123 ms, 3131761.3 GFLOPS, 34.80% peak
+  kv_b_proj B=1, S=512: 0.0100 ms, 1712723.1 GFLOPS, 19.03% peak
+  o_proj B=1, S=512: 0.0236 ms, 5088113.8 GFLOPS, 56.53% peak
+  q_b_proj B=1, S=1024: 0.0199 ms, 3886793.3 GFLOPS, 43.19% peak
+  kv_b_proj B=1, S=1024: 0.0151 ms, 2278816.0 GFLOPS, 25.32% peak
+  o_proj B=1, S=1024: 0.0504 ms, 4769509.1 GFLOPS, 52.99% peak
+  q_b_proj B=1, S=2048: 0.0401 ms, 3854173.1 GFLOPS, 42.82% peak
+  kv_b_proj B=1, S=2048: 0.0285 ms, 2413700.0 GFLOPS, 26.82% peak
+  o_proj B=1, S=2048: 0.0981 ms, 4905580.6 GFLOPS, 54.51% peak
+  q_b_proj B=2, S=128: 0.0089 ms, 2170718.0 GFLOPS, 24.12% peak
+  kv_b_proj B=2, S=128: 0.0070 ms, 1228590.3 GFLOPS, 13.65% peak
+  o_proj B=2, S=128: 0.0220 ms, 2739014.5 GFLOPS, 30.43% peak
+  q_b_proj B=2, S=256: 0.0123 ms, 3153416.9 GFLOPS, 35.04% peak
+  kv_b_proj B=2, S=256: 0.0100 ms, 1715195.4 GFLOPS, 19.06% peak
+  o_proj B=2, S=256: 0.0241 ms, 4989551.5 GFLOPS, 55.44% peak
+  q_b_proj B=2, S=512: 0.0200 ms, 3868136.8 GFLOPS, 42.98% peak
+  kv_b_proj B=2, S=512: 0.0151 ms, 2278753.2 GFLOPS, 25.32% peak
+  o_proj B=2, S=512: 0.0498 ms, 4833221.1 GFLOPS, 53.70% peak
+  q_b_proj B=2, S=1024: 0.0401 ms, 3852245.2 GFLOPS, 42.80% peak
+  kv_b_proj B=2, S=1024: 0.0285 ms, 2414788.2 GFLOPS, 26.83% peak
+  o_proj B=2, S=1024: 0.0974 ms, 4940786.7 GFLOPS, 54.90% peak
+  q_b_proj B=2, S=2048: 0.0744 ms, 4158846.2 GFLOPS, 46.21% peak
+  kv_b_proj B=2, S=2048: 0.0525 ms, 2619661.6 GFLOPS, 29.11% peak
+  o_proj B=2, S=2048: 0.1870 ms, 5143723.8 GFLOPS, 57.15% peak
+  q_b_proj B=4, S=128: 0.0123 ms, 3134890.7 GFLOPS, 34.83% peak
+  kv_b_proj B=4, S=128: 0.0100 ms, 1712664.6 GFLOPS, 19.03% peak
+  o_proj B=4, S=128: 0.0235 ms, 5126445.4 GFLOPS, 56.96% peak
+  q_b_proj B=4, S=256: 0.0202 ms, 3819119.3 GFLOPS, 42.43% peak
+  kv_b_proj B=4, S=256: 0.0153 ms, 2252962.9 GFLOPS, 25.03% peak
+  o_proj B=4, S=256: 0.0499 ms, 4815614.5 GFLOPS, 53.51% peak
+  q_b_proj B=4, S=512: 0.0402 ms, 3849688.7 GFLOPS, 42.77% peak
+  kv_b_proj B=4, S=512: 0.0283 ms, 2431440.0 GFLOPS, 27.02% peak
+  o_proj B=4, S=512: 0.0959 ms, 5013522.7 GFLOPS, 55.71% peak
+  q_b_proj B=4, S=1024: 0.0749 ms, 4129465.3 GFLOPS, 45.88% peak
+  kv_b_proj B=4, S=1024: 0.0545 ms, 2522392.7 GFLOPS, 28.03% peak
+  o_proj B=4, S=1024: 0.1828 ms, 5264192.2 GFLOPS, 58.49% peak
+  q_b_proj B=4, S=2048: 0.1472 ms, 4202961.0 GFLOPS, 46.70% peak
+  kv_b_proj B=4, S=2048: 0.1033 ms, 2660386.8 GFLOPS, 29.56% peak
+  o_proj B=4, S=2048: 0.3592 ms, 5356813.5 GFLOPS, 59.52% peak
+  q_b_proj B=8, S=128: 0.0201 ms, 3851976.2 GFLOPS, 42.80% peak
+  kv_b_proj B=8, S=128: 0.0152 ms, 2255901.2 GFLOPS, 25.07% peak
+  o_proj B=8, S=128: 0.0500 ms, 4815134.7 GFLOPS, 53.50% peak
+  q_b_proj B=8, S=256: 0.0403 ms, 3840397.5 GFLOPS, 42.67% peak
+  kv_b_proj B=8, S=256: 0.0284 ms, 2418242.3 GFLOPS, 26.87% peak
+  o_proj B=8, S=256: 0.0960 ms, 5011248.2 GFLOPS, 55.68% peak
+  q_b_proj B=8, S=512: 0.0739 ms, 4184021.9 GFLOPS, 46.49% peak
+  kv_b_proj B=8, S=512: 0.0523 ms, 2627477.2 GFLOPS, 29.19% peak
+  o_proj B=8, S=512: 0.1853 ms, 5192581.8 GFLOPS, 57.70% peak
+  q_b_proj B=8, S=1024: 0.1500 ms, 4122332.0 GFLOPS, 45.80% peak
+  kv_b_proj B=8, S=1024: 0.1029 ms, 2671040.9 GFLOPS, 29.68% peak
+  o_proj B=8, S=1024: 0.3657 ms, 5261797.1 GFLOPS, 58.46% peak
+  q_b_proj B=8, S=2048: 0.2987 ms, 4141762.6 GFLOPS, 46.02% peak
+  kv_b_proj B=8, S=2048: 0.2030 ms, 2707517.8 GFLOPS, 30.08% peak
+  o_proj B=8, S=2048: 0.7204 ms, 5341898.0 GFLOPS, 59.35% peak
 Saved ../results/cutlass_scaled_fp4_mm.csv
 
 [OK] cutlass_scaled_fp4_mm completed successfully
@@ -343,11 +200,11 @@ Benchmark: dsv3_fused_a_gemm (Kernel #4)
 ============================================================
 
 === Decode Phase (B<=16, low-latency path) ===
-  B=1: 0.0051 ms, 5927.9 GFLOPS, 0.26% peak
-  B=2: 0.0051 ms, 11878.5 GFLOPS, 0.53% peak
-  B=4: 0.0051 ms, 23679.5 GFLOPS, 1.05% peak
-  B=8: 0.0052 ms, 46815.2 GFLOPS, 2.08% peak
-  B=16: 0.0058 ms, 83932.4 GFLOPS, 3.73% peak
+  B=1: 0.0051 ms, 5923.4 GFLOPS, 0.26% peak
+  B=2: 0.0051 ms, 11867.1 GFLOPS, 0.53% peak
+  B=4: 0.0051 ms, 23661.4 GFLOPS, 1.05% peak
+  B=8: 0.0052 ms, 46747.4 GFLOPS, 2.08% peak
+  B=16: 0.0058 ms, 83782.6 GFLOPS, 3.72% peak
 Saved ../results/dsv3_fused_a_gemm.csv
 
 [OK] dsv3_fused_a_gemm completed successfully
@@ -360,11 +217,11 @@ Benchmark: dsv3_router_gemm (Kernel #5)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0020 ms, 1838.6 GFLOPS, 0.08% peak
-  B=2: 0.0022 ms, 3286.9 GFLOPS, 0.15% peak
-  B=4: 0.0027 ms, 5434.5 GFLOPS, 0.24% peak
-  B=8: 0.0036 ms, 8191.8 GFLOPS, 0.36% peak
-  B=16: 0.0071 ms, 8243.9 GFLOPS, 0.37% peak
+  B=1: 0.0020 ms, 1846.3 GFLOPS, 0.08% peak
+  B=2: 0.0022 ms, 3343.3 GFLOPS, 0.15% peak
+  B=4: 0.0027 ms, 5388.9 GFLOPS, 0.24% peak
+  B=8: 0.0036 ms, 8144.6 GFLOPS, 0.36% peak
+  B=16: 0.0072 ms, 8165.2 GFLOPS, 0.36% peak
   Skipping B=32: kernel limited to num_tokens <= 16
   Skipping B=64: kernel limited to num_tokens <= 16
   Skipping B=128: kernel limited to num_tokens <= 16
@@ -382,24 +239,24 @@ Benchmark: bmm_fp8 (Kernel #6)
 ============================================================
 
 === Decode Phase: q_nope * w_kc ===
-  B=1: 0.0055 ms, 3033.6 GFLOPS, 0.07% peak
-  B=2: 0.0055 ms, 6080.9 GFLOPS, 0.14% peak
-  B=4: 0.0055 ms, 12159.6 GFLOPS, 0.27% peak
-  B=8: 0.0055 ms, 24276.8 GFLOPS, 0.54% peak
-  B=16: 0.0056 ms, 47514.2 GFLOPS, 1.06% peak
-  B=32: 0.0058 ms, 93041.8 GFLOPS, 2.07% peak
-  B=64: 0.0061 ms, 174941.7 GFLOPS, 3.89% peak
-  B=128: 0.0070 ms, 307559.0 GFLOPS, 6.83% peak
+  B=1: 0.0055 ms, 3034.9 GFLOPS, 0.07% peak
+  B=2: 0.0055 ms, 6077.3 GFLOPS, 0.14% peak
+  B=4: 0.0055 ms, 12154.8 GFLOPS, 0.27% peak
+  B=8: 0.0055 ms, 24281.8 GFLOPS, 0.54% peak
+  B=16: 0.0057 ms, 47435.3 GFLOPS, 1.05% peak
+  B=32: 0.0058 ms, 92954.6 GFLOPS, 2.07% peak
+  B=64: 0.0061 ms, 174806.0 GFLOPS, 3.88% peak
+  B=128: 0.0070 ms, 307090.1 GFLOPS, 6.82% peak
 
 === Decode Phase: attn * w_vc ===
-  B=1: 0.0028 ms, 6093.4 GFLOPS, 0.14% peak
-  B=2: 0.0028 ms, 12192.3 GFLOPS, 0.27% peak
-  B=4: 0.0028 ms, 24268.3 GFLOPS, 0.54% peak
-  B=8: 0.0028 ms, 48643.5 GFLOPS, 1.08% peak
-  B=16: 0.0031 ms, 85327.7 GFLOPS, 1.90% peak
-  B=32: 0.0032 ms, 167372.7 GFLOPS, 3.72% peak
-  B=64: 0.0034 ms, 318055.9 GFLOPS, 7.07% peak
-  B=128: 0.0037 ms, 573018.8 GFLOPS, 12.73% peak
+  B=1: 0.0028 ms, 6085.5 GFLOPS, 0.14% peak
+  B=2: 0.0028 ms, 12154.5 GFLOPS, 0.27% peak
+  B=4: 0.0028 ms, 24333.1 GFLOPS, 0.54% peak
+  B=8: 0.0028 ms, 48504.0 GFLOPS, 1.08% peak
+  B=16: 0.0031 ms, 85422.3 GFLOPS, 1.90% peak
+  B=32: 0.0032 ms, 167701.9 GFLOPS, 3.73% peak
+  B=64: 0.0034 ms, 318332.4 GFLOPS, 7.07% peak
+  B=128: 0.0038 ms, 569943.0 GFLOPS, 12.67% peak
 Saved ../results/bmm_fp8.csv
 
 [OK] bmm_fp8 completed successfully
@@ -413,21 +270,21 @@ Benchmark: cutlass_mla_decode (Kernel #7)
 
 === Decode Phase (MLA Attention) ===
   B=1, seq_len=128: 0.0179 ms, 16.5 GB/s, memory
-  B=1, seq_len=256: 0.0294 ms, 15.1 GB/s, memory
-  B=1, seq_len=512: 0.0302 ms, 24.4 GB/s, memory
-  B=1, seq_len=1024: 0.0300 ms, 44.2 GB/s, memory
+  B=1, seq_len=256: 0.0292 ms, 15.1 GB/s, memory
+  B=1, seq_len=512: 0.0304 ms, 24.2 GB/s, memory
+  B=1, seq_len=1024: 0.0299 ms, 44.4 GB/s, memory
   Skipping B=1, seq_len=2048: B*seq_len=2048 > 1024 (crash risk)
-  B=2, seq_len=128: 0.0179 ms, 33.0 GB/s, memory
-  B=2, seq_len=256: 0.0293 ms, 30.2 GB/s, memory
-  B=2, seq_len=512: 0.0293 ms, 50.3 GB/s, memory
+  B=2, seq_len=128: 0.0178 ms, 33.1 GB/s, memory
+  B=2, seq_len=256: 0.0295 ms, 30.0 GB/s, memory
+  B=2, seq_len=512: 0.0292 ms, 50.4 GB/s, memory
   Skipping B=2, seq_len=1024: B*seq_len=2048 > 1024 (crash risk)
   Skipping B=2, seq_len=2048: B*seq_len=4096 > 1024 (crash risk)
-  B=4, seq_len=128: 0.0179 ms, 65.8 GB/s, memory
-  B=4, seq_len=256: 0.0294 ms, 60.1 GB/s, memory
+  B=4, seq_len=128: 0.0179 ms, 65.9 GB/s, memory
+  B=4, seq_len=256: 0.0296 ms, 59.8 GB/s, memory
   Skipping B=4, seq_len=512: B*seq_len=2048 > 1024 (crash risk)
   Skipping B=4, seq_len=1024: B*seq_len=4096 > 1024 (crash risk)
   Skipping B=4, seq_len=2048: B*seq_len=8192 > 1024 (crash risk)
-  B=8, seq_len=128: 0.0180 ms, 131.4 GB/s, memory
+  B=8, seq_len=128: 0.0179 ms, 131.6 GB/s, memory
   Skipping B=8, seq_len=256: B*seq_len=2048 > 1024 (crash risk)
   Skipping B=8, seq_len=512: B*seq_len=4096 > 1024 (crash risk)
   Skipping B=8, seq_len=1024: B*seq_len=8192 > 1024 (crash risk)
@@ -463,7 +320,50 @@ Running: trtllm_batch_decode_with_kv_cache_mla (Attention, Mixed)
 Benchmark: trtllm_batch_decode_with_kv_cache_mla (Kernel #8)
 ============================================================
 
-[FAILED] trtllm_batch_decode_with_kv_cache_mla: Exit code 1
+=== Decode Phase (TRT-LLM MLA Attention) ===
+Warning: Kernel failed for B=1, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=1, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=1, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=1, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=1, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=2, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=2, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=2, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=2, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=2, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=4, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=4, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=4, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=4, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=4, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=8, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=8, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=8, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=8, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=8, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=16, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=16, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=16, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=16, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=16, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=32, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=32, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=32, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=32, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=32, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=64, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=64, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=64, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=64, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=64, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=128, seq_len=128: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=128, seq_len=256: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=128, seq_len=512: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=128, seq_len=1024: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Warning: Kernel failed for B=128, seq_len=2048: trtllm_batch_decode_with_kv_cache_mla() missing 3 required positional arguments: 'block_tables', 'seq_lens', and 'max_seq_len'
+Saved ../results/trtllm_batch_decode_with_kv_cache_mla.csv
+
+[OK] trtllm_batch_decode_with_kv_cache_mla completed successfully
 
 ======================================================================
 Running: trtllm_ragged_attention_deepseek (Attention, Mixed)
@@ -472,7 +372,30 @@ Running: trtllm_ragged_attention_deepseek (Attention, Mixed)
 Benchmark: trtllm_ragged_attention_deepseek (Kernel #9)
 ============================================================
 
-[FAILED] trtllm_ragged_attention_deepseek: Exit code 1
+=== Prefill Phase (TRT-LLM Ragged Attention) ===
+Warning: Kernel failed for B=1, S=128: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=1, S=256: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=1, S=512: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=1, S=1024: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=1, S=2048: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=2, S=128: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=2, S=256: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=2, S=512: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=2, S=1024: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=2, S=2048: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=4, S=128: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=4, S=256: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=4, S=512: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=4, S=1024: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=4, S=2048: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=8, S=128: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=8, S=256: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=8, S=512: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=8, S=1024: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Warning: Kernel failed for B=8, S=2048: trtllm_ragged_attention_deepseek() missing 12 required positional arguments: 'max_q_len', 'max_kv_len', 'bmm1_scale', 'bmm2_scale', 'o_sf_scale', 'batch_size', 'window_left', 'cum_seq_lens_q', 'cum_seq_lens_kv', 'enable_pdl', 'is_causal', and 'return_lse'
+Saved ../results/trtllm_ragged_attention_deepseek.csv
+
+[OK] trtllm_ragged_attention_deepseek completed successfully
 
 ======================================================================
 Running: mla_rope_quantize_fp8 (Attention, Memory)
@@ -481,7 +404,40 @@ Running: mla_rope_quantize_fp8 (Attention, Memory)
 Benchmark: mla_rope_quantize_fp8 (Kernel #10)
 ============================================================
 
-[FAILED] mla_rope_quantize_fp8: Exit code 1
+=== Decode Phase ===
+Warning: Kernel failed for B=1, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=2, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=4, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=8, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=16, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=32, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=64, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=128, S=1: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=1, S=256: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=1, S=512: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=1, S=1024: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=1, S=2048: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=2, S=128: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=2, S=256: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=2, S=512: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=2, S=1024: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=2, S=2048: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=4, S=128: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=4, S=256: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=4, S=512: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=4, S=1024: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=4, S=2048: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=8, S=128: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=8, S=256: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=8, S=512: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=8, S=1024: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Warning: Kernel failed for B=8, S=2048: mla_rope_quantize_fp8() missing 1 required positional argument: 'pos_ids'
+Saved ../results/mla_rope_quantize_fp8.csv
+
+[OK] mla_rope_quantize_fp8 completed successfully
 
 ======================================================================
 Running: apply_rope_with_cos_sin_cache_inplace (RoPE, Memory)
@@ -528,7 +484,44 @@ Saved ../results/apply_rope_with_cos_sin_cache_inplace.csv
 ======================================================================
 Running: concat_mla_k (Concat, Memory)
 ======================================================================
-[FAILED] concat_mla_k: Exit code -6
+============================================================
+Benchmark: concat_mla_k (Kernel #12)
+============================================================
+
+=== Decode Phase ===
+  B=1: 0.0021 ms, 39.5 GB/s, 0.5% peak
+  B=2: 0.0029 ms, 55.8 GB/s, 0.7% peak
+  B=4: 0.0048 ms, 69.0 GB/s, 0.9% peak
+  B=8: 0.0048 ms, 136.9 GB/s, 1.7% peak
+  B=16: 0.0048 ms, 274.0 GB/s, 3.4% peak
+  B=32: 0.0048 ms, 551.4 GB/s, 6.9% peak
+  B=64: 0.0049 ms, 1074.3 GB/s, 13.4% peak
+  B=128: 0.0049 ms, 2143.7 GB/s, 26.8% peak
+
+=== Prefill Phase ===
+  B=1, S=128: 0.0049 ms, 2143.1 GB/s, 26.8% peak
+  B=1, S=256: 0.0050 ms, 4226.4 GB/s, 52.8% peak
+  B=1, S=512: 0.0054 ms, 7843.2 GB/s, 98.0% peak
+  B=1, S=1024: 0.0106 ms, 7892.5 GB/s, 98.7% peak
+  B=1, S=2048: 0.0274 ms, 6135.0 GB/s, 76.7% peak
+  B=2, S=128: 0.0050 ms, 4242.7 GB/s, 53.0% peak
+  B=2, S=256: 0.0051 ms, 8235.8 GB/s, 102.9% peak
+  B=2, S=512: 0.0095 ms, 8859.0 GB/s, 110.7% peak
+  B=2, S=1024: 0.0275 ms, 6115.1 GB/s, 76.4% peak
+  B=2, S=2048: 0.0519 ms, 6474.3 GB/s, 80.9% peak
+  B=4, S=128: 0.0051 ms, 8201.9 GB/s, 102.5% peak
+  B=4, S=256: 0.0095 ms, 8863.0 GB/s, 110.8% peak
+  B=4, S=512: 0.0273 ms, 6160.6 GB/s, 77.0% peak
+  B=4, S=1024: 0.0520 ms, 6458.3 GB/s, 80.7% peak
+  B=4, S=2048: 0.1010 ms, 6653.5 GB/s, 83.2% peak
+  B=8, S=128: 0.0095 ms, 8864.9 GB/s, 110.8% peak
+  B=8, S=256: 0.0275 ms, 6106.6 GB/s, 76.3% peak
+  B=8, S=512: 0.0524 ms, 6408.5 GB/s, 80.1% peak
+  B=8, S=1024: 0.1011 ms, 6649.3 GB/s, 83.1% peak
+  B=8, S=2048: 0.1983 ms, 6780.3 GB/s, 84.8% peak
+Saved ../results/concat_mla_k.csv
+
+[OK] concat_mla_k completed successfully
 
 ======================================================================
 Running: silu_and_mul (Activation, Memory)
@@ -540,34 +533,34 @@ Benchmark: silu_and_mul (Kernel #13)
 === Decode Phase ===
   B=1: 0.0018 ms, 6.9 GB/s, 0.1% peak
   B=2: 0.0018 ms, 13.8 GB/s, 0.2% peak
-  B=4: 0.0018 ms, 27.7 GB/s, 0.3% peak
+  B=4: 0.0018 ms, 27.8 GB/s, 0.3% peak
   B=8: 0.0018 ms, 55.4 GB/s, 0.7% peak
-  B=16: 0.0019 ms, 104.8 GB/s, 1.3% peak
-  B=32: 0.0019 ms, 209.1 GB/s, 2.6% peak
-  B=64: 0.0019 ms, 413.9 GB/s, 5.2% peak
-  B=128: 0.0019 ms, 809.4 GB/s, 10.1% peak
+  B=16: 0.0019 ms, 105.0 GB/s, 1.3% peak
+  B=32: 0.0019 ms, 209.5 GB/s, 2.6% peak
+  B=64: 0.0019 ms, 413.6 GB/s, 5.2% peak
+  B=128: 0.0019 ms, 812.6 GB/s, 10.2% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0020 ms, 780.5 GB/s, 9.8% peak
-  B=1, S=256: 0.0021 ms, 1478.9 GB/s, 18.5% peak
-  B=1, S=512: 0.0028 ms, 2243.2 GB/s, 28.0% peak
-  B=1, S=1024: 0.0038 ms, 3291.4 GB/s, 41.1% peak
-  B=1, S=2048: 0.0058 ms, 4370.2 GB/s, 54.6% peak
-  B=2, S=128: 0.0021 ms, 1480.6 GB/s, 18.5% peak
-  B=2, S=256: 0.0028 ms, 2244.0 GB/s, 28.1% peak
-  B=2, S=512: 0.0038 ms, 3297.7 GB/s, 41.2% peak
-  B=2, S=1024: 0.0058 ms, 4368.7 GB/s, 54.6% peak
-  B=2, S=2048: 0.0098 ms, 5128.6 GB/s, 64.1% peak
-  B=4, S=128: 0.0028 ms, 2244.1 GB/s, 28.1% peak
-  B=4, S=256: 0.0038 ms, 3295.9 GB/s, 41.2% peak
-  B=4, S=512: 0.0058 ms, 4367.9 GB/s, 54.6% peak
-  B=4, S=1024: 0.0098 ms, 5120.0 GB/s, 64.0% peak
-  B=4, S=2048: 0.0201 ms, 5001.5 GB/s, 62.5% peak
-  B=8, S=128: 0.0039 ms, 3247.4 GB/s, 40.6% peak
-  B=8, S=256: 0.0058 ms, 4368.0 GB/s, 54.6% peak
-  B=8, S=512: 0.0098 ms, 5117.5 GB/s, 64.0% peak
-  B=8, S=1024: 0.0200 ms, 5039.1 GB/s, 63.0% peak
-  B=8, S=2048: 0.0399 ms, 5044.9 GB/s, 63.1% peak
+  B=1, S=128: 0.0019 ms, 812.6 GB/s, 10.2% peak
+  B=1, S=256: 0.0021 ms, 1477.2 GB/s, 18.5% peak
+  B=1, S=512: 0.0028 ms, 2244.0 GB/s, 28.1% peak
+  B=1, S=1024: 0.0038 ms, 3292.7 GB/s, 41.2% peak
+  B=1, S=2048: 0.0058 ms, 4368.7 GB/s, 54.6% peak
+  B=2, S=128: 0.0021 ms, 1472.1 GB/s, 18.4% peak
+  B=2, S=256: 0.0028 ms, 2248.2 GB/s, 28.1% peak
+  B=2, S=512: 0.0038 ms, 3295.3 GB/s, 41.2% peak
+  B=2, S=1024: 0.0058 ms, 4369.2 GB/s, 54.6% peak
+  B=2, S=2048: 0.0098 ms, 5128.0 GB/s, 64.1% peak
+  B=4, S=128: 0.0028 ms, 2242.7 GB/s, 28.0% peak
+  B=4, S=256: 0.0038 ms, 3297.2 GB/s, 41.2% peak
+  B=4, S=512: 0.0058 ms, 4368.1 GB/s, 54.6% peak
+  B=4, S=1024: 0.0098 ms, 5117.2 GB/s, 64.0% peak
+  B=4, S=2048: 0.0199 ms, 5060.4 GB/s, 63.3% peak
+  B=8, S=128: 0.0038 ms, 3287.1 GB/s, 41.1% peak
+  B=8, S=256: 0.0058 ms, 4368.5 GB/s, 54.6% peak
+  B=8, S=512: 0.0098 ms, 5114.3 GB/s, 63.9% peak
+  B=8, S=1024: 0.0197 ms, 5110.2 GB/s, 63.9% peak
+  B=8, S=2048: 0.0400 ms, 5032.3 GB/s, 62.9% peak
 Saved ../results/silu_and_mul.csv
 
 [OK] silu_and_mul completed successfully
@@ -952,7 +945,41 @@ Running: trtllm_fp4_block_scale_moe (MoE, Mixed)
 Benchmark: trtllm_fp4_block_scale_moe (Kernel #22)
 ============================================================
 
-[FAILED] trtllm_fp4_block_scale_moe: Exit code 1
+=== Decode Phase ===
+Warning: Kernel failed for B=1, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=2, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=4, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=8, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=16, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=32, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=64, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=128, S=1: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=1, S=256: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=1, S=512: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=1, S=1024: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=1, S=2048: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=2, S=128: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=2, S=256: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=2, S=512: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=2, S=1024: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=2, S=2048: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=4, S=128: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=4, S=256: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=4, S=512: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=4, S=1024: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=4, S=2048: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=8, S=128: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=8, S=256: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=8, S=512: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=8, S=1024: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+Warning: Kernel failed for B=8, S=2048: trtllm_fp4_block_scale_moe() missing 19 required positional arguments: 'gemm1_weights_scale', 'gemm1_bias', 'gemm1_alpha', 'gemm1_beta', 'gemm1_clamp_limit', 'gemm2_weights', 'gemm2_weights_scale', 'gemm2_bias', 'output1_scale_scalar', 'output1_scale_gate_scalar', 'output2_scale_scalar', 'num_experts', 'top_k', 'n_group', 'topk_group', 'intermediate_size', 'local_expert_offset', 'local_num_experts', and 'routed_scaling_factor'
+
+No results - kernel not available
+
+[OK] trtllm_fp4_block_scale_moe completed successfully
 
 ======================================================================
 Running: fused_moe_kernel (MoE, Mixed)
@@ -962,22 +989,47 @@ Benchmark: fused_moe_kernel (Kernel #23)
 ============================================================
 
 === Decode Phase ===
+Warning: Kernel failed for B=1, S=1: 'module' object is not callable
+Warning: Kernel failed for B=2, S=1: 'module' object is not callable
+Warning: Kernel failed for B=4, S=1: 'module' object is not callable
+Warning: Kernel failed for B=8, S=1: 'module' object is not callable
+Warning: Kernel failed for B=16, S=1: 'module' object is not callable
+Warning: Kernel failed for B=32, S=1: 'module' object is not callable
+Warning: Kernel failed for B=64, S=1: 'module' object is not callable
+Warning: Kernel failed for B=128, S=1: 'module' object is not callable
 
-[FAILED] fused_moe_kernel: Exit code 1
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: 'module' object is not callable
+Warning: Kernel failed for B=1, S=256: 'module' object is not callable
+Warning: Kernel failed for B=1, S=512: 'module' object is not callable
+Warning: Kernel failed for B=1, S=1024: 'module' object is not callable
+Warning: Kernel failed for B=1, S=2048: 'module' object is not callable
+Warning: Kernel failed for B=2, S=128: 'module' object is not callable
+Warning: Kernel failed for B=2, S=256: 'module' object is not callable
+Warning: Kernel failed for B=2, S=512: 'module' object is not callable
+Warning: Kernel failed for B=2, S=1024: 'module' object is not callable
+Warning: Kernel failed for B=2, S=2048: 'module' object is not callable
+Warning: Kernel failed for B=4, S=128: 'module' object is not callable
+Warning: Kernel failed for B=4, S=256: 'module' object is not callable
+Warning: Kernel failed for B=4, S=512: 'module' object is not callable
+Warning: Kernel failed for B=4, S=1024: 'module' object is not callable
+Warning: Kernel failed for B=4, S=2048: 'module' object is not callable
+Warning: Kernel failed for B=8, S=128: 'module' object is not callable
+Warning: Kernel failed for B=8, S=256: 'module' object is not callable
+Warning: Kernel failed for B=8, S=512: 'module' object is not callable
+Warning: Kernel failed for B=8, S=1024: 'module' object is not callable
+Warning: Kernel failed for B=8, S=2048: 'module' object is not callable
+
+No results - kernel not available
+
+[OK] fused_moe_kernel completed successfully
 
 Aggregated results saved to ../results/all_kernels.csv
-Total benchmark results: 204
+Total benchmark results: 232
 
 Summary saved to ../results/benchmark_summary.md
 
 ======================================================================
 Benchmark Complete!
-Successful: 17/23
-Failed kernels:
-  - trtllm_batch_decode_with_kv_cache_mla: Exit code 1
-  - trtllm_ragged_attention_deepseek: Exit code 1
-  - mla_rope_quantize_fp8: Exit code 1
-  - concat_mla_k: Exit code -6
-  - trtllm_fp4_block_scale_moe: Exit code 1
-  - fused_moe_kernel: Exit code 1
+Successful: 23/23
 ======================================================================
