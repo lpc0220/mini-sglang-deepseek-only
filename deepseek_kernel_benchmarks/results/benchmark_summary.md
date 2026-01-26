@@ -1,10 +1,10 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-25 22:29:55
+**Generated:** 2026-01-26 09:51:46
 
 **Total Kernels:** 23
-**Kernels Run:** 10
-**Kernels Failed:** 13
+**Kernels Run:** 11
+**Kernels Failed:** 12
 
 ## Kernel Status
 
@@ -14,7 +14,7 @@
 | 2 | `fused_add_rmsnorm` | Norm | Memory | OK |
 | 3 | `cutlass_scaled_fp4_mm` | GEMM | Compute | OK |
 | 4 | `dsv3_fused_a_gemm` | GEMM | Compute | OK |
-| 5 | `dsv3_router_gemm` | GEMM | Compute | FAILED |
+| 5 | `dsv3_router_gemm` | GEMM | Compute | OK |
 | 6 | `bmm_fp8` | BMM | Compute | OK |
 | 7 | `cutlass_mla_decode` | Attention | Mixed | FAILED |
 | 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | OK |
@@ -41,6 +41,7 @@
 - `concat_mla_mha_k.csv`
 - `cutlass_scaled_fp4_mm.csv`
 - `dsv3_fused_a_gemm.csv`
+- `dsv3_router_gemm.csv`
 - `fused_add_rmsnorm.csv`
 - `mla_rope_quantize_fp8.csv`
 - `rmsnorm.csv`
