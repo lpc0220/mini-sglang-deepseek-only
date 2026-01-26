@@ -66,7 +66,7 @@ def bench_dsv3_fused_a_gemm(sgl_kernel, B: int, phase: str,
     )
 
 
-def run_benchmarks(batch_sizes: List[int], output_dir: str):
+def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
     """Run dsv3_fused_a_gemm benchmarks."""
     sgl_kernel = check_sgl_kernel()
     if not sgl_kernel:

@@ -34,7 +34,7 @@ def bench_cutlass_mla_decode(sgl_kernel, B: int, seq_len: int,
     block_size = 64
     num_kv_splits = -1
 
-    seq_lens = torch.full((B,), seq_len, dtype=torch.int32, device=device)
+    seq_lens_tensor = torch.full((B,), seq_len, dtype=torch.int32, device=device)
     block_num = (seq_len + block_size - 1) // block_size
     pack_factor = 128 // block_size
     block_num = ((block_num + pack_factor - 1) // pack_factor) * pack_factor
@@ -46,14 +46,27 @@ def bench_cutlass_mla_decode(sgl_kernel, B: int, seq_len: int,
     kv_cache = torch.randn(block_table.numel(), block_size, d,
                            dtype=torch.bfloat16, device=device)
 
-    workspace_size = cutlass_mla_get_workspace_size(block_num * block_size, B, num_kv_splits)
-    workspace = torch.empty(workspace_size, device=device, dtype=torch.uint8)
+    try:
+        workspace_size = cutlass_mla_get_workspace_size(block_num * block_size, B, num_kv_splits)
+        workspace = torch.empty(workspace_size, device=device, dtype=torch.uint8)
+    except Exception as e:
+        print(f"Warning: Failed to get workspace size for B={B}, seq_len={seq_len}: {e}")
+        return None
 
     def kernel_fn():
-        cutlass_mla_decode(qn.transpose(0, 1), qr, kv_cache, seq_lens,
+        cutlass_mla_decode(qn.transpose(0, 1), qr, kv_cache, seq_lens_tensor,
                           block_table, workspace, 1.44, num_kv_splits)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, seq_len={seq_len}: {e}")
+        # Try to clear CUDA error state
+        try:
+            torch.cuda.synchronize()
+        except:
+            pass
+        return None
 
     # Approximate FLOPS for attention
     flops = 4 * B * Nh * seq_len * d

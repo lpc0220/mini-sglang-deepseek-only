@@ -76,6 +76,13 @@ def run_benchmark(module_name: str, output_dir: str, batch_sizes: str, seq_lens:
         return True
     except Exception as e:
         print(f"Error running {module_name}: {e}")
+        # Try to reset CUDA context after error
+        try:
+            import torch
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
         return False
 
 

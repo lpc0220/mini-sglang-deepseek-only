@@ -31,13 +31,15 @@ def bench_dsv3_router_gemm(sgl_kernel, B: int, phase: str,
         print("Warning: dsv3_router_gemm not available")
         return None
 
-    M, K, N = B, H, E  # 7168 -> 256
+    M, K, N = B, H, E  # B tokens, hidden_dim=7168 -> num_experts=256
 
-    mat_a = torch.randn((M, K), dtype=torch.bfloat16, device=device)
-    mat_b = torch.randn((N, K), dtype=torch.bfloat16, device=device).T
+    # hidden_states: [M, K] where K is hidden_dim
+    # router_weights: [N, K] where N is num_experts, K is hidden_dim
+    hidden_states = torch.randn((M, K), dtype=torch.bfloat16, device=device)
+    router_weights = torch.randn((N, K), dtype=torch.bfloat16, device=device)
 
     def kernel_fn():
-        dsv3_router_gemm(mat_a, mat_b)
+        dsv3_router_gemm(hidden_states, router_weights)
 
     latency_ms = benchmark_kernel(kernel_fn)
 
