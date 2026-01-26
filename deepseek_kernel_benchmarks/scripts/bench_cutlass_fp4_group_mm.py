@@ -87,10 +87,10 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
     expert_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * tokens_per_expert
     expert_offsets[-1] = total_expert_tokens
 
-    # Scale factor offsets (each token has K_dim//16 scale factors)
+    # Blockscale offsets (each token has K_dim//16 scale factors)
     sf_per_token = K_dim // 16
-    sf_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * (tokens_per_expert * sf_per_token)
-    sf_offsets[-1] = total_expert_tokens * sf_per_token
+    blockscale_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * (tokens_per_expert * sf_per_token)
+    blockscale_offsets[-1] = total_expert_tokens * sf_per_token
 
     # Problem sizes for each expert: [M_per_expert, N, K]
     problem_sizes = torch.zeros((num_experts, 3), dtype=torch.int32, device=device)
@@ -98,11 +98,19 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
         m_i = tokens_per_expert if i < num_experts - 1 else total_expert_tokens - i * tokens_per_expert
         problem_sizes[i] = torch.tensor([m_i, N, K_dim], dtype=torch.int32)
 
-    # Build params dict
+    # Strides for a (input): row stride = K_dim // 2 (packed FP4)
+    # Strides for b (weights): row stride = K_dim // 2 (packed FP4)
+    # Strides for c (output): row stride = N
+    ab_strides = torch.tensor([K_dim // 2, K_dim // 2], dtype=torch.int64, device=device)
+    c_strides = torch.tensor([N], dtype=torch.int64, device=device)
+
+    # Build params dict - must match cutlass_fp4_group_mm API
     params: Dict[str, Any] = {
+        "ab_strides": ab_strides,
+        "c_strides": c_strides,
         "problem_sizes": problem_sizes,
         "expert_offsets": expert_offsets,
-        "sf_offsets": sf_offsets,
+        "blockscale_offsets": blockscale_offsets,
     }
 
     def kernel_fn():

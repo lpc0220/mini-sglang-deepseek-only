@@ -265,9 +265,16 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
 
     results = []
 
+    # TRT-LLM FP4 MoE kernel has minimum token requirements
+    # The kernel crashes with B=1 decode (single token) due to GEMM dimension requirements
+    MIN_DECODE_BATCH = 2  # Minimum batch size for decode phase
+
     # Decode phase (S=1)
     print("\n=== Decode Phase ===")
     for B in batch_sizes:
+        if B < MIN_DECODE_BATCH:
+            print(f"  B={B}: Skipped (minimum batch size for FP4 MoE is {MIN_DECODE_BATCH})")
+            continue
         result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, 1, H, E, K, I, "decode")
         if result:
             results.append(result)
