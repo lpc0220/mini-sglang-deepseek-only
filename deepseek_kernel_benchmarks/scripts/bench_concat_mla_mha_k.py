@@ -43,7 +43,16 @@ def bench_concat_mla_mha_k(sgl_kernel, B: int, S: int,
     def kernel_fn():
         concat_mla_mha_k(mla_latent, rope_k, output)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Pure memory copy
     bytes_read = (mla_latent.numel() + rope_k.numel()) * 2

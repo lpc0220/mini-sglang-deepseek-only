@@ -43,7 +43,16 @@ def bench_scaled_fp4_experts_quant(sgl_kernel, B: int, S: int, hidden_size: int,
     def kernel_fn():
         scaled_fp4_experts_quant(expert_inputs)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Memory: read bf16 inputs, write fp4 outputs + scales
     bytes_read = expert_inputs.numel() * 2  # bf16

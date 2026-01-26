@@ -32,7 +32,16 @@ def bench_silu_and_mul(sgl_kernel, B: int, S: int, dim: int, phase: str,
     def kernel_fn():
         sgl_kernel.silu_and_mul(x)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     flops = compute_activation_flops(tokens * dim)
     bytes_transferred = compute_activation_bytes(tokens * dim)

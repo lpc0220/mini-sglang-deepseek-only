@@ -45,7 +45,16 @@ def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
     def kernel_fn():
         mla_rope_quantize_fp8(q_rope, kv_latent, cos_cache, sin_cache, positions)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Memory-bound: read q_rope, kv_latent, cos, sin; write quantized outputs
     bytes_read = (q_rope.numel() + kv_latent.numel() + cos_cache.numel() + sin_cache.numel()) * 2

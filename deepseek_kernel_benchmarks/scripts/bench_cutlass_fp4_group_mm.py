@@ -65,7 +65,16 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
         # Note: actual API may differ
         cutlass_fp4_group_mm(a_fp4, b_fp4, a_scale, b_scale, alpha, expert_ids, torch.bfloat16)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}, op={op_name}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     flops = compute_gemm_flops(M, N, K_dim)
     bytes_transferred = int(M * K_dim * 0.5 + K_dim * N * 0.5 + M * N * 2)  # FP4 inputs, bf16 output

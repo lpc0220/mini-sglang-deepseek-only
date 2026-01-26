@@ -45,7 +45,16 @@ def bench_prepare_moe_input(sgl_kernel, B: int, S: int, hidden_size: int,
     def kernel_fn():
         prepare_moe_input(hidden_states, expert_indices, expert_weights)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Memory: read hidden_states, indices, weights; write gathered inputs
     bytes_read = hidden_states.numel() * 2 + expert_indices.numel() * 4 + expert_weights.numel() * 4

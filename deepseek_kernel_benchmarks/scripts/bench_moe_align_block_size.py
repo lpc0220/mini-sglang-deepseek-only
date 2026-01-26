@@ -38,7 +38,16 @@ def bench_moe_align_block_size(sgl_kernel, B: int, S: int, num_experts: int,
     def kernel_fn():
         moe_align_block_size(expert_indices, num_experts, block_size)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Memory: read expert_indices, write aligned indices and metadata
     bytes_read = expert_indices.numel() * 4

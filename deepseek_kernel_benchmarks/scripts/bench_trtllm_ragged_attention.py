@@ -46,7 +46,16 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
             q_nope, q_rope, kv_cache, cu_seqlens, 1.0 / (d ** 0.5)
         )
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Approximate FLOPS for attention: 4 * tokens * seq_len * d (simplified)
     flops = 4 * tokens * S * d

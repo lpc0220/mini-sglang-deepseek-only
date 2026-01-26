@@ -48,7 +48,16 @@ def bench_trtllm_mla(flashinfer, B: int, seq_len: int,
             q_nope, q_rope, kv_cache, block_table, seq_lens, 1.0 / (d ** 0.5)
         )
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, seq_len={seq_len}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Approximate FLOPS for attention
     flops = 4 * B * Nh * seq_len * d

@@ -40,7 +40,16 @@ def bench_moe_fused_gate(sgl_kernel, B: int, S: int, hidden_size: int,
     def kernel_fn():
         moe_fused_gate(hidden_states, gate_weight, topk)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Memory: read hidden_states, gate_weight; write routing outputs
     bytes_read = (hidden_states.numel() + gate_weight.numel()) * 2

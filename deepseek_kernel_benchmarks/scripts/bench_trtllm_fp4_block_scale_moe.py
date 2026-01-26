@@ -56,7 +56,16 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
             expert_indices, expert_weights
         )
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # FLOPS: gate_up GEMM + down GEMM for each expert token
     total_expert_tokens = tokens * topk

@@ -47,7 +47,16 @@ def bench_apply_rope(sgl_kernel, B: int, S: int,
     def kernel_fn():
         apply_rope_with_cos_sin_cache_inplace(q, k, cos_cache, sin_cache, positions)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Memory-bound: read q, k, cos, sin, positions; write q, k
     bytes_read = (q.numel() + k.numel()) * 2 + (cos_cache.numel() + sin_cache.numel()) * 2 + positions.numel() * 8

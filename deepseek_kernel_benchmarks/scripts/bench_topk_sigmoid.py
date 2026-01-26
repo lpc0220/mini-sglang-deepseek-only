@@ -37,7 +37,16 @@ def bench_topk_sigmoid(sgl_kernel, B: int, S: int, num_experts: int, topk: int, 
     def kernel_fn():
         topk_sigmoid(router_logits, topk)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # Memory: read logits, write topk indices and weights
     bytes_read = router_logits.numel() * 4  # float32

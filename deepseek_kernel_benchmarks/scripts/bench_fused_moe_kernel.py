@@ -54,7 +54,16 @@ def bench_fused_moe_kernel(B: int, S: int, hidden_size: int,
     def kernel_fn():
         fused_moe(hidden_states, w1, w2, w3, router_logits, topk, renormalize=True)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}, S={S}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     # FLOPS: gate GEMM + up GEMM + down GEMM
     total_expert_tokens = tokens * topk
