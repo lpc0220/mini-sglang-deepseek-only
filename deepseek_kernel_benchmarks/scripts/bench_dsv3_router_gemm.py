@@ -24,11 +24,19 @@ from bench_utils import (
 
 def bench_dsv3_router_gemm(sgl_kernel, B: int, phase: str,
                            device: str = "cuda") -> Optional[BenchmarkResult]:
-    """Benchmark DSV3 router GEMM (gate for MoE)."""
+    """Benchmark DSV3 router GEMM (gate for MoE).
+
+    Note: This kernel is optimized for small batch sizes (num_tokens <= 16).
+    """
     try:
         from sgl_kernel import dsv3_router_gemm
     except ImportError:
         print("Warning: dsv3_router_gemm not available")
+        return None
+
+    # Kernel has hard limit of 16 tokens
+    if B > 16:
+        print(f"  Skipping B={B}: kernel limited to num_tokens <= 16")
         return None
 
     M, K, N = B, H, E  # B tokens, hidden_dim=7168 -> num_experts=256
@@ -41,7 +49,16 @@ def bench_dsv3_router_gemm(sgl_kernel, B: int, phase: str,
     def kernel_fn():
         dsv3_router_gemm(hidden_states, router_weights)
 
-    latency_ms = benchmark_kernel(kernel_fn)
+    try:
+        latency_ms = benchmark_kernel(kernel_fn)
+    except Exception as e:
+        print(f"Warning: Kernel failed for B={B}: {e}")
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        except:
+            pass
+        return None
 
     flops = compute_gemm_flops(M, N, K)
     bytes_transferred = compute_gemm_bytes(M, N, K, dtype_size=2, weight_dtype_size=2)
@@ -85,17 +102,9 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
             results.append(result)
             print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
 
-    # Prefill phase
-    print("\n=== Prefill Phase ===")
-    for B in batch_sizes[:4]:
-        for S in seq_lens:
-            tokens = B * S
-            result = bench_dsv3_router_gemm(sgl_kernel, tokens, "prefill")
-            if result:
-                result.B = B
-                result.S = S
-                results.append(result)
-                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+    # Prefill phase - skip since kernel limited to 16 tokens
+    # (B*S would exceed 16 for most prefill cases)
+    print("\n=== Prefill Phase (skipped - kernel limited to 16 tokens) ===")
 
     save_results(results, output_dir, "dsv3_router_gemm")
 

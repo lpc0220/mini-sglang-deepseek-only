@@ -23,11 +23,20 @@ from bench_utils import (
 
 def bench_cutlass_mla_decode(sgl_kernel, B: int, seq_len: int,
                              device: str = "cuda") -> Optional[BenchmarkResult]:
-    """Benchmark Cutlass MLA decode kernel."""
+    """Benchmark Cutlass MLA decode kernel.
+
+    Note: Large B*seq_len combinations can cause CUDA crashes.
+    Limit to B*seq_len <= 16384 to avoid illegal memory access.
+    """
     try:
         from sgl_kernel import cutlass_mla_decode, cutlass_mla_get_workspace_size
     except ImportError:
         print("Warning: cutlass_mla_decode not available")
+        return None
+
+    # Skip large combinations that cause CUDA crashes
+    if B * seq_len > 16384:
+        print(f"  Skipping B={B}, seq_len={seq_len}: B*seq_len={B*seq_len} > 16384 (crash risk)")
         return None
 
     d = Lkv + Dr  # 576
@@ -61,9 +70,10 @@ def bench_cutlass_mla_decode(sgl_kernel, B: int, seq_len: int,
         latency_ms = benchmark_kernel(kernel_fn)
     except Exception as e:
         print(f"Warning: Kernel failed for B={B}, seq_len={seq_len}: {e}")
-        # Try to clear CUDA error state
+        # Try to clear CUDA error state and free memory
         try:
             torch.cuda.synchronize()
+            torch.cuda.empty_cache()
         except:
             pass
         return None

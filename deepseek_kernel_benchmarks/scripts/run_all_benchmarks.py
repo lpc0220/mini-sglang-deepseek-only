@@ -63,6 +63,19 @@ KERNELS = [
 ]
 
 
+def reset_cuda_context():
+    """Reset CUDA context to clean state."""
+    try:
+        import torch
+        torch.cuda.synchronize()
+        torch.cuda.empty_cache()
+        # Force garbage collection to release any lingering references
+        import gc
+        gc.collect()
+    except Exception as e:
+        print(f"Warning: CUDA reset failed: {e}")
+
+
 def run_benchmark(module_name: str, output_dir: str, batch_sizes: str, seq_lens: str) -> bool:
     """Run a single benchmark module."""
     try:
@@ -73,16 +86,14 @@ def run_benchmark(module_name: str, output_dir: str, batch_sizes: str, seq_lens:
         # Call the run_benchmarks function
         if hasattr(module, 'run_benchmarks'):
             module.run_benchmarks(batch_list, seq_list, output_dir)
+
+        # Clean up CUDA context after each kernel to prevent corruption
+        reset_cuda_context()
         return True
     except Exception as e:
         print(f"Error running {module_name}: {e}")
         # Try to reset CUDA context after error
-        try:
-            import torch
-            torch.cuda.synchronize()
-            torch.cuda.empty_cache()
-        except:
-            pass
+        reset_cuda_context()
         return False
 
 
