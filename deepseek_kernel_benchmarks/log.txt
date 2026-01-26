@@ -1,686 +1,983 @@
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_mla.py", line 132, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_mla.py", line 128, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_mla.py", line 94, in run_benchmarks
+    flashinfer = check_flashinfer()
+                 ^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
+    import flashinfer
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
+    from . import jit as jit
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
+    from . import cubin_loader
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
+    from .core import logger
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
+    from . import env as jit_env
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
+    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
+                                       ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
+    raise RuntimeError(
+RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
+
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_ragged_attention.py", line 130, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_ragged_attention.py", line 126, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_ragged_attention.py", line 92, in run_benchmarks
+    flashinfer = check_flashinfer()
+                 ^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
+    import flashinfer
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
+    from . import jit as jit
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
+    from . import cubin_loader
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
+    from .core import logger
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
+    from . import env as jit_env
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
+    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
+                                       ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
+    raise RuntimeError(
+RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
+
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_mla_rope_quantize_fp8.py", line 133, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_mla_rope_quantize_fp8.py", line 129, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_mla_rope_quantize_fp8.py", line 87, in run_benchmarks
+    flashinfer = check_flashinfer()
+                 ^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
+    import flashinfer
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
+    from . import jit as jit
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
+    from . import cubin_loader
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
+    from .core import logger
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
+    from . import env as jit_env
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
+    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
+                                       ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
+    raise RuntimeError(
+RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
+
+[F126 10:29:52.967366207 concat_mla.cu:78] Check failed: t.dim() == 3 (2 vs. 3) 
+
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 159, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 155, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 110, in run_benchmarks
+    flashinfer = check_flashinfer()
+                 ^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_utils.py", line 166, in check_flashinfer
+    import flashinfer
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
+    from . import jit as jit
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
+    from . import cubin_loader
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
+    from .core import logger
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
+    from . import env as jit_env
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
+    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
+                                       ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
+    raise RuntimeError(
+RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
+
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 153, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 149, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 114, in run_benchmarks
+    result = bench_fused_moe_kernel(B, 1, H, E, K, I, "decode")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_fused_moe_kernel.py", line 30, in bench_fused_moe_kernel
+    from sglang.srt.layers.moe.fused_moe_triton import fused_moe
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/moe/fused_moe_triton/__init__.py", line 4, in <module>
+    from sglang.srt.layers.moe.fused_moe_triton.fused_moe import fused_experts
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py", line 21, in <module>
+    from .fused_moe_triton_kernels import (
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels.py", line 11, in <module>
+    from sglang.srt.layers.quantization.fp8_kernel import (
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/__init__.py", line 7, in <module>
+    from sglang.srt.layers.quantization.blockwise_int8 import BlockInt8Config
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/blockwise_int8.py", line 23, in <module>
+    from sglang.srt.layers.quantization.utils import is_layer_skipped
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/utils.py", line 13, in <module>
+    from sglang.srt.layers.quantization.fp8_kernel import scaled_fp8_quant
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/srt/layers/quantization/fp8_kernel.py", line 41, in <module>
+    from sglang.jit_kernel.per_tensor_quant_fp8 import (
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/sglang/python/sglang/jit_kernel/per_tensor_quant_fp8.py", line 6, in <module>
+    import flashinfer
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/__init__.py", line 23, in <module>
+    from . import jit as jit
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/__init__.py", line 22, in <module>
+    from . import cubin_loader
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py", line 27, in <module>
+    from .core import logger
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/core.py", line 14, in <module>
+    from . import env as jit_env
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 127, in <module>
+    FLASHINFER_AOT_DIR: pathlib.Path = _get_aot_dir()
+                                       ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/flashinfer/jit/env.py", line 114, in _get_aot_dir
+    raise RuntimeError(
+RuntimeError: flashinfer-jit-cache version (0.5.3+cu129) does not match flashinfer version (0.6.2). Please install the same version of both packages. Set FLASHINFER_DISABLE_VERSION_CHECK=1 to bypass this check.
+
 ======================================================================
 DeepSeek-R1-NVFP4-v2 Kernel Benchmarks
 ======================================================================
 Kernels to run: 23
 Batch sizes: 1,2,4,8,16,32,64,128
 Sequence lengths: 128,256,512,1024,2048
-Output directory: deepseek_kernel_benchmarks/results/
+Output directory: ../results/
+
+NOTE: Each kernel runs in a separate subprocess for isolation.
+      CUDA crashes in one kernel will NOT affect other kernels.
 ======================================================================
 
 ======================================================================
 Running: rmsnorm (Norm, Memory)
 ======================================================================
+============================================================
+Benchmark: rmsnorm (Kernel #1)
+============================================================
 
 === Decode Phase ===
-  B=1: 0.0019 ms, 15.4 GB/s, 0.2% peak
-  B=2: 0.0019 ms, 30.6 GB/s, 0.4% peak
-  B=4: 0.0019 ms, 61.2 GB/s, 0.8% peak
-  B=8: 0.0019 ms, 122.1 GB/s, 1.5% peak
-  B=16: 0.0020 ms, 233.9 GB/s, 2.9% peak
-  B=32: 0.0020 ms, 463.9 GB/s, 5.8% peak
-  B=64: 0.0020 ms, 916.2 GB/s, 11.5% peak
-  B=128: 0.0021 ms, 1779.5 GB/s, 22.2% peak
+  B=1: 0.0019 ms, 15.5 GB/s, 0.2% peak
+  B=2: 0.0019 ms, 30.3 GB/s, 0.4% peak
+  B=4: 0.0019 ms, 60.8 GB/s, 0.8% peak
+  B=8: 0.0019 ms, 122.3 GB/s, 1.5% peak
+  B=16: 0.0020 ms, 231.4 GB/s, 2.9% peak
+  B=32: 0.0020 ms, 463.5 GB/s, 5.8% peak
+  B=64: 0.0020 ms, 914.8 GB/s, 11.4% peak
+  B=128: 0.0021 ms, 1769.1 GB/s, 22.1% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0021 ms, 1780.0 GB/s, 22.3% peak
-  B=1, S=256: 0.0027 ms, 2761.6 GB/s, 34.5% peak
-  B=1, S=512: 0.0046 ms, 3178.8 GB/s, 39.7% peak
-  B=1, S=1024: 0.0081 ms, 3618.1 GB/s, 45.2% peak
-  B=1, S=2048: 0.0151 ms, 3892.0 GB/s, 48.7% peak
-  B=2, S=128: 0.0027 ms, 2758.7 GB/s, 34.5% peak
-  B=2, S=256: 0.0046 ms, 3178.8 GB/s, 39.7% peak
-  B=2, S=512: 0.0081 ms, 3618.6 GB/s, 45.2% peak
-  B=2, S=1024: 0.0152 ms, 3873.7 GB/s, 48.4% peak
-  B=2, S=2048: 0.0363 ms, 3239.2 GB/s, 40.5% peak
-  B=4, S=128: 0.0046 ms, 3178.6 GB/s, 39.7% peak
-  B=4, S=256: 0.0081 ms, 3613.4 GB/s, 45.2% peak
-  B=4, S=512: 0.0151 ms, 3881.6 GB/s, 48.5% peak
-  B=4, S=1024: 0.0364 ms, 3227.8 GB/s, 40.3% peak
-  B=4, S=2048: 0.0701 ms, 3352.3 GB/s, 41.9% peak
-  B=8, S=128: 0.0081 ms, 3612.2 GB/s, 45.2% peak
-  B=8, S=256: 0.0151 ms, 3892.6 GB/s, 48.7% peak
-  B=8, S=512: 0.0364 ms, 3223.6 GB/s, 40.3% peak
-  B=8, S=1024: 0.0701 ms, 3350.1 GB/s, 41.9% peak
-  B=8, S=2048: 0.1372 ms, 3423.5 GB/s, 42.8% peak
-Saved deepseek_kernel_benchmarks/results/rmsnorm.csv
+  B=1, S=128: 0.0021 ms, 1768.6 GB/s, 22.1% peak
+  B=1, S=256: 0.0027 ms, 2760.9 GB/s, 34.5% peak
+  B=1, S=512: 0.0046 ms, 3179.1 GB/s, 39.7% peak
+  B=1, S=1024: 0.0081 ms, 3619.4 GB/s, 45.2% peak
+  B=1, S=2048: 0.0150 ms, 3906.7 GB/s, 48.8% peak
+  B=2, S=128: 0.0027 ms, 2754.4 GB/s, 34.4% peak
+  B=2, S=256: 0.0046 ms, 3179.6 GB/s, 39.7% peak
+  B=2, S=512: 0.0081 ms, 3619.4 GB/s, 45.2% peak
+  B=2, S=1024: 0.0151 ms, 3885.9 GB/s, 48.6% peak
+  B=2, S=2048: 0.0359 ms, 3271.5 GB/s, 40.9% peak
+  B=4, S=128: 0.0046 ms, 3172.0 GB/s, 39.7% peak
+  B=4, S=256: 0.0081 ms, 3612.8 GB/s, 45.2% peak
+  B=4, S=512: 0.0151 ms, 3883.3 GB/s, 48.5% peak
+  B=4, S=1024: 0.0365 ms, 3215.6 GB/s, 40.2% peak
+  B=4, S=2048: 0.0701 ms, 3351.2 GB/s, 41.9% peak
+  B=8, S=128: 0.0081 ms, 3611.6 GB/s, 45.1% peak
+  B=8, S=256: 0.0150 ms, 3917.1 GB/s, 49.0% peak
+  B=8, S=512: 0.0363 ms, 3235.2 GB/s, 40.4% peak
+  B=8, S=1024: 0.0699 ms, 3360.2 GB/s, 42.0% peak
+  B=8, S=2048: 0.1373 ms, 3420.3 GB/s, 42.8% peak
+Saved ../results/rmsnorm.csv
+
+[OK] rmsnorm completed successfully
 
 ======================================================================
 Running: fused_add_rmsnorm (Norm, Memory)
 ======================================================================
+============================================================
+Benchmark: fused_add_rmsnorm (Kernel #2)
+============================================================
 
 === Decode Phase ===
-  B=1: 0.0025 ms, 22.8 GB/s, 0.3% peak
-  B=2: 0.0023 ms, 49.0 GB/s, 0.6% peak
-  B=4: 0.0023 ms, 98.1 GB/s, 1.2% peak
+  B=1: 0.0023 ms, 24.7 GB/s, 0.3% peak
+  B=2: 0.0023 ms, 49.4 GB/s, 0.6% peak
+  B=4: 0.0023 ms, 99.1 GB/s, 1.2% peak
   B=8: 0.0023 ms, 197.1 GB/s, 2.5% peak
-  B=16: 0.0024 ms, 379.4 GB/s, 4.7% peak
-  B=32: 0.0024 ms, 753.8 GB/s, 9.4% peak
-  B=64: 0.0024 ms, 1503.1 GB/s, 18.8% peak
-  B=128: 0.0026 ms, 2864.8 GB/s, 35.8% peak
+  B=16: 0.0024 ms, 383.0 GB/s, 4.8% peak
+  B=32: 0.0024 ms, 757.4 GB/s, 9.5% peak
+  B=64: 0.0024 ms, 1506.1 GB/s, 18.8% peak
+  B=128: 0.0026 ms, 2866.5 GB/s, 35.8% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0026 ms, 2868.7 GB/s, 35.9% peak
-  B=1, S=256: 0.0045 ms, 3272.9 GB/s, 40.9% peak
-  B=1, S=512: 0.0081 ms, 3639.4 GB/s, 45.5% peak
-  B=1, S=1024: 0.0143 ms, 4096.9 GB/s, 51.2% peak
-  B=1, S=2048: 0.0272 ms, 4314.6 GB/s, 53.9% peak
-  B=2, S=128: 0.0045 ms, 3275.9 GB/s, 40.9% peak
-  B=2, S=256: 0.0081 ms, 3639.3 GB/s, 45.5% peak
-  B=2, S=512: 0.0142 ms, 4132.5 GB/s, 51.7% peak
-  B=2, S=1024: 0.0273 ms, 4295.3 GB/s, 53.7% peak
-  B=2, S=2048: 0.0673 ms, 3492.3 GB/s, 43.7% peak
-  B=4, S=128: 0.0081 ms, 3640.2 GB/s, 45.5% peak
-  B=4, S=256: 0.0143 ms, 4108.8 GB/s, 51.4% peak
-  B=4, S=512: 0.0273 ms, 4308.0 GB/s, 53.8% peak
-  B=4, S=1024: 0.0676 ms, 3474.3 GB/s, 43.4% peak
-  B=4, S=2048: 0.1305 ms, 3600.1 GB/s, 45.0% peak
-  B=8, S=128: 0.0143 ms, 4102.6 GB/s, 51.3% peak
-  B=8, S=256: 0.0272 ms, 4311.2 GB/s, 53.9% peak
-  B=8, S=512: 0.0671 ms, 3501.1 GB/s, 43.8% peak
-  B=8, S=1024: 0.1321 ms, 3555.6 GB/s, 44.4% peak
-  B=8, S=2048: 0.2595 ms, 3620.1 GB/s, 45.3% peak
-Saved deepseek_kernel_benchmarks/results/fused_add_rmsnorm.csv
+  B=1, S=128: 0.0026 ms, 2866.4 GB/s, 35.8% peak
+  B=1, S=256: 0.0045 ms, 3274.1 GB/s, 40.9% peak
+  B=1, S=512: 0.0081 ms, 3641.3 GB/s, 45.5% peak
+  B=1, S=1024: 0.0143 ms, 4104.6 GB/s, 51.3% peak
+  B=1, S=2048: 0.0273 ms, 4305.1 GB/s, 53.8% peak
+  B=2, S=128: 0.0045 ms, 3235.1 GB/s, 40.4% peak
+  B=2, S=256: 0.0081 ms, 3641.1 GB/s, 45.5% peak
+  B=2, S=512: 0.0142 ms, 4129.3 GB/s, 51.6% peak
+  B=2, S=1024: 0.0274 ms, 4293.7 GB/s, 53.7% peak
+  B=2, S=2048: 0.0675 ms, 3477.8 GB/s, 43.5% peak
+  B=4, S=128: 0.0081 ms, 3640.9 GB/s, 45.5% peak
+  B=4, S=256: 0.0143 ms, 4093.7 GB/s, 51.2% peak
+  B=4, S=512: 0.0272 ms, 4313.5 GB/s, 53.9% peak
+  B=4, S=1024: 0.0680 ms, 3453.7 GB/s, 43.2% peak
+  B=4, S=2048: 0.1312 ms, 3580.5 GB/s, 44.8% peak
+  B=8, S=128: 0.0143 ms, 4111.2 GB/s, 51.4% peak
+  B=8, S=256: 0.0273 ms, 4304.2 GB/s, 53.8% peak
+  B=8, S=512: 0.0680 ms, 3456.7 GB/s, 43.2% peak
+  B=8, S=1024: 0.1318 ms, 3564.6 GB/s, 44.6% peak
+  B=8, S=2048: 0.2578 ms, 3643.7 GB/s, 45.5% peak
+Saved ../results/fused_add_rmsnorm.csv
+
+[OK] fused_add_rmsnorm completed successfully
 
 ======================================================================
 Running: cutlass_scaled_fp4_mm (GEMM, Compute)
 ======================================================================
+============================================================
+Benchmark: cutlass_scaled_fp4_mm (Kernel #3)
+============================================================
 
 === Decode Phase ===
-  q_b_proj B=1: 0.0064 ms, 11797.2 GFLOPS, 0.13% peak
-  kv_b_proj B=1: 0.0051 ms, 6575.5 GFLOPS, 0.07% peak
-  o_proj B=1: 0.0233 ms, 10081.3 GFLOPS, 0.11% peak
-  q_b_proj B=2: 0.0064 ms, 23570.7 GFLOPS, 0.26% peak
-  kv_b_proj B=2: 0.0051 ms, 13224.0 GFLOPS, 0.15% peak
-  o_proj B=2: 0.0233 ms, 20120.9 GFLOPS, 0.22% peak
-  q_b_proj B=4: 0.0063 ms, 47852.5 GFLOPS, 0.53% peak
-  kv_b_proj B=4: 0.0050 ms, 26659.1 GFLOPS, 0.30% peak
-  o_proj B=4: 0.0233 ms, 40364.7 GFLOPS, 0.45% peak
-  q_b_proj B=8: 0.0063 ms, 95418.4 GFLOPS, 1.06% peak
-  kv_b_proj B=8: 0.0050 ms, 53386.1 GFLOPS, 0.59% peak
-  o_proj B=8: 0.0232 ms, 80888.3 GFLOPS, 0.90% peak
-  q_b_proj B=16: 0.0063 ms, 191419.0 GFLOPS, 2.13% peak
-  kv_b_proj B=16: 0.0050 ms, 107557.0 GFLOPS, 1.20% peak
-  o_proj B=16: 0.0234 ms, 160666.5 GFLOPS, 1.79% peak
-  q_b_proj B=32: 0.0063 ms, 382058.6 GFLOPS, 4.25% peak
-  kv_b_proj B=32: 0.0050 ms, 214073.0 GFLOPS, 2.38% peak
-  o_proj B=32: 0.0233 ms, 322934.4 GFLOPS, 3.59% peak
-  q_b_proj B=64: 0.0064 ms, 757935.4 GFLOPS, 8.42% peak
-  kv_b_proj B=64: 0.0050 ms, 426079.6 GFLOPS, 4.73% peak
-  o_proj B=64: 0.0234 ms, 641930.1 GFLOPS, 7.13% peak
-  q_b_proj B=128: 0.0068 ms, 1418878.5 GFLOPS, 15.77% peak
-  kv_b_proj B=128: 0.0054 ms, 796548.3 GFLOPS, 8.85% peak
-  o_proj B=128: 0.0239 ms, 1257550.7 GFLOPS, 13.97% peak
+  q_b_proj B=1: 0.0063 ms, 11933.3 GFLOPS, 0.13% peak
+  kv_b_proj B=1: 0.0051 ms, 6641.1 GFLOPS, 0.07% peak
+  o_proj B=1: 0.0233 ms, 10071.9 GFLOPS, 0.11% peak
+  q_b_proj B=2: 0.0064 ms, 23649.6 GFLOPS, 0.26% peak
+  kv_b_proj B=2: 0.0051 ms, 13251.2 GFLOPS, 0.15% peak
+  o_proj B=2: 0.0232 ms, 20213.3 GFLOPS, 0.22% peak
+  q_b_proj B=4: 0.0063 ms, 48001.6 GFLOPS, 0.53% peak
+  kv_b_proj B=4: 0.0051 ms, 26524.3 GFLOPS, 0.29% peak
+  o_proj B=4: 0.0234 ms, 40113.3 GFLOPS, 0.45% peak
+  q_b_proj B=8: 0.0063 ms, 95929.3 GFLOPS, 1.07% peak
+  kv_b_proj B=8: 0.0050 ms, 53169.9 GFLOPS, 0.59% peak
+  o_proj B=8: 0.0233 ms, 80526.7 GFLOPS, 0.89% peak
+  q_b_proj B=16: 0.0063 ms, 192469.8 GFLOPS, 2.14% peak
+  kv_b_proj B=16: 0.0050 ms, 107864.7 GFLOPS, 1.20% peak
+  o_proj B=16: 0.0233 ms, 160969.6 GFLOPS, 1.79% peak
+  q_b_proj B=32: 0.0063 ms, 383443.8 GFLOPS, 4.26% peak
+  kv_b_proj B=32: 0.0050 ms, 214168.9 GFLOPS, 2.38% peak
+  o_proj B=32: 0.0234 ms, 321801.1 GFLOPS, 3.58% peak
+  q_b_proj B=64: 0.0064 ms, 755081.6 GFLOPS, 8.39% peak
+  kv_b_proj B=64: 0.0050 ms, 426568.5 GFLOPS, 4.74% peak
+  o_proj B=64: 0.0234 ms, 643221.7 GFLOPS, 7.15% peak
+  q_b_proj B=128: 0.0068 ms, 1426249.8 GFLOPS, 15.85% peak
+  kv_b_proj B=128: 0.0054 ms, 792731.6 GFLOPS, 8.81% peak
+  o_proj B=128: 0.0239 ms, 1257364.0 GFLOPS, 13.97% peak
 
 === Prefill Phase ===
-  q_b_proj B=1, S=128: 0.0068 ms, 1423199.0 GFLOPS, 15.81% peak
-  kv_b_proj B=1, S=128: 0.0054 ms, 796536.2 GFLOPS, 8.85% peak
-  o_proj B=1, S=128: 0.0239 ms, 1257584.4 GFLOPS, 13.97% peak
-  q_b_proj B=1, S=256: 0.0090 ms, 2148551.0 GFLOPS, 23.87% peak
-  kv_b_proj B=1, S=256: 0.0070 ms, 1228457.9 GFLOPS, 13.65% peak
-  o_proj B=1, S=256: 0.0220 ms, 2738859.7 GFLOPS, 30.43% peak
-  q_b_proj B=1, S=512: 0.0122 ms, 3160268.9 GFLOPS, 35.11% peak
-  kv_b_proj B=1, S=512: 0.0100 ms, 1716370.1 GFLOPS, 19.07% peak
-  o_proj B=1, S=512: 0.0232 ms, 5194766.7 GFLOPS, 57.72% peak
-  q_b_proj B=1, S=1024: 0.0200 ms, 3870356.8 GFLOPS, 43.00% peak
-  kv_b_proj B=1, S=1024: 0.0151 ms, 2272059.3 GFLOPS, 25.25% peak
-  o_proj B=1, S=1024: 0.0499 ms, 4815805.3 GFLOPS, 53.51% peak
-  q_b_proj B=1, S=2048: 0.0399 ms, 3874898.1 GFLOPS, 43.05% peak
-  kv_b_proj B=1, S=2048: 0.0287 ms, 2395968.7 GFLOPS, 26.62% peak
-  o_proj B=1, S=2048: 0.0958 ms, 5022530.1 GFLOPS, 55.81% peak
-  q_b_proj B=2, S=128: 0.0090 ms, 2137298.6 GFLOPS, 23.75% peak
-  kv_b_proj B=2, S=128: 0.0070 ms, 1226659.5 GFLOPS, 13.63% peak
-  o_proj B=2, S=128: 0.0226 ms, 2657042.6 GFLOPS, 29.52% peak
-  q_b_proj B=2, S=256: 0.0123 ms, 3134203.6 GFLOPS, 34.82% peak
-  kv_b_proj B=2, S=256: 0.0100 ms, 1714870.3 GFLOPS, 19.05% peak
-  o_proj B=2, S=256: 0.0249 ms, 4828263.7 GFLOPS, 53.65% peak
-  q_b_proj B=2, S=512: 0.0198 ms, 3913923.0 GFLOPS, 43.49% peak
-  kv_b_proj B=2, S=512: 0.0151 ms, 2275597.0 GFLOPS, 25.28% peak
-  o_proj B=2, S=512: 0.0502 ms, 4789663.2 GFLOPS, 53.22% peak
-  q_b_proj B=2, S=1024: 0.0400 ms, 3862478.9 GFLOPS, 42.92% peak
-  kv_b_proj B=2, S=1024: 0.0286 ms, 2404749.7 GFLOPS, 26.72% peak
-  o_proj B=2, S=1024: 0.0978 ms, 4916295.3 GFLOPS, 54.63% peak
-  q_b_proj B=2, S=2048: 0.0751 ms, 4116693.2 GFLOPS, 45.74% peak
-  kv_b_proj B=2, S=2048: 0.0528 ms, 2602567.7 GFLOPS, 28.92% peak
-  o_proj B=2, S=2048: 0.1826 ms, 5268170.7 GFLOPS, 58.54% peak
-  q_b_proj B=4, S=128: 0.0122 ms, 3164163.8 GFLOPS, 35.16% peak
-  kv_b_proj B=4, S=128: 0.0101 ms, 1705894.7 GFLOPS, 18.95% peak
-  o_proj B=4, S=128: 0.0240 ms, 5005417.8 GFLOPS, 55.62% peak
-  q_b_proj B=4, S=256: 0.0200 ms, 3861770.9 GFLOPS, 42.91% peak
-  kv_b_proj B=4, S=256: 0.0151 ms, 2273655.5 GFLOPS, 25.26% peak
-  o_proj B=4, S=256: 0.0498 ms, 4826924.1 GFLOPS, 53.63% peak
-  q_b_proj B=4, S=512: 0.0401 ms, 3858897.4 GFLOPS, 42.88% peak
-  kv_b_proj B=4, S=512: 0.0283 ms, 2428788.7 GFLOPS, 26.99% peak
-  o_proj B=4, S=512: 0.0985 ms, 4884304.4 GFLOPS, 54.27% peak
-  q_b_proj B=4, S=1024: 0.0714 ms, 4329701.5 GFLOPS, 48.11% peak
-  kv_b_proj B=4, S=1024: 0.0529 ms, 2597908.7 GFLOPS, 28.87% peak
-  o_proj B=4, S=1024: 0.1864 ms, 5162433.4 GFLOPS, 57.36% peak
-  q_b_proj B=4, S=2048: 0.1465 ms, 4222977.9 GFLOPS, 46.92% peak
-  kv_b_proj B=4, S=2048: 0.1006 ms, 2732392.7 GFLOPS, 30.36% peak
-  o_proj B=4, S=2048: 0.3566 ms, 5395073.5 GFLOPS, 59.95% peak
-  q_b_proj B=8, S=128: 0.0200 ms, 3865470.6 GFLOPS, 42.95% peak
-  kv_b_proj B=8, S=128: 0.0153 ms, 2248432.4 GFLOPS, 24.98% peak
-  o_proj B=8, S=128: 0.0499 ms, 4815551.7 GFLOPS, 53.51% peak
-  q_b_proj B=8, S=256: 0.0402 ms, 3846895.9 GFLOPS, 42.74% peak
-  kv_b_proj B=8, S=256: 0.0283 ms, 2425768.0 GFLOPS, 26.95% peak
-  o_proj B=8, S=256: 0.0970 ms, 4958566.8 GFLOPS, 55.10% peak
-  q_b_proj B=8, S=512: 0.0744 ms, 4157772.0 GFLOPS, 46.20% peak
-  kv_b_proj B=8, S=512: 0.0525 ms, 2616630.7 GFLOPS, 29.07% peak
-  o_proj B=8, S=512: 0.1827 ms, 5266433.3 GFLOPS, 58.52% peak
-  q_b_proj B=8, S=1024: 0.1477 ms, 4187456.4 GFLOPS, 46.53% peak
-  kv_b_proj B=8, S=1024: 0.1028 ms, 2674545.7 GFLOPS, 29.72% peak
-  o_proj B=8, S=1024: 0.3667 ms, 5247734.9 GFLOPS, 58.31% peak
-  q_b_proj B=8, S=2048: 0.2972 ms, 4162184.2 GFLOPS, 46.25% peak
-  kv_b_proj B=8, S=2048: 0.1959 ms, 2806469.5 GFLOPS, 31.18% peak
-  o_proj B=8, S=2048: 0.7345 ms, 5239500.9 GFLOPS, 58.22% peak
-Saved deepseek_kernel_benchmarks/results/cutlass_scaled_fp4_mm.csv
+  q_b_proj B=1, S=128: 0.0068 ms, 1425382.8 GFLOPS, 15.84% peak
+  kv_b_proj B=1, S=128: 0.0054 ms, 793068.2 GFLOPS, 8.81% peak
+  o_proj B=1, S=128: 0.0239 ms, 1257396.3 GFLOPS, 13.97% peak
+  q_b_proj B=1, S=256: 0.0089 ms, 2173693.3 GFLOPS, 24.15% peak
+  kv_b_proj B=1, S=256: 0.0071 ms, 1214821.2 GFLOPS, 13.50% peak
+  o_proj B=1, S=256: 0.0220 ms, 2737260.8 GFLOPS, 30.41% peak
+  q_b_proj B=1, S=512: 0.0123 ms, 3148584.6 GFLOPS, 34.98% peak
+  kv_b_proj B=1, S=512: 0.0100 ms, 1716438.6 GFLOPS, 19.07% peak
+  o_proj B=1, S=512: 0.0235 ms, 5123295.7 GFLOPS, 56.93% peak
+  q_b_proj B=1, S=1024: 0.0200 ms, 3869989.6 GFLOPS, 43.00% peak
+  kv_b_proj B=1, S=1024: 0.0148 ms, 2316234.4 GFLOPS, 25.74% peak
+  o_proj B=1, S=1024: 0.0504 ms, 4775666.8 GFLOPS, 53.06% peak
+  q_b_proj B=1, S=2048: 0.0400 ms, 3866452.5 GFLOPS, 42.96% peak
+  kv_b_proj B=1, S=2048: 0.0287 ms, 2395021.0 GFLOPS, 26.61% peak
+  o_proj B=1, S=2048: 0.0985 ms, 4882567.4 GFLOPS, 54.25% peak
+  q_b_proj B=2, S=128: 0.0104 ms, 1852812.3 GFLOPS, 20.59% peak
+  kv_b_proj B=2, S=128: 0.0071 ms, 1214468.9 GFLOPS, 13.49% peak
+  o_proj B=2, S=128: 0.0222 ms, 2705714.4 GFLOPS, 30.06% peak
+  q_b_proj B=2, S=256: 0.0122 ms, 3157873.0 GFLOPS, 35.09% peak
+  kv_b_proj B=2, S=256: 0.0101 ms, 1695321.1 GFLOPS, 18.84% peak
+  o_proj B=2, S=256: 0.0248 ms, 4848625.9 GFLOPS, 53.87% peak
+  q_b_proj B=2, S=512: 0.0199 ms, 3877213.4 GFLOPS, 43.08% peak
+  kv_b_proj B=2, S=512: 0.0151 ms, 2273605.6 GFLOPS, 25.26% peak
+  o_proj B=2, S=512: 0.0495 ms, 4857282.3 GFLOPS, 53.97% peak
+  q_b_proj B=2, S=1024: 0.0395 ms, 3918337.3 GFLOPS, 43.54% peak
+  kv_b_proj B=2, S=1024: 0.0283 ms, 2425045.1 GFLOPS, 26.94% peak
+  o_proj B=2, S=1024: 0.1006 ms, 4780408.5 GFLOPS, 53.12% peak
+  q_b_proj B=2, S=2048: 0.0751 ms, 4116461.5 GFLOPS, 45.74% peak
+  kv_b_proj B=2, S=2048: 0.0527 ms, 2606394.6 GFLOPS, 28.96% peak
+  o_proj B=2, S=2048: 0.1813 ms, 5307219.6 GFLOPS, 58.97% peak
+  q_b_proj B=4, S=128: 0.0148 ms, 2604227.7 GFLOPS, 28.94% peak
+  kv_b_proj B=4, S=128: 0.0100 ms, 1712917.9 GFLOPS, 19.03% peak
+  o_proj B=4, S=128: 0.0240 ms, 5006825.9 GFLOPS, 55.63% peak
+  q_b_proj B=4, S=256: 0.0197 ms, 3916108.9 GFLOPS, 43.51% peak
+  kv_b_proj B=4, S=256: 0.0148 ms, 2327502.6 GFLOPS, 25.86% peak
+  o_proj B=4, S=256: 0.0500 ms, 4814919.5 GFLOPS, 53.50% peak
+  q_b_proj B=4, S=512: 0.0402 ms, 3848773.5 GFLOPS, 42.76% peak
+  kv_b_proj B=4, S=512: 0.0284 ms, 2417111.1 GFLOPS, 26.86% peak
+  o_proj B=4, S=512: 0.0984 ms, 4889010.7 GFLOPS, 54.32% peak
+  q_b_proj B=4, S=1024: 0.0748 ms, 4135142.9 GFLOPS, 45.95% peak
+  kv_b_proj B=4, S=1024: 0.0528 ms, 2602506.5 GFLOPS, 28.92% peak
+  o_proj B=4, S=1024: 0.1815 ms, 5301371.6 GFLOPS, 58.90% peak
+  q_b_proj B=4, S=2048: 0.1470 ms, 4206417.3 GFLOPS, 46.74% peak
+  kv_b_proj B=4, S=2048: 0.1021 ms, 2691377.1 GFLOPS, 29.90% peak
+  o_proj B=4, S=2048: 0.3608 ms, 5332383.0 GFLOPS, 59.25% peak
+  q_b_proj B=8, S=128: 0.0203 ms, 3814290.5 GFLOPS, 42.38% peak
+  kv_b_proj B=8, S=128: 0.0149 ms, 2305371.0 GFLOPS, 25.62% peak
+  o_proj B=8, S=128: 0.0500 ms, 4814263.0 GFLOPS, 53.49% peak
+  q_b_proj B=8, S=256: 0.0405 ms, 3817218.5 GFLOPS, 42.41% peak
+  kv_b_proj B=8, S=256: 0.0284 ms, 2423361.7 GFLOPS, 26.93% peak
+  o_proj B=8, S=256: 0.0988 ms, 4869519.2 GFLOPS, 54.11% peak
+  q_b_proj B=8, S=512: 0.0727 ms, 4255293.3 GFLOPS, 47.28% peak
+  kv_b_proj B=8, S=512: 0.0535 ms, 2568639.0 GFLOPS, 28.54% peak
+  o_proj B=8, S=512: 0.1881 ms, 5114074.4 GFLOPS, 56.82% peak
+  q_b_proj B=8, S=1024: 0.1483 ms, 4169190.6 GFLOPS, 46.32% peak
+  kv_b_proj B=8, S=1024: 0.1030 ms, 2668886.9 GFLOPS, 29.65% peak
+  o_proj B=8, S=1024: 0.3639 ms, 5287081.9 GFLOPS, 58.75% peak
+  q_b_proj B=8, S=2048: 0.3024 ms, 4089936.3 GFLOPS, 45.44% peak
+  kv_b_proj B=8, S=2048: 0.2072 ms, 2653101.7 GFLOPS, 29.48% peak
+  o_proj B=8, S=2048: 0.7127 ms, 5399343.6 GFLOPS, 59.99% peak
+Saved ../results/cutlass_scaled_fp4_mm.csv
+
+[OK] cutlass_scaled_fp4_mm completed successfully
 
 ======================================================================
 Running: dsv3_fused_a_gemm (GEMM, Compute)
 ======================================================================
+============================================================
+Benchmark: dsv3_fused_a_gemm (Kernel #4)
+============================================================
 
 === Decode Phase (B<=16, low-latency path) ===
-  B=1: 0.0052 ms, 5849.5 GFLOPS, 0.26% peak
-  B=2: 0.0052 ms, 11721.4 GFLOPS, 0.52% peak
-  B=4: 0.0052 ms, 23372.9 GFLOPS, 1.04% peak
-  B=8: 0.0052 ms, 46380.6 GFLOPS, 2.06% peak
-  B=16: 0.0058 ms, 82984.9 GFLOPS, 3.69% peak
-Saved deepseek_kernel_benchmarks/results/dsv3_fused_a_gemm.csv
+  B=1: 0.0051 ms, 5927.9 GFLOPS, 0.26% peak
+  B=2: 0.0051 ms, 11878.5 GFLOPS, 0.53% peak
+  B=4: 0.0051 ms, 23679.5 GFLOPS, 1.05% peak
+  B=8: 0.0052 ms, 46815.2 GFLOPS, 2.08% peak
+  B=16: 0.0058 ms, 83932.4 GFLOPS, 3.73% peak
+Saved ../results/dsv3_fused_a_gemm.csv
+
+[OK] dsv3_fused_a_gemm completed successfully
 
 ======================================================================
 Running: dsv3_router_gemm (GEMM, Compute)
 ======================================================================
+============================================================
+Benchmark: dsv3_router_gemm (Kernel #5)
+============================================================
 
 === Decode Phase ===
-  B=1: 0.0020 ms, 1818.8 GFLOPS, 0.08% peak
-  B=2: 0.0023 ms, 3250.4 GFLOPS, 0.14% peak
-  B=4: 0.0028 ms, 5293.2 GFLOPS, 0.24% peak
-  B=8: 0.0037 ms, 8035.2 GFLOPS, 0.36% peak
-  B=16: 0.0075 ms, 7876.4 GFLOPS, 0.35% peak
+  B=1: 0.0020 ms, 1838.6 GFLOPS, 0.08% peak
+  B=2: 0.0022 ms, 3286.9 GFLOPS, 0.15% peak
+  B=4: 0.0027 ms, 5434.5 GFLOPS, 0.24% peak
+  B=8: 0.0036 ms, 8191.8 GFLOPS, 0.36% peak
+  B=16: 0.0071 ms, 8243.9 GFLOPS, 0.37% peak
   Skipping B=32: kernel limited to num_tokens <= 16
   Skipping B=64: kernel limited to num_tokens <= 16
   Skipping B=128: kernel limited to num_tokens <= 16
 
 === Prefill Phase (skipped - kernel limited to 16 tokens) ===
-Saved deepseek_kernel_benchmarks/results/dsv3_router_gemm.csv
+Saved ../results/dsv3_router_gemm.csv
+
+[OK] dsv3_router_gemm completed successfully
 
 ======================================================================
 Running: bmm_fp8 (BMM, Compute)
 ======================================================================
+============================================================
+Benchmark: bmm_fp8 (Kernel #6)
+============================================================
 
 === Decode Phase: q_nope * w_kc ===
-  B=1: 0.0056 ms, 3013.0 GFLOPS, 0.07% peak
-  B=2: 0.0055 ms, 6046.6 GFLOPS, 0.13% peak
-  B=4: 0.0056 ms, 12083.4 GFLOPS, 0.27% peak
-  B=8: 0.0055 ms, 24200.4 GFLOPS, 0.54% peak
-  B=16: 0.0057 ms, 47302.2 GFLOPS, 1.05% peak
-  B=32: 0.0058 ms, 92662.8 GFLOPS, 2.06% peak
-  B=64: 0.0062 ms, 174473.0 GFLOPS, 3.88% peak
-  B=128: 0.0070 ms, 305943.4 GFLOPS, 6.80% peak
+  B=1: 0.0055 ms, 3033.6 GFLOPS, 0.07% peak
+  B=2: 0.0055 ms, 6080.9 GFLOPS, 0.14% peak
+  B=4: 0.0055 ms, 12159.6 GFLOPS, 0.27% peak
+  B=8: 0.0055 ms, 24276.8 GFLOPS, 0.54% peak
+  B=16: 0.0056 ms, 47514.2 GFLOPS, 1.06% peak
+  B=32: 0.0058 ms, 93041.8 GFLOPS, 2.07% peak
+  B=64: 0.0061 ms, 174941.7 GFLOPS, 3.89% peak
+  B=128: 0.0070 ms, 307559.0 GFLOPS, 6.83% peak
 
 === Decode Phase: attn * w_vc ===
-  B=1: 0.0028 ms, 6062.5 GFLOPS, 0.13% peak
-  B=2: 0.0028 ms, 12182.1 GFLOPS, 0.27% peak
-  B=4: 0.0028 ms, 24303.0 GFLOPS, 0.54% peak
-  B=8: 0.0028 ms, 48545.6 GFLOPS, 1.08% peak
-  B=16: 0.0032 ms, 85207.8 GFLOPS, 1.89% peak
-  B=32: 0.0032 ms, 166674.1 GFLOPS, 3.70% peak
-  B=64: 0.0034 ms, 318310.9 GFLOPS, 7.07% peak
-  B=128: 0.0038 ms, 571265.0 GFLOPS, 12.69% peak
-Saved deepseek_kernel_benchmarks/results/bmm_fp8.csv
+  B=1: 0.0028 ms, 6093.4 GFLOPS, 0.14% peak
+  B=2: 0.0028 ms, 12192.3 GFLOPS, 0.27% peak
+  B=4: 0.0028 ms, 24268.3 GFLOPS, 0.54% peak
+  B=8: 0.0028 ms, 48643.5 GFLOPS, 1.08% peak
+  B=16: 0.0031 ms, 85327.7 GFLOPS, 1.90% peak
+  B=32: 0.0032 ms, 167372.7 GFLOPS, 3.72% peak
+  B=64: 0.0034 ms, 318055.9 GFLOPS, 7.07% peak
+  B=128: 0.0037 ms, 573018.8 GFLOPS, 12.73% peak
+Saved ../results/bmm_fp8.csv
+
+[OK] bmm_fp8 completed successfully
 
 ======================================================================
 Running: cutlass_mla_decode (Attention, Mixed)
 ======================================================================
+============================================================
+Benchmark: cutlass_mla_decode (Kernel #7)
+============================================================
 
 === Decode Phase (MLA Attention) ===
-  B=1, seq_len=128: 0.0180 ms, 16.4 GB/s, memory
-  B=1, seq_len=256: 0.0294 ms, 15.0 GB/s, memory
-  B=1, seq_len=512: 0.0304 ms, 24.3 GB/s, memory
-  B=1, seq_len=1024: 0.0301 ms, 44.1 GB/s, memory
-  B=1, seq_len=2048: 0.0318 ms, 78.9 GB/s, memory
+  B=1, seq_len=128: 0.0179 ms, 16.5 GB/s, memory
+  B=1, seq_len=256: 0.0294 ms, 15.1 GB/s, memory
+  B=1, seq_len=512: 0.0302 ms, 24.4 GB/s, memory
+  B=1, seq_len=1024: 0.0300 ms, 44.2 GB/s, memory
+  Skipping B=1, seq_len=2048: B*seq_len=2048 > 1024 (crash risk)
   B=2, seq_len=128: 0.0179 ms, 33.0 GB/s, memory
-  B=2, seq_len=256: 0.0294 ms, 30.1 GB/s, memory
+  B=2, seq_len=256: 0.0293 ms, 30.2 GB/s, memory
   B=2, seq_len=512: 0.0293 ms, 50.3 GB/s, memory
-Warning: Kernel failed for B=2, seq_len=1024: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+  Skipping B=2, seq_len=1024: B*seq_len=2048 > 1024 (crash risk)
+  Skipping B=2, seq_len=2048: B*seq_len=4096 > 1024 (crash risk)
+  B=4, seq_len=128: 0.0179 ms, 65.8 GB/s, memory
+  B=4, seq_len=256: 0.0294 ms, 60.1 GB/s, memory
+  Skipping B=4, seq_len=512: B*seq_len=2048 > 1024 (crash risk)
+  Skipping B=4, seq_len=1024: B*seq_len=4096 > 1024 (crash risk)
+  Skipping B=4, seq_len=2048: B*seq_len=8192 > 1024 (crash risk)
+  B=8, seq_len=128: 0.0180 ms, 131.4 GB/s, memory
+  Skipping B=8, seq_len=256: B*seq_len=2048 > 1024 (crash risk)
+  Skipping B=8, seq_len=512: B*seq_len=4096 > 1024 (crash risk)
+  Skipping B=8, seq_len=1024: B*seq_len=8192 > 1024 (crash risk)
+  Skipping B=8, seq_len=2048: B*seq_len=16384 > 1024 (crash risk)
+  Skipping B=16, seq_len=128: B*seq_len=2048 > 1024 (crash risk)
+  Skipping B=16, seq_len=256: B*seq_len=4096 > 1024 (crash risk)
+  Skipping B=16, seq_len=512: B*seq_len=8192 > 1024 (crash risk)
+  Skipping B=16, seq_len=1024: B*seq_len=16384 > 1024 (crash risk)
+  Skipping B=16, seq_len=2048: B*seq_len=32768 > 1024 (crash risk)
+  Skipping B=32, seq_len=128: B*seq_len=4096 > 1024 (crash risk)
+  Skipping B=32, seq_len=256: B*seq_len=8192 > 1024 (crash risk)
+  Skipping B=32, seq_len=512: B*seq_len=16384 > 1024 (crash risk)
+  Skipping B=32, seq_len=1024: B*seq_len=32768 > 1024 (crash risk)
+  Skipping B=32, seq_len=2048: B*seq_len=65536 > 1024 (crash risk)
+  Skipping B=64, seq_len=128: B*seq_len=8192 > 1024 (crash risk)
+  Skipping B=64, seq_len=256: B*seq_len=16384 > 1024 (crash risk)
+  Skipping B=64, seq_len=512: B*seq_len=32768 > 1024 (crash risk)
+  Skipping B=64, seq_len=1024: B*seq_len=65536 > 1024 (crash risk)
+  Skipping B=64, seq_len=2048: B*seq_len=131072 > 1024 (crash risk)
+  Skipping B=128, seq_len=128: B*seq_len=16384 > 1024 (crash risk)
+  Skipping B=128, seq_len=256: B*seq_len=32768 > 1024 (crash risk)
+  Skipping B=128, seq_len=512: B*seq_len=65536 > 1024 (crash risk)
+  Skipping B=128, seq_len=1024: B*seq_len=131072 > 1024 (crash risk)
+  Skipping B=128, seq_len=2048: B*seq_len=262144 > 1024 (crash risk)
+Saved ../results/cutlass_mla_decode.csv
 
-Error running bench_cutlass_mla_decode: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
+[OK] cutlass_mla_decode completed successfully
 
 ======================================================================
 Running: trtllm_batch_decode_with_kv_cache_mla (Attention, Mixed)
 ======================================================================
+============================================================
+Benchmark: trtllm_batch_decode_with_kv_cache_mla (Kernel #8)
+============================================================
 
-=== Decode Phase (TRT-LLM MLA Attention) ===
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Warning: trtllm_batch_decode_with_kv_cache_mla not available
-Saved deepseek_kernel_benchmarks/results/trtllm_batch_decode_with_kv_cache_mla.csv
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
+[FAILED] trtllm_batch_decode_with_kv_cache_mla: Exit code 1
 
 ======================================================================
 Running: trtllm_ragged_attention_deepseek (Attention, Mixed)
 ======================================================================
+============================================================
+Benchmark: trtllm_ragged_attention_deepseek (Kernel #9)
+============================================================
 
-=== Prefill Phase (TRT-LLM Ragged Attention) ===
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Warning: trtllm_ragged_attention_deepseek not available
-Saved deepseek_kernel_benchmarks/results/trtllm_ragged_attention_deepseek.csv
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
+[FAILED] trtllm_ragged_attention_deepseek: Exit code 1
 
 ======================================================================
 Running: mla_rope_quantize_fp8 (Attention, Memory)
 ======================================================================
+============================================================
+Benchmark: mla_rope_quantize_fp8 (Kernel #10)
+============================================================
 
-=== Decode Phase ===
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-
-=== Prefill Phase ===
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Warning: mla_rope_quantize_fp8 not available
-Saved deepseek_kernel_benchmarks/results/mla_rope_quantize_fp8.csv
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
+[FAILED] mla_rope_quantize_fp8: Exit code 1
 
 ======================================================================
 Running: apply_rope_with_cos_sin_cache_inplace (RoPE, Memory)
 ======================================================================
+============================================================
+Benchmark: apply_rope_with_cos_sin_cache_inplace (Kernel #11)
+============================================================
 
 === Decode Phase ===
-Error running bench_apply_rope: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
-
-======================================================================
-Running: concat_mla_mha_k (Concat, Memory)
-======================================================================
-
-=== Decode Phase ===
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
+Warning: Kernel failed for B=1, S=1: cos_sin_cache should be float32
+Warning: Kernel failed for B=2, S=1: cos_sin_cache should be float32
+Warning: Kernel failed for B=4, S=1: cos_sin_cache should be float32
+Warning: Kernel failed for B=8, S=1: cos_sin_cache should be float32
+Warning: Kernel failed for B=16, S=1: cos_sin_cache should be float32
+Warning: Kernel failed for B=32, S=1: cos_sin_cache should be float32
+Warning: Kernel failed for B=64, S=1: cos_sin_cache should be float32
+Warning: Kernel failed for B=128, S=1: cos_sin_cache should be float32
 
 === Prefill Phase ===
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Warning: concat_mla_mha_k not available
-Saved deepseek_kernel_benchmarks/results/concat_mla_mha_k.csv
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=128: cos_sin_cache should be float32
+Warning: Kernel failed for B=1, S=256: cos_sin_cache should be float32
+Warning: Kernel failed for B=1, S=512: cos_sin_cache should be float32
+Warning: Kernel failed for B=1, S=1024: cos_sin_cache should be float32
+Warning: Kernel failed for B=1, S=2048: cos_sin_cache should be float32
+Warning: Kernel failed for B=2, S=128: cos_sin_cache should be float32
+Warning: Kernel failed for B=2, S=256: cos_sin_cache should be float32
+Warning: Kernel failed for B=2, S=512: cos_sin_cache should be float32
+Warning: Kernel failed for B=2, S=1024: cos_sin_cache should be float32
+Warning: Kernel failed for B=2, S=2048: cos_sin_cache should be float32
+Warning: Kernel failed for B=4, S=128: cos_sin_cache should be float32
+Warning: Kernel failed for B=4, S=256: cos_sin_cache should be float32
+Warning: Kernel failed for B=4, S=512: cos_sin_cache should be float32
+Warning: Kernel failed for B=4, S=1024: cos_sin_cache should be float32
+Warning: Kernel failed for B=4, S=2048: cos_sin_cache should be float32
+Warning: Kernel failed for B=8, S=128: cos_sin_cache should be float32
+Warning: Kernel failed for B=8, S=256: cos_sin_cache should be float32
+Warning: Kernel failed for B=8, S=512: cos_sin_cache should be float32
+Warning: Kernel failed for B=8, S=1024: cos_sin_cache should be float32
+Warning: Kernel failed for B=8, S=2048: cos_sin_cache should be float32
+Saved ../results/apply_rope_with_cos_sin_cache_inplace.csv
 
+[OK] apply_rope_with_cos_sin_cache_inplace completed successfully
+
+======================================================================
+Running: concat_mla_k (Concat, Memory)
+======================================================================
+[FAILED] concat_mla_k: Exit code -6
 
 ======================================================================
 Running: silu_and_mul (Activation, Memory)
 ======================================================================
+============================================================
+Benchmark: silu_and_mul (Kernel #13)
+============================================================
 
 === Decode Phase ===
-Error running bench_silu_and_mul: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+  B=1: 0.0018 ms, 6.9 GB/s, 0.1% peak
+  B=2: 0.0018 ms, 13.8 GB/s, 0.2% peak
+  B=4: 0.0018 ms, 27.7 GB/s, 0.3% peak
+  B=8: 0.0018 ms, 55.4 GB/s, 0.7% peak
+  B=16: 0.0019 ms, 104.8 GB/s, 1.3% peak
+  B=32: 0.0019 ms, 209.1 GB/s, 2.6% peak
+  B=64: 0.0019 ms, 413.9 GB/s, 5.2% peak
+  B=128: 0.0019 ms, 809.4 GB/s, 10.1% peak
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+  B=1, S=128: 0.0020 ms, 780.5 GB/s, 9.8% peak
+  B=1, S=256: 0.0021 ms, 1478.9 GB/s, 18.5% peak
+  B=1, S=512: 0.0028 ms, 2243.2 GB/s, 28.0% peak
+  B=1, S=1024: 0.0038 ms, 3291.4 GB/s, 41.1% peak
+  B=1, S=2048: 0.0058 ms, 4370.2 GB/s, 54.6% peak
+  B=2, S=128: 0.0021 ms, 1480.6 GB/s, 18.5% peak
+  B=2, S=256: 0.0028 ms, 2244.0 GB/s, 28.1% peak
+  B=2, S=512: 0.0038 ms, 3297.7 GB/s, 41.2% peak
+  B=2, S=1024: 0.0058 ms, 4368.7 GB/s, 54.6% peak
+  B=2, S=2048: 0.0098 ms, 5128.6 GB/s, 64.1% peak
+  B=4, S=128: 0.0028 ms, 2244.1 GB/s, 28.1% peak
+  B=4, S=256: 0.0038 ms, 3295.9 GB/s, 41.2% peak
+  B=4, S=512: 0.0058 ms, 4367.9 GB/s, 54.6% peak
+  B=4, S=1024: 0.0098 ms, 5120.0 GB/s, 64.0% peak
+  B=4, S=2048: 0.0201 ms, 5001.5 GB/s, 62.5% peak
+  B=8, S=128: 0.0039 ms, 3247.4 GB/s, 40.6% peak
+  B=8, S=256: 0.0058 ms, 4368.0 GB/s, 54.6% peak
+  B=8, S=512: 0.0098 ms, 5117.5 GB/s, 64.0% peak
+  B=8, S=1024: 0.0200 ms, 5039.1 GB/s, 63.0% peak
+  B=8, S=2048: 0.0399 ms, 5044.9 GB/s, 63.1% peak
+Saved ../results/silu_and_mul.csv
 
+[OK] silu_and_mul completed successfully
 
 ======================================================================
 Running: topk_softmax (MoE Routing, Memory)
 ======================================================================
+============================================================
+Benchmark: topk_softmax (Kernel #14)
+============================================================
 
 === Decode Phase ===
-Error running bench_topk_softmax: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=16, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=32, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=64, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=128, S=1: topk_softmax() missing 1 required positional argument: 'gating_output'
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=256: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=512: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=1024: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=2048: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=128: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=256: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=512: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=1024: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=2048: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=128: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=256: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=512: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=1024: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=2048: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=128: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=256: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=512: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=1024: topk_softmax() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=2048: topk_softmax() missing 1 required positional argument: 'gating_output'
+Saved ../results/topk_softmax.csv
 
+[OK] topk_softmax completed successfully
 
 ======================================================================
 Running: topk_sigmoid (MoE Routing, Memory)
 ======================================================================
+============================================================
+Benchmark: topk_sigmoid (Kernel #15)
+============================================================
 
 === Decode Phase ===
-Error running bench_topk_sigmoid: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=16, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=32, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=64, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=128, S=1: topk_sigmoid() missing 1 required positional argument: 'gating_output'
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=256: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=512: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=1024: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=1, S=2048: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=128: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=256: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=512: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=1024: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=2, S=2048: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=128: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=256: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=512: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=1024: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=4, S=2048: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=128: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=256: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=512: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=1024: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Warning: Kernel failed for B=8, S=2048: topk_sigmoid() missing 1 required positional argument: 'gating_output'
+Saved ../results/topk_sigmoid.csv
 
+[OK] topk_sigmoid completed successfully
 
 ======================================================================
 Running: moe_fused_gate (MoE Routing, Memory)
 ======================================================================
+============================================================
+Benchmark: moe_fused_gate (Kernel #16)
+============================================================
 
 === Decode Phase ===
-Error running bench_moe_fused_gate: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=2, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=4, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=8, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=16, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=32, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=64, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=128, S=1: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=1, S=256: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=1, S=512: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=1, S=1024: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=1, S=2048: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=2, S=128: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=2, S=256: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=2, S=512: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=2, S=1024: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=2, S=2048: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=4, S=128: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=4, S=256: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=4, S=512: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=4, S=1024: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=4, S=2048: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=8, S=128: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=8, S=256: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=8, S=512: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=8, S=1024: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Warning: Kernel failed for B=8, S=2048: moe_fused_gate() missing 2 required positional arguments: 'topk_group' and 'topk'
+Saved ../results/moe_fused_gate.csv
 
+[OK] moe_fused_gate completed successfully
 
 ======================================================================
 Running: prepare_moe_input (MoE, Memory)
 ======================================================================
+============================================================
+Benchmark: prepare_moe_input (Kernel #17)
+============================================================
 
 === Decode Phase ===
-Error running bench_prepare_moe_input: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=2, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=4, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=8, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=16, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=32, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=64, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=128, S=1: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=1, S=256: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=1, S=512: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=1, S=1024: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=1, S=2048: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=2, S=128: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=2, S=256: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=2, S=512: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=2, S=1024: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=2, S=2048: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=4, S=128: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=4, S=256: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=4, S=512: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=4, S=1024: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=4, S=2048: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=8, S=128: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=8, S=256: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=8, S=512: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=8, S=1024: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
+Warning: Kernel failed for B=8, S=2048: prepare_moe_input() missing 6 required positional arguments: 'problem_sizes2', 'input_permutation', 'output_permutation', 'num_experts', 'n', and 'k'
 
+No results - kernel not available
+
+[OK] prepare_moe_input completed successfully
 
 ======================================================================
 Running: scaled_fp4_experts_quant (MoE, Memory)
 ======================================================================
+============================================================
+Benchmark: scaled_fp4_experts_quant (Kernel #18)
+============================================================
 
 === Decode Phase ===
-Error running bench_scaled_fp4_experts_quant: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=2, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=4, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=8, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=16, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=32, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=64, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=128, S=1: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=1, S=256: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=1, S=512: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=1, S=1024: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=1, S=2048: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=2, S=128: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=2, S=256: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=2, S=512: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=2, S=1024: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=2, S=2048: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=4, S=128: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=4, S=256: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=4, S=512: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=4, S=1024: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=4, S=2048: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=8, S=128: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=8, S=256: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=8, S=512: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=8, S=1024: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
+Warning: Kernel failed for B=8, S=2048: scaled_fp4_experts_quant() missing 4 required positional arguments: 'input_global_scale', 'expert_offsets', 'blockscale_offsets', and 'topk'
 
+No results - kernel not available
+
+[OK] scaled_fp4_experts_quant completed successfully
 
 ======================================================================
 Running: cutlass_fp4_group_mm (MoE, Compute)
 ======================================================================
+============================================================
+Benchmark: cutlass_fp4_group_mm (Kernel #19)
+============================================================
 
 === Decode Phase: gate_up ===
-Error running bench_cutlass_fp4_group_mm: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=16, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=32, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=64, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=128, S=1, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Decode Phase: down ===
+Warning: Kernel failed for B=1, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=16, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=32, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=64, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=128, S=1, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
 
+=== Prefill Phase: gate_up ===
+Warning: Kernel failed for B=1, S=128, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=256, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=512, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=1024, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=2048, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=128, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=256, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=512, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=1024, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=2048, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=128, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=256, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=512, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=1024, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=2048, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=128, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=256, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=512, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=1024, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=2048, op=gate_up: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+
+=== Prefill Phase: down ===
+Warning: Kernel failed for B=1, S=128, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=256, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=512, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=1024, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=1, S=2048, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=128, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=256, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=512, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=1024, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=2, S=2048, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=128, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=256, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=512, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=1024, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=4, S=2048, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=128, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=256, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=512, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=1024, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+Warning: Kernel failed for B=8, S=2048, op=down: cutlass_fp4_group_mm() missing 1 required positional argument: 'params'
+
+No results - kernel not available
+
+[OK] cutlass_fp4_group_mm completed successfully
 
 ======================================================================
 Running: apply_shuffle_mul_sum (MoE, Memory)
 ======================================================================
+============================================================
+Benchmark: apply_shuffle_mul_sum (Kernel #20)
+============================================================
 
 === Decode Phase ===
-Error running bench_apply_shuffle_mul_sum: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1: Factors must match output dtype
+Warning: Kernel failed for B=2, S=1: Factors must match output dtype
+Warning: Kernel failed for B=4, S=1: Factors must match output dtype
+Warning: Kernel failed for B=8, S=1: Factors must match output dtype
+Warning: Kernel failed for B=16, S=1: Factors must match output dtype
+Warning: Kernel failed for B=32, S=1: Factors must match output dtype
+Warning: Kernel failed for B=64, S=1: Factors must match output dtype
+Warning: Kernel failed for B=128, S=1: Factors must match output dtype
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: Factors must match output dtype
+Warning: Kernel failed for B=1, S=256: Factors must match output dtype
+Warning: Kernel failed for B=1, S=512: Factors must match output dtype
+Warning: Kernel failed for B=1, S=1024: Factors must match output dtype
+Warning: Kernel failed for B=1, S=2048: Factors must match output dtype
+Warning: Kernel failed for B=2, S=128: Factors must match output dtype
+Warning: Kernel failed for B=2, S=256: Factors must match output dtype
+Warning: Kernel failed for B=2, S=512: Factors must match output dtype
+Warning: Kernel failed for B=2, S=1024: Factors must match output dtype
+Warning: Kernel failed for B=2, S=2048: Factors must match output dtype
+Warning: Kernel failed for B=4, S=128: Factors must match output dtype
+Warning: Kernel failed for B=4, S=256: Factors must match output dtype
+Warning: Kernel failed for B=4, S=512: Factors must match output dtype
+Warning: Kernel failed for B=4, S=1024: Factors must match output dtype
+Warning: Kernel failed for B=4, S=2048: Factors must match output dtype
+Warning: Kernel failed for B=8, S=128: Factors must match output dtype
+Warning: Kernel failed for B=8, S=256: Factors must match output dtype
+Warning: Kernel failed for B=8, S=512: Factors must match output dtype
+Warning: Kernel failed for B=8, S=1024: Factors must match output dtype
+Warning: Kernel failed for B=8, S=2048: Factors must match output dtype
 
+No results - kernel not available
+
+[OK] apply_shuffle_mul_sum completed successfully
 
 ======================================================================
 Running: moe_align_block_size (MoE, Memory)
 ======================================================================
+============================================================
+Benchmark: moe_align_block_size (Kernel #21)
+============================================================
 
 === Decode Phase ===
-Error running bench_moe_align_block_size: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Warning: Kernel failed for B=1, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=2, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=4, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=8, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=16, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=32, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=64, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=128, S=1: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+=== Prefill Phase ===
+Warning: Kernel failed for B=1, S=128: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=1, S=256: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=1, S=512: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=1, S=1024: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=1, S=2048: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=2, S=128: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=2, S=256: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=2, S=512: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=2, S=1024: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=2, S=2048: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=4, S=128: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=4, S=256: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=4, S=512: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=4, S=1024: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=4, S=2048: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=8, S=128: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=8, S=256: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=8, S=512: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=8, S=1024: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
+Warning: Kernel failed for B=8, S=2048: moe_align_block_size() missing 4 required positional arguments: 'sorted_token_ids', 'experts_ids', 'num_tokens_post_pad', and 'cumsum_buffer'
 
+No results - kernel not available
+
+[OK] moe_align_block_size completed successfully
 
 ======================================================================
 Running: trtllm_fp4_block_scale_moe (MoE, Mixed)
 ======================================================================
+============================================================
+Benchmark: trtllm_fp4_block_scale_moe (Kernel #22)
+============================================================
 
-=== Decode Phase ===
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-
-=== Prefill Phase ===
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-Warning: trtllm_fp4_block_scale_moe not available
-
-No results - kernel not available
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
+[FAILED] trtllm_fp4_block_scale_moe: Exit code 1
 
 ======================================================================
 Running: fused_moe_kernel (MoE, Mixed)
 ======================================================================
+============================================================
+Benchmark: fused_moe_kernel (Kernel #23)
+============================================================
 
 === Decode Phase ===
-Error running bench_fused_moe_kernel: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
 
-Warning: CUDA reset failed: CUDA error: an illegal instruction was encountered
-Search for `cudaErrorIllegalInstruction' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+[FAILED] fused_moe_kernel: Exit code 1
 
+Aggregated results saved to ../results/all_kernels.csv
+Total benchmark results: 204
 
-Aggregated results saved to deepseek_kernel_benchmarks/results/all_kernels.csv
-Total benchmark results: 166
-
-Summary saved to deepseek_kernel_benchmarks/results/benchmark_summary.md
+Summary saved to ../results/benchmark_summary.md
 
 ======================================================================
 Benchmark Complete!
-Successful: 11/23
-Failed: ['cutlass_mla_decode', 'apply_rope_with_cos_sin_cache_inplace', 'silu_and_mul', 'topk_softmax', 'topk_sigmoid', 'moe_fused_gate', 'prepare_moe_input', 'scaled_fp4_experts_quant', 'cutlass_fp4_group_mm', 'apply_shuffle_mul_sum', 'moe_align_block_size', 'fused_moe_kernel']
+Successful: 17/23
+Failed kernels:
+  - trtllm_batch_decode_with_kv_cache_mla: Exit code 1
+  - trtllm_ragged_attention_deepseek: Exit code 1
+  - mla_rope_quantize_fp8: Exit code 1
+  - concat_mla_k: Exit code -6
+  - trtllm_fp4_block_scale_moe: Exit code 1
+  - fused_moe_kernel: Exit code 1
 ======================================================================
