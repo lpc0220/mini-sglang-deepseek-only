@@ -65,17 +65,26 @@ KERNELS = [
 ]
 
 
-def run_benchmark_subprocess(module_name: str, output_dir: str, batch_sizes: str, seq_lens: str) -> Tuple[bool, str]:
+def run_benchmark_subprocess(module_name: str, kernel_name: str, output_dir: str, batch_sizes: str, seq_lens: str) -> Tuple[bool, str]:
     """Run a single benchmark in a separate subprocess for isolation.
 
     This ensures that if one kernel crashes and corrupts the CUDA context,
     it won't affect subsequent benchmarks.
+
+    Returns (success, notes) where success is True only if:
+    1. The subprocess exits with code 0
+    2. A CSV file with results was actually produced
     """
     script_dir = os.path.dirname(os.path.abspath(__file__))
     script_path = os.path.join(script_dir, f"{module_name}.py")
 
     if not os.path.exists(script_path):
         return False, f"Script not found: {script_path}"
+
+    # Check for existing CSV before running
+    csv_path = os.path.join(output_dir, f"{kernel_name}.csv")
+    csv_existed_before = os.path.exists(csv_path)
+    csv_mtime_before = os.path.getmtime(csv_path) if csv_existed_before else 0
 
     cmd = [
         sys.executable,
@@ -101,6 +110,26 @@ def run_benchmark_subprocess(module_name: str, output_dir: str, batch_sizes: str
 
         if result.returncode != 0:
             return False, f"Exit code {result.returncode}"
+
+        # Check if CSV was created/updated with actual results
+        csv_exists_after = os.path.exists(csv_path)
+        csv_mtime_after = os.path.getmtime(csv_path) if csv_exists_after else 0
+
+        if not csv_exists_after:
+            return False, "No CSV output (kernel not available or all runs failed)"
+
+        if csv_existed_before and csv_mtime_after <= csv_mtime_before:
+            return False, "CSV not updated (all runs failed)"
+
+        # Check if CSV has actual data rows (not just header)
+        try:
+            with open(csv_path, 'r') as f:
+                lines = f.readlines()
+                if len(lines) <= 1:  # Only header or empty
+                    return False, "CSV empty (no successful runs)"
+        except Exception as e:
+            return False, f"CSV read error: {e}"
+
         return True, "OK"
 
     except subprocess.TimeoutExpired:
@@ -223,7 +252,7 @@ def main():
         print(f"{'='*70}")
 
         success, notes = run_benchmark_subprocess(
-            module_name, args.output, args.batch_sizes, args.seq_lens
+            module_name, kernel_name, args.output, args.batch_sizes, args.seq_lens
         )
         results.append((module_name, kernel_name, category, bound, success, notes))
 

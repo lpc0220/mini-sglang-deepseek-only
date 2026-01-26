@@ -23,27 +23,82 @@ from bench_utils import (
 
 def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
                                    device: str = "cuda") -> Optional[BenchmarkResult]:
-    """Benchmark TensorRT-LLM ragged attention for DeepSeek."""
+    """Benchmark TensorRT-LLM ragged attention for DeepSeek.
+
+    API signature:
+        trtllm_ragged_attention_deepseek(
+            query,              # [num_tokens, num_heads, 192]  (q_nope + q_rope)
+            key,                # [num_tokens, num_heads, 192]
+            value,              # [num_tokens, num_heads, 128]
+            workspace_buffer,
+            seq_lens,           # [B]
+            max_q_len,          # int
+            max_kv_len,         # int
+            bmm1_scale,         # float
+            bmm2_scale,         # float
+            o_sf_scale,         # float
+            batch_size,         # int
+            window_left,        # int
+            cum_seq_lens_q,     # [B+1]
+            cum_seq_lens_kv,    # [B+1]
+            enable_pdl,         # bool
+            is_causal,          # bool
+            return_lse,         # bool
+        )
+
+    Note: query.shape[2] == 192, key.shape[2] == 192, value.shape[2] == 128
+    """
     try:
         from flashinfer.prefill import trtllm_ragged_attention_deepseek
     except ImportError:
         print("Warning: trtllm_ragged_attention_deepseek not available (requires flashinfer)")
         return None
 
-    d = Lkv + Dr  # 576
+    # DeepSeek MLA dimensions
+    head_dim_qk = 192  # 128 + 64
+    head_dim_v = Dv    # 128
+
     tokens = B * S
 
-    # Setup inputs
-    q_nope = torch.randn(tokens, Nh, Lkv, dtype=torch.bfloat16, device=device)
-    q_rope = torch.randn(tokens, Nh, Dr, dtype=torch.bfloat16, device=device)
-    kv_cache = torch.randn(tokens, d, dtype=torch.bfloat16, device=device)
+    # Query: [num_tokens, num_heads, 192]
+    query = torch.randn(tokens, Nh, head_dim_qk, dtype=torch.bfloat16, device=device)
+    # Key: [num_tokens, num_heads, 192]
+    key = torch.randn(tokens, Nh, head_dim_qk, dtype=torch.bfloat16, device=device)
+    # Value: [num_tokens, num_heads, 128]
+    value = torch.randn(tokens, Nh, head_dim_v, dtype=torch.bfloat16, device=device)
 
-    # Ragged batch info
-    cu_seqlens = torch.arange(0, tokens + 1, S, dtype=torch.int32, device=device)
+    # Sequence lengths: [B]
+    seq_lens_tensor = torch.full((B,), S, dtype=torch.int32, device=device)
+
+    # Cumulative sequence lengths: [B+1]
+    cum_seq_lens_q = torch.arange(0, tokens + 1, S, dtype=torch.int32, device=device)
+    cum_seq_lens_kv = cum_seq_lens_q.clone()
+
+    # Workspace buffer
+    workspace_buffer = torch.zeros(256, 4, dtype=torch.int32, device=device)
+
+    # Scale factors
+    sm_scale = 1.0 / (head_dim_qk ** 0.5)
 
     def kernel_fn():
         trtllm_ragged_attention_deepseek(
-            q_nope, q_rope, kv_cache, cu_seqlens, 1.0 / (d ** 0.5)
+            query,
+            key,
+            value,
+            workspace_buffer,
+            seq_lens_tensor,
+            S,  # max_q_len
+            S,  # max_kv_len
+            sm_scale,  # bmm1_scale
+            1.0,  # bmm2_scale
+            1.0,  # o_sf_scale
+            B,  # batch_size
+            -1,  # window_left (-1 for no windowing)
+            cum_seq_lens_q,
+            cum_seq_lens_kv,
+            False,  # enable_pdl
+            True,   # is_causal
+            False,  # return_lse
         )
 
     try:
@@ -57,10 +112,10 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
             pass
         return None
 
-    # Approximate FLOPS for attention: 4 * tokens * seq_len * d (simplified)
-    flops = 4 * tokens * S * d
-    q_bytes = (q_nope.numel() + q_rope.numel()) * 2
-    kv_bytes = kv_cache.numel() * 2
+    # Approximate FLOPS for attention: 4 * tokens * seq_len * head_dim (simplified)
+    flops = 4 * tokens * S * head_dim_qk
+    q_bytes = query.numel() * 2
+    kv_bytes = (key.numel() + value.numel()) * 2
     bytes_transferred = q_bytes + kv_bytes
     gflops = flops / (latency_ms * 1e-3) / 1e9
     bandwidth_gbs = bytes_transferred / (latency_ms * 1e-3) / 1e9
@@ -77,7 +132,7 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
         op="prefill_attn",
         phase="prefill",
         B=B, S=S,
-        M=tokens * Nh, N=S, K_dim=d,
+        M=tokens * Nh, N=S, K_dim=head_dim_qk,
         latency_ms=latency_ms,
         gflops=gflops,
         peak_pct=peak_pct,

@@ -38,10 +38,10 @@ def bench_apply_rope(sgl_kernel, B: int, S: int,
     # Key tensor: [tokens, Nh, head_dim] (for standard attention, but MLA uses compressed)
     k = torch.randn(tokens, Nh, head_dim, dtype=torch.bfloat16, device=device)
 
-    # RoPE cos/sin cache
+    # RoPE cos/sin cache - MUST be float32
     max_seq_len = max(S, 2048)
-    cos_cache = torch.randn(max_seq_len, head_dim // 2, dtype=torch.bfloat16, device=device)
-    sin_cache = torch.randn(max_seq_len, head_dim // 2, dtype=torch.bfloat16, device=device)
+    cos_cache = torch.randn(max_seq_len, head_dim // 2, dtype=torch.float32, device=device)
+    sin_cache = torch.randn(max_seq_len, head_dim // 2, dtype=torch.float32, device=device)
     positions = torch.arange(tokens, dtype=torch.int64, device=device) % S
 
     def kernel_fn():
@@ -59,7 +59,7 @@ def bench_apply_rope(sgl_kernel, B: int, S: int,
         return None
 
     # Memory-bound: read q, k, cos, sin, positions; write q, k
-    bytes_read = (q.numel() + k.numel()) * 2 + (cos_cache.numel() + sin_cache.numel()) * 2 + positions.numel() * 8
+    bytes_read = (q.numel() + k.numel()) * 2 + (cos_cache.numel() + sin_cache.numel()) * 4 + positions.numel() * 8
     bytes_write = (q.numel() + k.numel()) * 2
     bytes_transferred = bytes_read + bytes_write
     flops = tokens * Nh * head_dim * 4  # RoPE ops

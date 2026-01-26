@@ -23,7 +23,19 @@ from bench_utils import (
 
 def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
                                  device: str = "cuda") -> Optional[BenchmarkResult]:
-    """Benchmark MLA RoPE + FP8 quantization kernel."""
+    """Benchmark MLA RoPE + FP8 quantization kernel.
+
+    API signature:
+        mla_rope_quantize_fp8(
+            q_rope,         # [tokens, num_heads, qk_rope_head_dim]
+            k_rope,         # [tokens, qk_rope_head_dim] (MLA: 2D)
+            q_nope,         # [tokens, num_heads, qk_nope_head_dim]
+            k_nope,         # [tokens, kv_lora_rank] (MLA: 2D)
+            cos_sin_cache,  # [max_seq_len, qk_rope_head_dim] MUST be float32
+            pos_ids,        # [tokens]
+            ...
+        )
+    """
     try:
         from flashinfer.rope import mla_rope_quantize_fp8
     except ImportError:
@@ -31,19 +43,36 @@ def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
         return None
 
     tokens = B * S
-    d = Lkv + Dr  # 576
 
-    # Input: q_rope before RoPE
-    q_rope = torch.randn(tokens, Nh, Dr, dtype=torch.bfloat16, device=device)
-    kv_latent = torch.randn(tokens, d, dtype=torch.bfloat16, device=device)
+    # DeepSeek MLA dimensions
+    qk_nope_head_dim = 128  # Dn
+    qk_rope_head_dim = Dr   # 64
+    kv_lora_rank = Lkv      # 512
 
-    # RoPE cos/sin cache
-    cos_cache = torch.randn(S, Dr // 2, dtype=torch.bfloat16, device=device)
-    sin_cache = torch.randn(S, Dr // 2, dtype=torch.bfloat16, device=device)
-    positions = torch.arange(S, dtype=torch.int32, device=device).repeat(B)
+    # Query inputs
+    q_rope = torch.randn(tokens, Nh, qk_rope_head_dim, dtype=torch.bfloat16, device=device)
+    q_nope = torch.randn(tokens, Nh, qk_nope_head_dim, dtype=torch.bfloat16, device=device)
+
+    # Key inputs (MLA uses 2D for k_rope and k_nope)
+    k_rope = torch.randn(tokens, qk_rope_head_dim, dtype=torch.bfloat16, device=device)
+    k_nope = torch.randn(tokens, kv_lora_rank, dtype=torch.bfloat16, device=device)
+
+    # RoPE cos/sin cache - MUST be float32
+    max_seq_len = max(S, 2048)  # Use reasonable max
+    cos_sin_cache = torch.randn(max_seq_len, qk_rope_head_dim, dtype=torch.float32, device=device)
+
+    # Position IDs
+    pos_ids = torch.arange(S, dtype=torch.int64, device=device).repeat(B)[:tokens]
 
     def kernel_fn():
-        mla_rope_quantize_fp8(q_rope, kv_latent, cos_cache, sin_cache, positions)
+        mla_rope_quantize_fp8(
+            q_rope,
+            k_rope,
+            q_nope,
+            k_nope,
+            cos_sin_cache,
+            pos_ids,
+        )
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)
@@ -56,11 +85,12 @@ def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
             pass
         return None
 
-    # Memory-bound: read q_rope, kv_latent, cos, sin; write quantized outputs
-    bytes_read = (q_rope.numel() + kv_latent.numel() + cos_cache.numel() + sin_cache.numel()) * 2
-    bytes_write = (tokens * Nh * Dr + tokens * d)  # FP8 outputs = 1 byte each
+    # Memory-bound: read q_rope, k_rope, q_nope, k_nope, cos_sin; write quantized outputs
+    bytes_read = (q_rope.numel() + k_rope.numel() + q_nope.numel() + k_nope.numel()) * 2
+    bytes_read += cos_sin_cache.numel() * 4  # float32
+    bytes_write = (q_rope.numel() + k_rope.numel() + q_nope.numel() + k_nope.numel())  # FP8 outputs = 1 byte each
     bytes_transferred = bytes_read + bytes_write
-    flops = tokens * (Nh * Dr * 4 + d)  # RoPE ops
+    flops = tokens * (Nh * qk_rope_head_dim * 4 + qk_rope_head_dim * 4)  # RoPE ops
     gflops = flops / (latency_ms * 1e-3) / 1e9
     bandwidth_gbs = bytes_transferred / (latency_ms * 1e-3) / 1e9
     arith_intensity = flops / bytes_transferred
@@ -72,7 +102,7 @@ def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
         op="rope_quantize",
         phase="prefill" if S > 1 else "decode",
         B=B, S=S,
-        M=tokens, N=Dr, K_dim=d,
+        M=tokens, N=qk_rope_head_dim, K_dim=kv_lora_rank,
         latency_ms=latency_ms,
         gflops=gflops,
         peak_pct=peak_pct,
