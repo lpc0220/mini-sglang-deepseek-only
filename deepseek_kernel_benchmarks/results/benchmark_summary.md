@@ -1,11 +1,11 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-26 11:17:50
+**Generated:** 2026-01-26 11:55:09
 
 **Total Kernels:** 23
 **Kernels Run:** 23
-**Successful:** 12
-**Failed:** 11
+**Successful:** 16
+**Failed:** 7
 
 **Note:** Each kernel runs in a separate subprocess for isolation.
 CUDA crashes in one kernel do not affect other kernels.
@@ -23,19 +23,19 @@ CUDA crashes in one kernel do not affect other kernels.
 | 7 | `cutlass_mla_decode` | Attention | Mixed | ✓ OK | OK |
 | 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✓ OK | OK |
 | 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | ✓ OK | OK |
-| 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✗ FAILED | Exit code 2 |
-| 11 | `apply_rope_with_cos_sin_cache_inplace` | RoPE | Memory | ✗ FAILED | CSV empty (no successful runs) |
+| 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✓ OK | OK |
+| 11 | `apply_rope_with_cos_sin_cache_inplace` | RoPE | Memory | ✓ OK | OK |
 | 12 | `concat_mla_k` | Concat | Memory | ✓ OK | OK |
 | 13 | `silu_and_mul` | Activation | Memory | ✓ OK | OK |
-| 14 | `topk_softmax` | MoE Routing | Memory | ✗ FAILED | Exit code 1 |
-| 15 | `topk_sigmoid` | MoE Routing | Memory | ✗ FAILED | Exit code 1 |
+| 14 | `topk_softmax` | MoE Routing | Memory | ✓ OK | OK |
+| 15 | `topk_sigmoid` | MoE Routing | Memory | ✓ OK | OK |
 | 16 | `moe_fused_gate` | MoE Routing | Memory | ✓ OK | OK |
 | 17 | `prepare_moe_input` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
 | 18 | `scaled_fp4_experts_quant` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
 | 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
 | 20 | `apply_shuffle_mul_sum` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
 | 21 | `moe_align_block_size` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
-| 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
+| 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✗ FAILED | Exit code 1 |
 | 23 | `fused_moe_kernel` | MoE | Mixed | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
 
 ## CSV Files Generated
