@@ -107,14 +107,17 @@ def main():
     parser.add_argument("--output", type=str, default="../results/", help="Output directory")
     parser.add_argument("--batch-sizes", type=str, default="1,2,4,8,16,32,64,128",
                         help="Comma-separated batch sizes")
+    parser.add_argument("--seq-lens", type=str, default="128,256,512,1024,2048",
+                        help="Comma-separated sequence lengths (unused for this kernel)")
     args = parser.parse_args()
 
     batch_sizes = [int(x) for x in args.batch_sizes.split(",")]
+    seq_lens = [int(x) for x in args.seq_lens.split(",")]
 
     print("=" * 60)
     print("Benchmark: bmm_fp8 (Kernel #6)")
     print("=" * 60)
-    run_benchmarks(batch_sizes, args.output)
+    run_benchmarks(batch_sizes, seq_lens, args.output)
 
 
 if __name__ == "__main__":
