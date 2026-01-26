@@ -15,7 +15,6 @@ from typing import List, Optional
 import torch
 
 from bench_utils import (
-    Nh, Lkv, Dr,
     BenchmarkResult, PEAK_BANDWIDTH_GBS,
     benchmark_kernel, save_results, check_sgl_kernel
 )
@@ -26,6 +25,11 @@ def bench_concat_mla_k(sgl_kernel, B: int, S: int,
     """Benchmark concat_mla_k kernel.
 
     concat_mla_k(k, k_nope, k_rope) concatenates k_nope and k_rope into k.
+
+    Expected tensor shapes (from CUDA kernel):
+    - k:      [tokens, NUM_LOCAL_HEADS=128, K_HEAD_DIM=192]
+    - k_nope: [tokens, NUM_LOCAL_HEADS=128, QK_NOPE_HEAD_DIM=128]
+    - k_rope: [tokens, 1, QK_ROPE_HEAD_DIM=64]
     """
     try:
         from sgl_kernel import concat_mla_k
@@ -34,14 +38,18 @@ def bench_concat_mla_k(sgl_kernel, B: int, S: int,
         return None
 
     tokens = B * S
-    d = Lkv + Dr  # 576
+    # Constants from the CUDA kernel
+    NUM_LOCAL_HEADS = 128
+    QK_NOPE_HEAD_DIM = 128
+    QK_ROPE_HEAD_DIM = 64
+    K_HEAD_DIM = QK_NOPE_HEAD_DIM + QK_ROPE_HEAD_DIM  # 192
 
-    # k_nope: [tokens, Lkv] - the latent key (no position embedding)
-    k_nope = torch.randn(tokens, Lkv, dtype=torch.bfloat16, device=device)
-    # k_rope: [tokens, Dr] - the rotary position embedded key
-    k_rope = torch.randn(tokens, Dr, dtype=torch.bfloat16, device=device)
-    # Output k: [tokens, d] - concatenated key
-    k = torch.empty(tokens, d, dtype=torch.bfloat16, device=device)
+    # k_nope: [tokens, 128, 128] - the latent key (no position embedding)
+    k_nope = torch.randn(tokens, NUM_LOCAL_HEADS, QK_NOPE_HEAD_DIM, dtype=torch.bfloat16, device=device)
+    # k_rope: [tokens, 1, 64] - the rotary position embedded key
+    k_rope = torch.randn(tokens, 1, QK_ROPE_HEAD_DIM, dtype=torch.bfloat16, device=device)
+    # Output k: [tokens, 128, 192] - concatenated key
+    k = torch.empty(tokens, NUM_LOCAL_HEADS, K_HEAD_DIM, dtype=torch.bfloat16, device=device)
 
     def kernel_fn():
         concat_mla_k(k, k_nope, k_rope)
@@ -73,7 +81,7 @@ def bench_concat_mla_k(sgl_kernel, B: int, S: int,
         op="concat_kv",
         phase="prefill" if S > 1 else "decode",
         B=B, S=S,
-        M=tokens, N=d, K_dim=0,
+        M=tokens, N=K_HEAD_DIM, K_dim=0,
         latency_ms=latency_ms,
         gflops=gflops,
         peak_pct=peak_pct,
