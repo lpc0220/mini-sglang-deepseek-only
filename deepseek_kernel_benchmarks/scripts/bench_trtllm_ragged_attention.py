@@ -25,9 +25,9 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
                                    device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark TensorRT-LLM ragged attention for DeepSeek."""
     try:
-        from flashinfer.triton.mla import trtllm_ragged_attention_deepseek
+        from flashinfer.prefill import trtllm_ragged_attention_deepseek
     except ImportError:
-        print("Warning: trtllm_ragged_attention_deepseek not available")
+        print("Warning: trtllm_ragged_attention_deepseek not available (requires flashinfer)")
         return None
 
     d = Lkv + Dr  # 576

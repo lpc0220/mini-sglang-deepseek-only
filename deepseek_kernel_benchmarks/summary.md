@@ -62,7 +62,7 @@
 | `dsv3_router_gemm` | num_tokens ≤ 16 | Hard limit in kernel; prefill phase skipped |
 | `cutlass_mla_decode` | B × seq_len ≤ 1024 | GB200 crashes at B*seq_len > 1024 with CUDA illegal instruction |
 | `trtllm_*` kernels | flashinfer required | May not be available on all installations |
-| `mla_rope_quantize_fp8` | flashinfer required | Requires flashinfer.triton.mla module |
+| `mla_rope_quantize_fp8` | flashinfer required | Requires flashinfer.rope module |
 | `prepare_moe_input` | May not be exported | Internal API - may show "not available" |
 | `scaled_fp4_experts_quant` | May not be exported | Internal API - may show "not available" |
 | `apply_shuffle_mul_sum` | May not be exported | Internal API - may show "not available" |

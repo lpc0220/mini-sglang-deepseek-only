@@ -27,9 +27,9 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
                                       phase: str, device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark TRT-LLM FP4 block-scaled MoE kernel."""
     try:
-        from flashinfer.triton.moe import trtllm_fp4_block_scale_moe
+        from flashinfer.fused_moe import trtllm_fp4_block_scale_moe
     except ImportError:
-        print("Warning: trtllm_fp4_block_scale_moe not available")
+        print("Warning: trtllm_fp4_block_scale_moe not available (requires flashinfer)")
         return None
 
     tokens = B * S if phase == "prefill" else B

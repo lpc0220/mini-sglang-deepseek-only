@@ -25,9 +25,9 @@ def bench_trtllm_mla(flashinfer, B: int, seq_len: int,
                      device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark TensorRT-LLM MLA decode kernel."""
     try:
-        from flashinfer.triton.mla import trtllm_batch_decode_with_kv_cache_mla
+        from flashinfer.mla import trtllm_batch_decode_with_kv_cache_mla
     except ImportError:
-        print("Warning: trtllm_batch_decode_with_kv_cache_mla not available")
+        print("Warning: trtllm_batch_decode_with_kv_cache_mla not available (requires flashinfer)")
         return None
 
     d = Lkv + Dr  # 576

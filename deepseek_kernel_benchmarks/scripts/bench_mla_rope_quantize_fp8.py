@@ -25,9 +25,9 @@ def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
                                  device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark MLA RoPE + FP8 quantization kernel."""
     try:
-        from flashinfer.triton.mla import mla_rope_quantize_fp8
+        from flashinfer.rope import mla_rope_quantize_fp8
     except ImportError:
-        print("Warning: mla_rope_quantize_fp8 not available")
+        print("Warning: mla_rope_quantize_fp8 not available (requires flashinfer)")
         return None
 
     tokens = B * S

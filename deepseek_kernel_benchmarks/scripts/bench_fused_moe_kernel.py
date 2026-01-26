@@ -7,9 +7,13 @@ Ops: Fused MoE (triton implementation)
 
 Usage:
     python bench_fused_moe_kernel.py --output ../results/
+
+Note: This kernel requires flashinfer to be installed because sglang's
+import chain includes flashinfer dependencies.
 """
 
 import argparse
+import sys
 from typing import List, Optional
 
 import torch
@@ -21,19 +25,33 @@ from bench_utils import (
     benchmark_kernel, save_results, check_sgl_kernel
 )
 
+# Try to import fused_moe at module level to fail fast
+_fused_moe = None
+_import_error = None
+try:
+    from sglang.srt.layers.moe.fused_moe_triton import fused_moe as _fused_moe
+except Exception as e:
+    _import_error = str(e)
+    # Try vllm fallback
+    try:
+        from vllm._custom_ops import fused_moe as _fused_moe
+    except Exception:
+        pass
+
 
 def bench_fused_moe_kernel(B: int, S: int, hidden_size: int,
                            num_experts: int, topk: int, intermediate_size: int,
                            phase: str, device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark triton fused_moe_kernel."""
-    try:
-        from sglang.srt.layers.moe.fused_moe_triton import fused_moe
-    except ImportError:
-        try:
-            from vllm._custom_ops import fused_moe
-        except ImportError:
+    global _fused_moe, _import_error
+    if _fused_moe is None:
+        if _import_error:
+            print(f"Warning: fused_moe_kernel not available (requires flashinfer: {_import_error})")
+        else:
             print("Warning: fused_moe_kernel not available")
-            return None
+        return None
+
+    fused_moe = _fused_moe
 
     tokens = B * S if phase == "prefill" else B
 
