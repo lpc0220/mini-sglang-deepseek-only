@@ -23,7 +23,18 @@ from bench_utils import (
 
 def bench_topk_softmax(sgl_kernel, B: int, S: int, num_experts: int, topk: int, phase: str,
                        device: str = "cuda") -> Optional[BenchmarkResult]:
-    """Benchmark topk_softmax kernel for MoE routing."""
+    """Benchmark topk_softmax kernel for MoE routing.
+
+    API from sgl_kernel/moe.py:
+        topk_softmax(
+            topk_weights: [num_tokens, topk],  # Output
+            topk_ids: [num_tokens, topk],      # Output
+            gating_output: [num_tokens, num_experts],  # Input
+            renormalize: bool = False,
+            moe_softcapping: float = 0.0,
+            correction_bias: Optional[torch.Tensor] = None,
+        )
+    """
     try:
         from sgl_kernel import topk_softmax
     except ImportError:
@@ -31,11 +42,14 @@ def bench_topk_softmax(sgl_kernel, B: int, S: int, num_experts: int, topk: int, 
         return None
 
     tokens = B * S if phase == "prefill" else B
-    # Router logits: [tokens, num_experts]
-    router_logits = torch.randn(tokens, num_experts, dtype=torch.float32, device=device)
+    # Gating output (router logits): [tokens, num_experts]
+    gating_output = torch.randn(tokens, num_experts, dtype=torch.float32, device=device)
+    # Output tensors
+    topk_weights = torch.empty(tokens, topk, dtype=torch.float32, device=device)
+    topk_ids = torch.empty(tokens, topk, dtype=torch.int32, device=device)
 
     def kernel_fn():
-        topk_softmax(router_logits, topk)
+        topk_softmax(topk_weights, topk_ids, gating_output, renormalize=False)
 
     try:
         latency_ms = benchmark_kernel(kernel_fn)

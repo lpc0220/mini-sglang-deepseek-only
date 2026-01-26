@@ -25,19 +25,25 @@ def bench_trtllm_mla(flashinfer, B: int, seq_len: int,
                      device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark TensorRT-LLM MLA decode kernel.
 
-    API signature:
+    API from flashinfer/mla.py:
         trtllm_batch_decode_with_kv_cache_mla(
-            query,              # [B, q_len, num_heads, head_dim_qk] where head_dim_qk = qk_nope + qk_rope
-            kv_cache,           # [num_pages, page_size, head_dim_ckv + head_dim_kpe]
-            workspace_buffer,   # [num_semaphores, 4]
-            qk_nope_head_dim,   # 128
-            kv_lora_rank,       # 512
-            qk_rope_head_dim,   # 64
+            query,              # [B, q_len, num_heads, 576] - must be 576!
+            kv_cache,           # [num_pages, page_size, 576]
+            workspace_buffer,   # needs ~8MB
+            qk_nope_head_dim,   # must be 128
+            kv_lora_rank,       # must be 512
+            qk_rope_head_dim,   # must be 64
             block_tables,       # [B, num_pages]
             seq_lens,           # [B]
             max_seq_len,        # int
             ...
         )
+
+    Key constraints from _check_trtllm_gen_mla_shape():
+        - qk_nope_head_dim == 128
+        - kv_lora_rank == 512
+        - qk_rope_head_dim == 64
+        - query.shape[-1] == kv_cache.shape[-1] == 576
     """
     try:
         from flashinfer.mla import trtllm_batch_decode_with_kv_cache_mla
@@ -45,23 +51,22 @@ def bench_trtllm_mla(flashinfer, B: int, seq_len: int,
         print("Warning: trtllm_batch_decode_with_kv_cache_mla not available (requires flashinfer)")
         return None
 
-    # DeepSeek MLA dimensions
-    qk_nope_head_dim = 128  # Dn
-    kv_lora_rank = Lkv      # 512
-    qk_rope_head_dim = Dr   # 64
-    head_dim_qk = qk_nope_head_dim + qk_rope_head_dim  # 192
-    head_dim_ckv_kpe = kv_lora_rank + qk_rope_head_dim  # 576 = 512 + 64
+    # DeepSeek MLA fixed dimensions (hardcoded in flashinfer)
+    qk_nope_head_dim = 128  # must be 128
+    kv_lora_rank = 512      # must be 512
+    qk_rope_head_dim = 64   # must be 64
+    head_dim = 576          # kv_lora_rank + qk_rope_head_dim = 512 + 64
 
-    block_size = 64
+    block_size = 64  # must be 32 or 64
     q_len = 1  # decode: single token per request
 
-    # Query: [B, q_len, num_heads, head_dim_qk]
-    query = torch.randn(B, q_len, Nh, head_dim_qk, dtype=torch.bfloat16, device=device)
+    # Query: [B, q_len, num_heads, 576]
+    query = torch.randn(B, q_len, Nh, head_dim, dtype=torch.bfloat16, device=device)
 
-    # Paged KV cache: [num_pages, page_size, head_dim_ckv + head_dim_kpe]
+    # Paged KV cache: [num_pages, page_size, 576]
     num_blocks_per_seq = (seq_len + block_size - 1) // block_size
     total_pages = B * num_blocks_per_seq
-    kv_cache = torch.randn(total_pages, block_size, head_dim_ckv_kpe, dtype=torch.bfloat16, device=device)
+    kv_cache = torch.randn(total_pages, block_size, head_dim, dtype=torch.bfloat16, device=device)
 
     # Block tables: [B, num_blocks_per_seq]
     block_tables = torch.arange(total_pages, dtype=torch.int32, device=device).reshape(B, num_blocks_per_seq)
@@ -69,12 +74,12 @@ def bench_trtllm_mla(flashinfer, B: int, seq_len: int,
     # Sequence lengths: [B]
     seq_lens_tensor = torch.full((B,), seq_len, dtype=torch.int32, device=device)
 
-    # Workspace buffer for multi-block mode
-    num_semaphores = 256
-    workspace_buffer = torch.zeros(num_semaphores, 4, dtype=torch.int32, device=device)
+    # Workspace buffer - needs ~8MB for trtllm_gen_counter_workspace
+    workspace_size_bytes = 16 * 1024 * 1024  # 16MB to be safe
+    workspace_buffer = torch.zeros(workspace_size_bytes // 4, dtype=torch.int32, device=device)
 
     # Scale factor
-    sm_scale = 1.0 / (head_dim_qk ** 0.5)
+    sm_scale = 1.0 / (head_dim ** 0.5)
 
     def kernel_fn():
         trtllm_batch_decode_with_kv_cache_mla(
@@ -104,7 +109,7 @@ def bench_trtllm_mla(flashinfer, B: int, seq_len: int,
         return None
 
     # Approximate FLOPS for attention
-    flops = 4 * B * Nh * seq_len * head_dim_ckv_kpe
+    flops = 4 * B * Nh * seq_len * head_dim
     q_bytes = query.numel() * 2
     kv_bytes = kv_cache.numel() * 2
     bytes_transferred = q_bytes + kv_bytes
@@ -123,7 +128,7 @@ def bench_trtllm_mla(flashinfer, B: int, seq_len: int,
         op="attn_mqa",
         phase="decode",
         B=B, S=seq_len,
-        M=B * Nh, N=seq_len, K_dim=head_dim_ckv_kpe,
+        M=B * Nh, N=seq_len, K_dim=head_dim,
         latency_ms=latency_ms,
         gflops=gflops,
         peak_pct=peak_pct,

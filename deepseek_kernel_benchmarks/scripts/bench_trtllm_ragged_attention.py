@@ -74,8 +74,9 @@ def bench_trtllm_ragged_attention(flashinfer, B: int, S: int,
     cum_seq_lens_q = torch.arange(0, tokens + 1, S, dtype=torch.int32, device=device)
     cum_seq_lens_kv = cum_seq_lens_q.clone()
 
-    # Workspace buffer
-    workspace_buffer = torch.zeros(256, 4, dtype=torch.int32, device=device)
+    # Workspace buffer - needs ~8MB for trtllm kernels
+    workspace_size_bytes = 16 * 1024 * 1024  # 16MB to be safe
+    workspace_buffer = torch.zeros(workspace_size_bytes // 4, dtype=torch.int32, device=device)
 
     # Scale factors
     sm_scale = 1.0 / (head_dim_qk ** 0.5)

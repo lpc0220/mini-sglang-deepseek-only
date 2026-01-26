@@ -42,7 +42,7 @@ KERNELS = [
 
     # RoPE & Concat (2)
     ("bench_apply_rope", "apply_rope_with_cos_sin_cache_inplace", "RoPE", "Memory"),
-    ("bench_concat_mla_mha_k", "concat_mla_k", "Concat", "Memory"),
+    ("bench_concat_mla_k", "concat_mla_k", "Concat", "Memory"),
 
     # Activation (1)
     ("bench_silu_and_mul", "silu_and_mul", "Activation", "Memory"),

@@ -15,7 +15,7 @@ from typing import List, Optional
 import torch
 
 from bench_utils import (
-    Nh, Lkv, Dr,
+    Nh, Dr,
     BenchmarkResult, PEAK_BANDWIDTH_GBS,
     benchmark_kernel, save_results, check_flashinfer
 )
@@ -45,17 +45,18 @@ def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
     tokens = B * S
 
     # DeepSeek MLA dimensions
-    qk_nope_head_dim = 128  # Dn
-    qk_rope_head_dim = Dr   # 64
-    kv_lora_rank = Lkv      # 512
+    # From flashinfer docs: q_nope shape is (nnz, num_heads, no_rope_dim)
+    # For MLA: k_rope is 2D (nnz, rope_dim), k_nope is 2D (nnz, no_rope_dim)
+    qk_nope_head_dim = 128  # no_rope_dim (NOT kv_lora_rank!)
+    qk_rope_head_dim = Dr   # 64 (rope_dim)
 
-    # Query inputs
+    # Query inputs: (nnz, num_qo_heads, dim)
     q_rope = torch.randn(tokens, Nh, qk_rope_head_dim, dtype=torch.bfloat16, device=device)
     q_nope = torch.randn(tokens, Nh, qk_nope_head_dim, dtype=torch.bfloat16, device=device)
 
-    # Key inputs (MLA uses 2D for k_rope and k_nope)
+    # Key inputs: MLA uses 2D tensors (nnz, dim)
     k_rope = torch.randn(tokens, qk_rope_head_dim, dtype=torch.bfloat16, device=device)
-    k_nope = torch.randn(tokens, kv_lora_rank, dtype=torch.bfloat16, device=device)
+    k_nope = torch.randn(tokens, qk_nope_head_dim, dtype=torch.bfloat16, device=device)  # 128, not 512!
 
     # RoPE cos/sin cache - MUST be float32
     max_seq_len = max(S, 2048)  # Use reasonable max
@@ -102,7 +103,7 @@ def bench_mla_rope_quantize_fp8(flashinfer, B: int, S: int,
         op="rope_quantize",
         phase="prefill" if S > 1 else "decode",
         B=B, S=S,
-        M=tokens, N=qk_rope_head_dim, K_dim=kv_lora_rank,
+        M=tokens, N=qk_rope_head_dim, K_dim=qk_nope_head_dim,
         latency_ms=latency_ms,
         gflops=gflops,
         peak_pct=peak_pct,
