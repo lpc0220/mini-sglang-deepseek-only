@@ -19,25 +19,36 @@ Benchmark: trtllm_fp4_block_scale_moe (Kernel #22)
 
 Note: This kernel requires complex weight preprocessing (shuffling, permutation)
 that is difficult to replicate outside flashinfer's test framework.
-Using flashinfer's own benchmark infrastructure...
+Importing and running flashinfer's test routine directly...
 
 === Running flashinfer benchmark ===
 
   decode B=8 (tokens=8):
-    FAILED: usage: flashinfer_benchmark.py [-h] --routine
-                               {BatchDecodeWithPagedKVCacheWrapper,BatchPrefillWithPagedKVCacheWrapper,BatchPrefillWithRaggedKVCacheWrapper,BatchMLAPagedA
+    ERROR: Error in function 'run' at /usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/trtllm_batched_gemm_runner.cu:258: Error occurred when running GEMM! (numBatches:  256 , GemmMNK:  8   4096   7168 , Kernel:  bmm_E2m1_E2m1E2m1_Fp32_t128x8x512u2_s5_et128x8_m128x8x64_cga1x1x1_16dp256b_rM_TN_transOut_schedP2x1x2x3_bN_ldgsts_tmaOpt_clmp_swiGlu_dynBatch_sm100f )
 
   prefill B=1,S=128 (tokens=128):
-    FAILED: usage: flashinfer_benchmark.py [-h] --routine
-                               {BatchDecodeWithPagedKVCacheWrapper,BatchPrefillWithPagedKVCacheWrapper,BatchPrefillWithRaggedKVCacheWrapper,BatchMLAPagedA
+    ERROR: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
 
   prefill B=1,S=256 (tokens=256):
-    FAILED: usage: flashinfer_benchmark.py [-h] --routine
-                               {BatchDecodeWithPagedKVCacheWrapper,BatchPrefillWithPagedKVCacheWrapper,BatchPrefillWithRaggedKVCacheWrapper,BatchMLAPagedA
+    ERROR: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
 
   prefill B=1,S=1024 (tokens=1024):
-    FAILED: usage: flashinfer_benchmark.py [-h] --routine
-                               {BatchDecodeWithPagedKVCacheWrapper,BatchPrefillWithPagedKVCacheWrapper,BatchPrefillWithRaggedKVCacheWrapper,BatchMLAPagedA
+    ERROR: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
 
 ============================================================
 Note: This kernel benchmark uses flashinfer's internal benchmark tool.
