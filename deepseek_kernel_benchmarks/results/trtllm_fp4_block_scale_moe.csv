@@ -1,0 +1,5 @@
+kernel,op,phase,B,S,M,N,K,latency_ms,gflops,peak_pct,bandwidth_gbs,arith_intensity,bound
+trtllm_fp4_block_scale_moe,fused_moe,decode,1,1,4,1024,1024,0.011000,2287.80,0.02,0.00,0.0000,compute
+trtllm_fp4_block_scale_moe,fused_moe,decode,8,1,64,1024,1024,0.027000,14913.08,0.16,0.00,0.0000,compute
+trtllm_fp4_block_scale_moe,fused_moe,prefill,1,128,1024,1024,1024,0.051000,126322.57,1.41,0.00,0.0000,compute
+trtllm_fp4_block_scale_moe,fused_moe,prefill,1,1024,8192,1024,1024,0.087000,592409.28,6.55,0.00,0.0000,compute

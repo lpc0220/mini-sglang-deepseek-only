@@ -1,11 +1,11 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-27 22:10:46
+**Generated:** 2026-01-27 22:18:59
 
 **Total Kernels:** 23
-**Kernels Run:** 1
-**Successful:** 0
-**Failed:** 1
+**Kernels Run:** 23
+**Successful:** 23
+**Failed:** 0
 
 **Note:** Each kernel runs in a separate subprocess for isolation.
 CUDA crashes in one kernel do not affect other kernels.
@@ -14,7 +14,29 @@ CUDA crashes in one kernel do not affect other kernels.
 
 | # | Kernel | Category | Bound | Status | Notes |
 |---|--------|----------|-------|--------|-------|
-| 1 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
+| 1 | `rmsnorm` | Norm | Memory | ✓ OK | OK |
+| 2 | `fused_add_rmsnorm` | Norm | Memory | ✓ OK | OK |
+| 3 | `cutlass_scaled_fp4_mm` | GEMM | Compute | ✓ OK | OK |
+| 4 | `dsv3_fused_a_gemm` | GEMM | Compute | ✓ OK | OK |
+| 5 | `dsv3_router_gemm` | GEMM | Compute | ✓ OK | OK |
+| 6 | `bmm_fp8` | BMM | Compute | ✓ OK | OK |
+| 7 | `cutlass_mla_decode` | Attention | Mixed | ✓ OK | OK |
+| 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✓ OK | OK |
+| 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | ✓ OK | OK |
+| 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✓ OK | OK |
+| 11 | `apply_rope_with_cos_sin_cache_inplace` | RoPE | Memory | ✓ OK | OK |
+| 12 | `concat_mla_k` | Concat | Memory | ✓ OK | OK |
+| 13 | `silu_and_mul` | Activation | Memory | ✓ OK | OK |
+| 14 | `topk_softmax` | MoE Routing | Memory | ✓ OK | OK |
+| 15 | `topk_sigmoid` | MoE Routing | Memory | ✓ OK | OK |
+| 16 | `moe_fused_gate` | MoE Routing | Memory | ✓ OK | OK |
+| 17 | `prepare_moe_input` | MoE | Memory | ✓ OK | OK |
+| 18 | `scaled_fp4_experts_quant` | MoE | Memory | ✓ OK | OK |
+| 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✓ OK | OK |
+| 20 | `apply_shuffle_mul_sum` | MoE | Memory | ✓ OK | OK |
+| 21 | `moe_align_block_size` | MoE | Memory | ✓ OK | OK |
+| 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✓ OK | OK |
+| 23 | `fused_moe_kernel` | MoE | Mixed | ✓ OK | OK |
 
 ## CSV Files Generated
 
@@ -40,4 +62,5 @@ CUDA crashes in one kernel do not affect other kernels.
 - `topk_sigmoid.csv`
 - `topk_softmax.csv`
 - `trtllm_batch_decode_with_kv_cache_mla.csv`
+- `trtllm_fp4_block_scale_moe.csv`
 - `trtllm_ragged_attention_deepseek.csv`
