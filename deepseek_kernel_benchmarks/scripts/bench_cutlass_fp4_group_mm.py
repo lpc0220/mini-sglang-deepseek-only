@@ -168,38 +168,86 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         return
 
     results = []
+    cuda_error = False
 
     # Decode phase (S=1)
     print("\n=== Decode Phase: gate_up ===")
     for B in batch_sizes:
-        result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "gate_up", "decode")
-        if result:
-            results.append(result)
-            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+        if cuda_error:
+            print(f"  B={B}: Skipped (CUDA error in previous run)")
+            continue
+        try:
+            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "gate_up", "decode")
+            if result:
+                results.append(result)
+                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+        except Exception as e:
+            if "CUDA" in str(e) or "illegal memory" in str(e).lower():
+                print(f"  B={B}: CUDA error - stopping gate_up decode benchmarks")
+                cuda_error = True
+            else:
+                print(f"  B={B}: Error - {e}")
 
     print("\n=== Decode Phase: down ===")
+    cuda_error = False  # Reset for down phase
     for B in batch_sizes:
-        result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "down", "decode")
-        if result:
-            results.append(result)
-            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+        if cuda_error:
+            print(f"  B={B}: Skipped (CUDA error in previous run)")
+            continue
+        try:
+            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "down", "decode")
+            if result:
+                results.append(result)
+                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+        except Exception as e:
+            if "CUDA" in str(e) or "illegal memory" in str(e).lower():
+                print(f"  B={B}: CUDA error - stopping down decode benchmarks")
+                cuda_error = True
+            else:
+                print(f"  B={B}: Error - {e}")
 
     # Prefill phase
     print("\n=== Prefill Phase: gate_up ===")
+    cuda_error = False
     for B in batch_sizes[:4]:
+        if cuda_error:
+            break
         for S in seq_lens:
-            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "gate_up", "prefill")
-            if result:
-                results.append(result)
-                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+            if cuda_error:
+                print(f"  B={B}, S={S}: Skipped (CUDA error in previous run)")
+                continue
+            try:
+                result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "gate_up", "prefill")
+                if result:
+                    results.append(result)
+                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+            except Exception as e:
+                if "CUDA" in str(e) or "illegal memory" in str(e).lower():
+                    print(f"  B={B}, S={S}: CUDA error - stopping gate_up prefill benchmarks")
+                    cuda_error = True
+                else:
+                    print(f"  B={B}, S={S}: Error - {e}")
 
     print("\n=== Prefill Phase: down ===")
+    cuda_error = False
     for B in batch_sizes[:4]:
+        if cuda_error:
+            break
         for S in seq_lens:
-            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "down", "prefill")
-            if result:
-                results.append(result)
-                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+            if cuda_error:
+                print(f"  B={B}, S={S}: Skipped (CUDA error in previous run)")
+                continue
+            try:
+                result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "down", "prefill")
+                if result:
+                    results.append(result)
+                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
+            except Exception as e:
+                if "CUDA" in str(e) or "illegal memory" in str(e).lower():
+                    print(f"  B={B}, S={S}: CUDA error - stopping down prefill benchmarks")
+                    cuda_error = True
+                else:
+                    print(f"  B={B}, S={S}: Error - {e}")
 
     if results:
         save_results(results, output_dir, "cutlass_fp4_group_mm")

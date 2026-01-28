@@ -264,6 +264,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         return
 
     results = []
+    cuda_error = False
 
     # TRT-LLM FP4 MoE kernel has minimum token requirements
     # The kernel crashes with small batch sizes due to GEMM dimension requirements
@@ -276,19 +277,42 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         if B < MIN_DECODE_BATCH:
             print(f"  B={B}: Skipped (minimum batch size for FP4 MoE is {MIN_DECODE_BATCH})")
             continue
-        result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, 1, H, E, K, I, "decode")
-        if result:
-            results.append(result)
-            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
+        if cuda_error:
+            print(f"  B={B}: Skipped (CUDA error in previous run)")
+            continue
+        try:
+            result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, 1, H, E, K, I, "decode")
+            if result:
+                results.append(result)
+                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
+        except Exception as e:
+            if "CUDA" in str(e) or "illegal memory" in str(e).lower() or "GEMM" in str(e):
+                print(f"  B={B}: CUDA/GEMM error - stopping decode benchmarks")
+                cuda_error = True
+            else:
+                print(f"  B={B}: Error - {e}")
 
     # Prefill phase
     print("\n=== Prefill Phase ===")
+    cuda_error = False  # Reset for prefill phase
     for B in batch_sizes[:4]:
+        if cuda_error:
+            break
         for S in seq_lens:
-            result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, S, H, E, K, I, "prefill")
-            if result:
-                results.append(result)
-                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
+            if cuda_error:
+                print(f"  B={B}, S={S}: Skipped (CUDA error in previous run)")
+                continue
+            try:
+                result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, S, H, E, K, I, "prefill")
+                if result:
+                    results.append(result)
+                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
+            except Exception as e:
+                if "CUDA" in str(e) or "illegal memory" in str(e).lower() or "GEMM" in str(e):
+                    print(f"  B={B}, S={S}: CUDA/GEMM error - stopping prefill benchmarks")
+                    cuda_error = True
+                else:
+                    print(f"  B={B}, S={S}: Error - {e}")
 
     if results:
         save_results(results, output_dir, "trtllm_fp4_block_scale_moe")

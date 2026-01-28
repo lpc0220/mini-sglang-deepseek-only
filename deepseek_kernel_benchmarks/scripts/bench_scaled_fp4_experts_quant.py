@@ -123,23 +123,47 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         return
 
     results = []
+    cuda_error = False
 
     # Decode phase (S=1)
     print("\n=== Decode Phase ===")
     for B in batch_sizes:
-        result = bench_scaled_fp4_experts_quant(sgl_kernel, B, 1, H, E, K, "decode")
-        if result:
-            results.append(result)
-            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
+        if cuda_error:
+            print(f"  B={B}: Skipped (CUDA error in previous run)")
+            continue
+        try:
+            result = bench_scaled_fp4_experts_quant(sgl_kernel, B, 1, H, E, K, "decode")
+            if result:
+                results.append(result)
+                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
+        except Exception as e:
+            if "CUDA" in str(e) or "illegal memory" in str(e).lower():
+                print(f"  B={B}: CUDA error - stopping decode benchmarks")
+                cuda_error = True
+            else:
+                print(f"  B={B}: Error - {e}")
 
     # Prefill phase
     print("\n=== Prefill Phase ===")
+    cuda_error = False  # Reset for prefill phase
     for B in batch_sizes[:4]:
+        if cuda_error:
+            break
         for S in seq_lens:
-            result = bench_scaled_fp4_experts_quant(sgl_kernel, B, S, H, E, K, "prefill")
-            if result:
-                results.append(result)
-                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
+            if cuda_error:
+                print(f"  B={B}, S={S}: Skipped (CUDA error in previous run)")
+                continue
+            try:
+                result = bench_scaled_fp4_experts_quant(sgl_kernel, B, S, H, E, K, "prefill")
+                if result:
+                    results.append(result)
+                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
+            except Exception as e:
+                if "CUDA" in str(e) or "illegal memory" in str(e).lower():
+                    print(f"  B={B}, S={S}: CUDA error - stopping prefill benchmarks")
+                    cuda_error = True
+                else:
+                    print(f"  B={B}, S={S}: Error - {e}")
 
     if results:
         save_results(results, output_dir, "scaled_fp4_experts_quant")
