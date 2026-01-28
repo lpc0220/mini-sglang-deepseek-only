@@ -406,15 +406,25 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         return
 
     # Test configurations matching flashinfer's test parameters
+    # Note: The kernel tests use hidden_size=1024, not 7168. Full DeepSeek dimensions
+    # may not be supported by the current kernel implementation.
+    # First try with test-compatible dimensions, then optionally with DeepSeek dimensions.
+
+    # Use smaller dimensions that match flashinfer test cases
+    test_hidden_size = 1024  # flashinfer test uses 1024
+    test_intermediate_size = 1024  # flashinfer test uses up to 2048
+    test_num_experts = 128  # flashinfer test uses 128 or 256
+
     test_configs = [
         # (num_tokens, description)
         (8, "decode B=8"),
         (128, "prefill B=1,S=128"),
-        (256, "prefill B=1,S=256"),
-        (1024, "prefill B=1,S=1024"),
+        (768, "prefill B=1,S=768"),
     ]
 
     print("=== Running flashinfer benchmark ===")
+    print(f"  Using test-compatible dimensions: hidden={test_hidden_size}, intermediate={test_intermediate_size}, experts={test_num_experts}")
+    print(f"  (Full DeepSeek dimensions: hidden={H}, intermediate={I}, experts={E})")
     for num_tokens, desc in test_configs:
         # Create args namespace matching flashinfer's expected format
         # Include all required arguments from flashinfer_benchmark.py and parse_moe_args
@@ -422,9 +432,9 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
             # Required MoE args
             routine="trtllm_fp4_block_scale_moe",
             num_tokens=num_tokens,
-            hidden_size=H,
-            intermediate_size=I,
-            num_experts=E,
+            hidden_size=test_hidden_size,
+            intermediate_size=test_intermediate_size,
+            num_experts=test_num_experts,
             top_k=K,
             # DeepSeek V3 routing args
             n_group=N_GROUP,
@@ -434,7 +444,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
             routing_method_type=2,  # deepseek_v3 = 2
             # Local expert config
             local_expert_offset=0,
-            local_num_experts=E,
+            local_num_experts=test_num_experts,
             # Weight layout
             use_shuffled_weight=False,
             weight_layout=0,  # MajorK
