@@ -143,12 +143,32 @@ When user says:
 
 ## Current Status
 - **Phase:** Phase 4 - Testing & Validation ✅ WORKING
-- **Last Updated:** 2026-01-16
+- **Last Updated:** 2026-01-28
 - **Lines of Code:** ~291,000 (From original ~663K, ~56% reduction)
+- **Kernel Benchmarks:** 23/23 passing on GB200
 
 ## Working Milestones
 
-### Milestone 2: AWQ/GPTQ/Marlin Removal (Current)
+### Milestone 3: Kernel Benchmarks Complete (Current)
+
+**Date:** 2026-01-28
+**Branch:** `main`
+
+All 23 DeepSeek-R1-NVFP4-v2 kernel benchmarks passing on GB200:
+- **23/23 kernels successful** - Full benchmark coverage
+- Benchmark infrastructure in `deepseek_kernel_benchmarks/`
+- Results in `deepseek_kernel_benchmarks/results/`
+
+Key learnings:
+- `trtllm_fp4_block_scale_moe` requires flashinfer's official benchmark CLI due to complex weight preprocessing
+- `cutlass_mla_decode` has B×seq_len ≤ 1024 limit on GB200
+- `dsv3_fused_a_gemm` and `dsv3_router_gemm` limited to B ≤ 16
+
+**Tested on GB200:** WORKING ✅
+
+---
+
+### Milestone 2: AWQ/GPTQ/Marlin Removal
 
 **Commit:** `d1acc3ac1` (2026-01-17)
 **Branch:** `deepseek-only`

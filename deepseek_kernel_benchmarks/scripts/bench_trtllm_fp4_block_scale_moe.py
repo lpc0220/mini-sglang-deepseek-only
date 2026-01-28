@@ -7,6 +7,15 @@ Ops: Fused MoE with FP4 block-scaled weights
 
 Based on: flashinfer/benchmarks/routines/moe.py testTrtllmFp4BlockScaleMoe
 
+IMPORTANT: This benchmark uses flashinfer's official benchmark CLI instead of
+calling the kernel directly. The kernel requires complex weight preprocessing
+(shuffling, permutation via _maybe_get_cached_w3_w1_permute_indices and
+block_scale_interleave) that is difficult to replicate correctly. The CLI
+handles all preprocessing internally.
+
+Routing method: Uses Renormalize routing (type=1) for benchmarking.
+DeepSeek V3 routing (type=2) requires additional parameters (n_group, topk_group).
+
 Usage:
     python bench_trtllm_fp4_block_scale_moe.py --output ../results/
 """

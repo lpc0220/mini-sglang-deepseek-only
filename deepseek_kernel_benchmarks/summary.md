@@ -1,10 +1,12 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Performance Profile
 
-**Generated:** [Run benchmark to populate]
+**Generated:** 2026-01-28
 
 **Hardware:** NVIDIA GB200 (Blackwell B200)
 
-**Source:** `results/deepseek_nvfp4_ops.md`
+**Status:** ✅ **23/23 kernels passing**
+
+**Source:** `results/all_kernels.csv`
 
 ---
 
@@ -50,7 +52,7 @@
 | 22 | `trtllm_fp4_block_scale_moe` | flashinfer | MoE | Mixed | [bench_trtllm_fp4_block_scale_moe.py](scripts/bench_trtllm_fp4_block_scale_moe.py) |
 | 23 | `fused_moe_kernel` | triton | MoE | Mixed | [bench_fused_moe_kernel.py](scripts/bench_fused_moe_kernel.py) |
 
-**Note:** Kernels 17, 18, 20 (`prepare_moe_input`, `scaled_fp4_experts_quant`, `apply_shuffle_mul_sum`) may not be exposed as standalone functions - benchmarks will report "not available" if kernel API is internal.
+**Note:** All 23 kernels are now benchmarked successfully. Kernels 17, 18, 20 (`prepare_moe_input`, `scaled_fp4_experts_quant`, `apply_shuffle_mul_sum`) use internal APIs but are working.
 
 ---
 
@@ -62,6 +64,7 @@
 | `dsv3_router_gemm` | num_tokens ≤ 16 | Hard limit in kernel; prefill phase skipped |
 | `cutlass_mla_decode` | B × seq_len ≤ 1024 | GB200 crashes at B*seq_len > 1024 with CUDA illegal instruction |
 | `trtllm_*` kernels | flashinfer required | May not be available on all installations |
+| `trtllm_fp4_block_scale_moe` | Uses flashinfer CLI | Requires complex weight preprocessing (shuffling, permutation); benchmark uses flashinfer's official CLI with Renormalize routing |
 | `mla_rope_quantize_fp8` | flashinfer required | Requires flashinfer.rope module |
 | `prepare_moe_input` | May not be exported | Internal API - may show "not available" |
 | `scaled_fp4_experts_quant` | May not be exported | Internal API - may show "not available" |
