@@ -1,6 +1,6 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-27 20:38:17
+**Generated:** 2026-01-27 21:02:14
 
 **Total Kernels:** 23
 **Kernels Run:** 23
