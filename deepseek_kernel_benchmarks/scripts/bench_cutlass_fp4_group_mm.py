@@ -130,10 +130,14 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
     except Exception as e:
         error_str = str(e)
         print(f"Warning: Kernel failed for B={B}, S={S}, op={op_name}: {error_str}")
-        # Check if this is a CUDA error that will corrupt the context
-        if "CUDA" in error_str or "illegal memory" in error_str.lower():
-            # Signal to caller that we should stop
-            raise RuntimeError(f"CUDA_FATAL: {error_str}")
+        # Try to recover CUDA context
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+            # Force CUDA to reinitialize by creating a small tensor
+            _ = torch.zeros(1, device="cuda")
+        except:
+            pass
         return None
 
     flops = compute_gemm_flops(M, N, K_dim)
@@ -168,70 +172,38 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         return
 
     results = []
-    fatal_error = False
 
     # Decode phase (S=1)
     print("\n=== Decode Phase: gate_up ===")
     for B in batch_sizes:
-        if fatal_error:
-            print(f"  B={B}: Skipped (CUDA context corrupted)")
-            continue
-        try:
-            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "gate_up", "decode")
-            if result:
-                results.append(result)
-                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
-        except RuntimeError as e:
-            if "CUDA_FATAL" in str(e):
-                fatal_error = True
+        result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "gate_up", "decode")
+        if result:
+            results.append(result)
+            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
 
     print("\n=== Decode Phase: down ===")
-    fatal_error = False  # Reset for down phase
     for B in batch_sizes:
-        if fatal_error:
-            print(f"  B={B}: Skipped (CUDA context corrupted)")
-            continue
-        try:
-            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "down", "decode")
-            if result:
-                results.append(result)
-                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
-        except RuntimeError as e:
-            if "CUDA_FATAL" in str(e):
-                fatal_error = True
+        result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "down", "decode")
+        if result:
+            results.append(result)
+            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
 
     # Prefill phase
     print("\n=== Prefill Phase: gate_up ===")
-    fatal_error = False
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            if fatal_error:
-                print(f"  B={B}, S={S}: Skipped (CUDA context corrupted)")
-                continue
-            try:
-                result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "gate_up", "prefill")
-                if result:
-                    results.append(result)
-                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
-            except RuntimeError as e:
-                if "CUDA_FATAL" in str(e):
-                    fatal_error = True
+            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "gate_up", "prefill")
+            if result:
+                results.append(result)
+                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
 
     print("\n=== Prefill Phase: down ===")
-    fatal_error = False
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            if fatal_error:
-                print(f"  B={B}, S={S}: Skipped (CUDA context corrupted)")
-                continue
-            try:
-                result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "down", "prefill")
-                if result:
-                    results.append(result)
-                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
-            except RuntimeError as e:
-                if "CUDA_FATAL" in str(e):
-                    fatal_error = True
+            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "down", "prefill")
+            if result:
+                results.append(result)
+                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
 
     if results:
         save_results(results, output_dir, "cutlass_fp4_group_mm")

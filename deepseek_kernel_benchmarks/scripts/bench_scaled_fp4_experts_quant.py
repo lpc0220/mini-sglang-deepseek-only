@@ -83,10 +83,14 @@ def bench_scaled_fp4_experts_quant(sgl_kernel, B: int, S: int, hidden_size: int,
     except Exception as e:
         error_str = str(e)
         print(f"Warning: Kernel failed for B={B}, S={S}: {error_str}")
-        # Check if this is a CUDA error that will corrupt the context
-        if "CUDA" in error_str or "illegal memory" in error_str.lower():
-            # Signal to caller that we should stop
-            raise RuntimeError(f"CUDA_FATAL: {error_str}")
+        # Try to recover CUDA context
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+            # Force CUDA to reinitialize by creating a small tensor
+            _ = torch.zeros(1, device="cuda")
+        except:
+            pass
         return None
 
     # Memory: read bf16 inputs, write fp4 outputs + scales
@@ -123,38 +127,23 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         return
 
     results = []
-    fatal_error = False
 
     # Decode phase (S=1)
     print("\n=== Decode Phase ===")
     for B in batch_sizes:
-        if fatal_error:
-            print(f"  B={B}: Skipped (CUDA context corrupted)")
-            continue
-        try:
-            result = bench_scaled_fp4_experts_quant(sgl_kernel, B, 1, H, E, K, "decode")
-            if result:
-                results.append(result)
-                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
-        except RuntimeError as e:
-            if "CUDA_FATAL" in str(e):
-                fatal_error = True
+        result = bench_scaled_fp4_experts_quant(sgl_kernel, B, 1, H, E, K, "decode")
+        if result:
+            results.append(result)
+            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
 
     # Prefill phase
     print("\n=== Prefill Phase ===")
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            if fatal_error:
-                print(f"  B={B}, S={S}: Skipped (CUDA context corrupted)")
-                continue
-            try:
-                result = bench_scaled_fp4_experts_quant(sgl_kernel, B, S, H, E, K, "prefill")
-                if result:
-                    results.append(result)
-                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
-            except RuntimeError as e:
-                if "CUDA_FATAL" in str(e):
-                    fatal_error = True
+            result = bench_scaled_fp4_experts_quant(sgl_kernel, B, S, H, E, K, "prefill")
+            if result:
+                results.append(result)
+                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
 
     if results:
         save_results(results, output_dir, "scaled_fp4_experts_quant")

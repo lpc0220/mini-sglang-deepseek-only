@@ -209,10 +209,14 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
     except Exception as e:
         error_str = str(e)
         print(f"Warning: Kernel failed for B={B}, S={S}: {error_str}")
-        # Check if this is a CUDA/GEMM error that will corrupt the context
-        if "CUDA" in error_str or "illegal memory" in error_str.lower() or "GEMM" in error_str:
-            # Signal to caller that we should stop
-            raise RuntimeError(f"CUDA_FATAL: {error_str}")
+        # Try to recover CUDA context
+        try:
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+            # Force CUDA to reinitialize by creating a small tensor
+            _ = torch.zeros(1, device="cuda")
+        except:
+            pass
         return None
 
     # FLOPS: gate_up GEMM + down GEMM for each expert token
@@ -264,39 +268,23 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         return
 
     results = []
-    fatal_error = False
 
     # Decode phase (S=1)
     print("\n=== Decode Phase ===")
     for B in batch_sizes:
-        if fatal_error:
-            print(f"  B={B}: Skipped (CUDA context corrupted)")
-            continue
-        try:
-            result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, 1, H, E, K, I, "decode")
-            if result:
-                results.append(result)
-                print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
-        except RuntimeError as e:
-            if "CUDA_FATAL" in str(e):
-                fatal_error = True
+        result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, 1, H, E, K, I, "decode")
+        if result:
+            results.append(result)
+            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
 
     # Prefill phase
     print("\n=== Prefill Phase ===")
-    fatal_error = False  # Reset for prefill phase
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            if fatal_error:
-                print(f"  B={B}, S={S}: Skipped (CUDA context corrupted)")
-                continue
-            try:
-                result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, S, H, E, K, I, "prefill")
-                if result:
-                    results.append(result)
-                    print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
-            except RuntimeError as e:
-                if "CUDA_FATAL" in str(e):
-                    fatal_error = True
+            result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, S, H, E, K, I, "prefill")
+            if result:
+                results.append(result)
+                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
 
     if results:
         save_results(results, output_dir, "trtllm_fp4_block_scale_moe")
