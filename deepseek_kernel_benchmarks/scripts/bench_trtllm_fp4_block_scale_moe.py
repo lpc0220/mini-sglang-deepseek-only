@@ -379,6 +379,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     import subprocess
     import sys
     import os
+    import re
 
     print("\nRunning flashinfer benchmark CLI for trtllm_fp4_block_scale_moe...\n")
 
@@ -396,11 +397,11 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     # Test configurations - use dimensions that work with the kernel
     # The kernel works with hidden_size=1024, intermediate_size=1024, num_experts=128
     test_configs = [
-        # (num_tokens, hidden_size, intermediate_size, num_experts, top_k, description)
-        (1, 1024, 1024, 128, 4, "decode B=1"),
-        (8, 1024, 1024, 128, 8, "decode B=8"),
-        (128, 1024, 1024, 128, 8, "prefill S=128"),
-        (1024, 1024, 1024, 128, 8, "prefill S=1024"),
+        # (num_tokens, hidden_size, intermediate_size, num_experts, top_k, phase, B, S)
+        (1, 1024, 1024, 128, 4, "decode", 1, 1),
+        (8, 1024, 1024, 128, 8, "decode", 8, 1),
+        (128, 1024, 1024, 128, 8, "prefill", 1, 128),
+        (1024, 1024, 1024, 128, 8, "prefill", 1, 1024),
     ]
 
     print("=== Running flashinfer benchmark ===")
@@ -408,7 +409,10 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     print(f"  Routing method: renormalize (type=1)")
     print()
 
-    for num_tokens, hidden_size, intermediate_size, num_experts, top_k, desc in test_configs:
+    results = []
+
+    for num_tokens, hidden_size, intermediate_size, num_experts, top_k, phase, B, S in test_configs:
+        desc = f"{phase} B={B}" if phase == "decode" else f"{phase} S={S}"
         print(f"  {desc} (tokens={num_tokens}, H={hidden_size}, I={intermediate_size}, E={num_experts}, K={top_k}):")
 
         cmd = [
@@ -429,21 +433,54 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
             # Parse output for performance metrics
             output_lines = result.stdout.strip().split('\n')
+            latency_ms = None
+            tflops = None
             for line in output_lines:
-                if 'trtllm' in line.lower() or 'tflops' in line.lower() or 'median' in line.lower() or 'tb/s' in line.lower():
+                if 'perf' in line.lower() and 'trtllm' in line.lower():
                     print(f"    {line.strip()}")
+                    # Parse: [PERF] trtllm :: median time 0.011 ms; std 0.000 ms; achieved tflops 2.197 TFLOPs/sec; achieved tb_per_sec 0.618 TB/sec
+                    match = re.search(r'median time ([\d.]+) ms.*achieved tflops ([\d.]+)', line)
+                    if match:
+                        latency_ms = float(match.group(1))
+                        tflops = float(match.group(2))
+
             if result.returncode != 0:
                 print(f"    ERROR (exit code {result.returncode})")
                 if result.stderr:
-                    # Print first few lines of stderr
                     stderr_lines = result.stderr.strip().split('\n')[:5]
                     for line in stderr_lines:
                         print(f"    {line}")
+            elif latency_ms is not None:
+                # Create a BenchmarkResult for CSV output
+                # Calculate metrics
+                total_expert_tokens = num_tokens * top_k
+                flops_gate_up = 2 * total_expert_tokens * 2 * intermediate_size * hidden_size
+                flops_down = 2 * total_expert_tokens * hidden_size * intermediate_size
+                flops = flops_gate_up + flops_down
+                gflops = flops / (latency_ms * 1e-3) / 1e9
+
+                results.append(BenchmarkResult(
+                    kernel="trtllm_fp4_block_scale_moe",
+                    op="fused_moe",
+                    phase=phase,
+                    B=B, S=S,
+                    M=total_expert_tokens, N=intermediate_size, K_dim=hidden_size,
+                    latency_ms=latency_ms,
+                    gflops=gflops,
+                    peak_pct=tflops / PEAK_TFLOPS_FP4 * 100 if tflops else 0,
+                    bandwidth_gbs=0,  # Not computed
+                    arith_intensity=0,  # Not computed
+                    bound="compute"
+                ))
         except subprocess.TimeoutExpired:
             print(f"    TIMEOUT")
         except Exception as e:
             print(f"    ERROR: {e}")
         print()
+
+    # Save results to CSV
+    if results:
+        save_results(results, output_dir, "trtllm_fp4_block_scale_moe")
 
     print("=" * 60)
     print("Note: This benchmark uses flashinfer's official benchmark CLI.")
