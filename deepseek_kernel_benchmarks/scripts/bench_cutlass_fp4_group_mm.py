@@ -84,15 +84,15 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
 
     # Distribute tokens evenly across experts
     tokens_per_expert = total_expert_tokens // num_experts
-    expert_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * tokens_per_expert
-    expert_offsets[-1] = total_expert_tokens
+    # expert_offsets: [num_experts] - start offset for each expert (NOT num_experts + 1!)
+    # The kernel expects problem_sizes.size(0) == expert_offsets.size(0)
+    expert_offsets = torch.arange(0, num_experts, dtype=torch.int32, device=device) * tokens_per_expert
 
-    # Blockscale offsets (each token has K_dim//16 scale factors)
+    # Blockscale offsets: [num_experts] - start offset for scale factors
     sf_per_token = K_dim // 16
-    blockscale_offsets = torch.arange(0, num_experts + 1, dtype=torch.int32, device=device) * (tokens_per_expert * sf_per_token)
-    blockscale_offsets[-1] = total_expert_tokens * sf_per_token
+    blockscale_offsets = torch.arange(0, num_experts, dtype=torch.int32, device=device) * (tokens_per_expert * sf_per_token)
 
-    # Problem sizes for each expert: [M_per_expert, N, K]
+    # Problem sizes for each expert: [num_experts, 3] - [M_per_expert, N, K]
     problem_sizes = torch.zeros((num_experts, 3), dtype=torch.int32, device=device)
     for i in range(num_experts):
         m_i = tokens_per_expert if i < num_experts - 1 else total_expert_tokens - i * tokens_per_expert

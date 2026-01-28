@@ -48,10 +48,11 @@ def bench_scaled_fp4_experts_quant(sgl_kernel, B: int, S: int, hidden_size: int,
     expert_inputs = torch.randn(total_expert_tokens, hidden_size, dtype=torch.bfloat16, device=device)
 
     # Calculate global scale factor for FP4 quantization
+    # API expects input_global_scale to be 1D tensor with shape [1]
     FLOAT4_E2M1_MAX = 6.0
     FLOAT8_E4M3_MAX = torch.finfo(torch.float8_e4m3fn).max
     input_amax = expert_inputs.abs().max().to(torch.float32)
-    input_global_scale = (FLOAT8_E4M3_MAX * FLOAT4_E2M1_MAX) / input_amax.clamp(min=1e-12)
+    input_global_scale = ((FLOAT8_E4M3_MAX * FLOAT4_E2M1_MAX) / input_amax.clamp(min=1e-12)).reshape(1)
 
     # Expert offsets: [num_experts + 1] - cumulative token counts per expert
     # For simplicity, distribute tokens evenly across experts

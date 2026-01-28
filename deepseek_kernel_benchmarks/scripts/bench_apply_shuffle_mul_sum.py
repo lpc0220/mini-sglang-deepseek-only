@@ -53,8 +53,9 @@ def bench_apply_shuffle_mul_sum(sgl_kernel, B: int, S: int, hidden_size: int,
     permutation = torch.arange(tokens, dtype=torch.int32, device=device).repeat_interleave(topk)
 
     # Factors: weights for each expert output (softmax of routing scores)
+    # Must match output dtype (bfloat16)
     factors = torch.randn(total_expert_tokens, dtype=torch.float32, device=device)
-    factors = factors.view(tokens, topk).softmax(dim=-1).flatten()
+    factors = factors.view(tokens, topk).softmax(dim=-1).flatten().to(torch.bfloat16)
 
     def kernel_fn():
         apply_shuffle_mul_sum(input_tensor, output, permutation, factors)

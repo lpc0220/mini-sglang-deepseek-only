@@ -41,7 +41,8 @@ _StandardTopKOutput = None
 _MoeRunnerConfig = None
 _import_error = None
 try:
-    from sglang.srt.layers.moe.fused_moe_triton import fused_moe as _fused_moe
+    # Import from the actual module file, not the package
+    from sglang.srt.layers.moe.fused_moe_triton.fused_moe import fused_moe as _fused_moe
     from sglang.srt.layers.moe.topk import StandardTopKOutput as _StandardTopKOutput
     from sglang.srt.layers.moe.moe_runner import MoeRunnerConfig as _MoeRunnerConfig
 except Exception as e:
