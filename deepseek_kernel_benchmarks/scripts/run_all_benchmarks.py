@@ -102,11 +102,14 @@ def run_benchmark_subprocess(module_name: str, kernel_name: str, output_dir: str
             timeout=600,  # 10 minute timeout per kernel
         )
 
-        # Print output for visibility
+        # Print output for visibility (both to stdout for proper ordering in logs)
         if result.stdout:
             print(result.stdout)
+            sys.stdout.flush()
         if result.stderr:
-            print(result.stderr, file=sys.stderr)
+            # Print stderr to stdout to maintain proper ordering in log files
+            print(result.stderr)
+            sys.stdout.flush()
 
         if result.returncode != 0:
             return False, f"Exit code {result.returncode}"

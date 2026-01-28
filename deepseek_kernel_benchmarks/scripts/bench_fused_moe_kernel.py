@@ -41,6 +41,13 @@ _StandardTopKOutput = None
 _MoeRunnerConfig = None
 _import_error = None
 try:
+    # Initialize global server args to allow standalone benchmarking
+    # This is required because fused_moe depends on server configuration
+    from sglang.srt.server_args import ServerArgs, set_global_server_args
+    # Create minimal server args for benchmarking
+    _server_args = ServerArgs(model_path="dummy", disable_cuda_graph=True)
+    set_global_server_args(_server_args)
+
     # Import from the actual module file, not the package
     from sglang.srt.layers.moe.fused_moe_triton.fused_moe import fused_moe as _fused_moe
     from sglang.srt.layers.moe.topk import StandardTopKOutput as _StandardTopKOutput
