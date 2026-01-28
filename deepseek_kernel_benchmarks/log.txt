@@ -17,36 +17,26 @@ Running: trtllm_fp4_block_scale_moe (MoE, Mixed)
 Benchmark: trtllm_fp4_block_scale_moe (Kernel #22)
 ============================================================
 
-Note: This kernel requires complex weight preprocessing (shuffling, permutation)
-that is difficult to replicate outside flashinfer's test framework.
-Importing and running flashinfer's test routine directly...
+Running flashinfer benchmark CLI for trtllm_fp4_block_scale_moe...
 
 === Running flashinfer benchmark ===
-  Using test-compatible dimensions: hidden=1024, intermediate=1024, experts=128
-  (Full DeepSeek dimensions: hidden=7168, intermediate=2048, experts=256)
+  Benchmark script: /lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/../../flashinfer/benchmarks/flashinfer_benchmark.py
+  Routing method: renormalize (type=1)
 
-  decode B=8 (tokens=8):
-    ERROR: Error in function 'run' at /usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/trtllm_batched_gemm_runner.cu:258: Error occurred when running GEMM! (numBatches:  128 , GemmMNK:  8   2048   1024 , Kernel:  bmm_E2m1_E2m1E2m1_Fp32_t128x8x512u2_s5_et128x8_m128x8x64_cga1x1x1_16dp256b_rM_TN_transOut_schedP2x1x2x3_bN_ldgsts_tmaOpt_clmp_swiGlu_dynBatch_sm100f )
+  decode B=1 (tokens=1, H=1024, I=1024, E=128, K=4):
+    [PERF] trtllm         :: median time 0.011 ms; std 0.000 ms; achieved tflops 2.197 TFLOPs/sec; achieved tb_per_sec 0.618 TB/sec
 
-  prefill B=1,S=128 (tokens=128):
-    ERROR: CUDA error: an illegal memory access was encountered
-Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+  decode B=8 (tokens=8, H=1024, I=1024, E=128, K=8):
+    [PERF] trtllm         :: median time 0.027 ms; std 0.000 ms; achieved tflops 14.788 TFLOPs/sec; achieved tb_per_sec 3.380 TB/sec
 
+  prefill S=128 (tokens=128, H=1024, I=1024, E=128, K=8):
+    [PERF] trtllm         :: median time 0.051 ms; std 0.000 ms; achieved tflops 126.370 TFLOPs/sec; achieved tb_per_sec 4.450 TB/sec
 
-  prefill B=1,S=768 (tokens=768):
-    ERROR: CUDA error: an illegal memory access was encountered
-Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
-CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
+  prefill S=1024 (tokens=1024, H=1024, I=1024, E=128, K=8):
+    [PERF] trtllm         :: median time 0.087 ms; std 0.000 ms; achieved tflops 589.105 TFLOPs/sec; achieved tb_per_sec 2.623 TB/sec
 
 ============================================================
-Note: This kernel benchmark uses flashinfer's internal benchmark tool.
-Results may differ from other kernels due to different measurement methods.
+Note: This benchmark uses flashinfer's official benchmark CLI.
 ============================================================
 
 [FAILED] trtllm_fp4_block_scale_moe: No CSV output (kernel not available or all runs failed)
