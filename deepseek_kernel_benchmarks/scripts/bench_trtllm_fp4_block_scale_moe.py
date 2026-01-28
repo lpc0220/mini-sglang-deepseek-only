@@ -386,15 +386,16 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     import sys
     import os
 
-    # Find flashinfer benchmark script
+    # Find flashinfer benchmark directory - need to run from there for relative imports
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    flashinfer_bench = os.path.join(script_dir, "../../flashinfer/benchmarks/flashinfer_benchmark.py")
-    if not os.path.exists(flashinfer_bench):
-        flashinfer_bench = "/Users/lpc/workspace/sglang-deepseek-only/flashinfer/benchmarks/flashinfer_benchmark.py"
+    flashinfer_bench_dir = os.path.join(script_dir, "../../flashinfer/benchmarks")
+    if not os.path.exists(flashinfer_bench_dir):
+        flashinfer_bench_dir = None
 
-    if not os.path.exists(flashinfer_bench):
-        print("ERROR: Cannot find flashinfer benchmark script")
-        print("Please run flashinfer's benchmark directly:")
+    if not flashinfer_bench_dir:
+        print("ERROR: Cannot find flashinfer benchmarks directory")
+        print("Please clone flashinfer and run the benchmark directly:")
+        print(f"  git clone https://github.com/flashinfer-ai/flashinfer.git")
         print(f"  cd flashinfer/benchmarks")
         print(f"  python flashinfer_benchmark.py --routine trtllm_fp4_block_scale_moe \\")
         print(f"    --num_tokens <tokens> --hidden_size {H} --intermediate_size {I} \\")
@@ -414,9 +415,11 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     ]
 
     print("=== Running flashinfer benchmark ===")
+    print(f"  (running from: {flashinfer_bench_dir})")
     for num_tokens, desc in test_configs:
+        # Run from flashinfer/benchmarks directory so relative imports work
         cmd = [
-            sys.executable, flashinfer_bench,
+            sys.executable, "flashinfer_benchmark.py",
             "--routine", "trtllm_fp4_block_scale_moe",
             "--num_tokens", str(num_tokens),
             "--hidden_size", str(H),
@@ -434,7 +437,8 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
 
         print(f"\n  {desc} (tokens={num_tokens}):")
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            # Run from flashinfer/benchmarks directory
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, cwd=flashinfer_bench_dir)
             if result.returncode == 0:
                 # Parse output for performance metrics
                 for line in result.stdout.split('\n'):
