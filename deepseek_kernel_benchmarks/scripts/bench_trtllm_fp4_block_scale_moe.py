@@ -202,7 +202,6 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
             routing_method_type=ROUTING_METHOD_DEEPSEEK_V3,
             gated_act_type=0,  # SwiGLU
             do_finalize=True,
-            tile_tokens_dim=None,  # Let the kernel auto-compute
         )
 
     try:
