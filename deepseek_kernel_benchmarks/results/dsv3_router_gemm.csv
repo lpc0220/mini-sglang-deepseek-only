@@ -1,6 +1,6 @@
 kernel,op,phase,B,S,M,N,K,latency_ms,gflops,peak_pct,bandwidth_gbs,arith_intensity,bound
-dsv3_router_gemm,gate,decode,1,1,1,256,7168,0.002037,1801.93,0.08,1809.22,0.9960,compute
-dsv3_router_gemm,gate,decode,2,1,2,256,7168,0.002235,3284.10,0.15,1655.33,1.9839,compute
-dsv3_router_gemm,gate,decode,4,1,4,256,7168,0.002695,5448.05,0.24,1384.05,3.9363,compute
-dsv3_router_gemm,gate,decode,8,1,8,256,7168,0.003574,8214.28,0.37,1060.02,7.7492,compute
-dsv3_router_gemm,gate,decode,16,1,16,256,7168,0.007213,8140.86,0.36,541.74,15.0273,compute
+dsv3_router_gemm,gate,decode,1,1,1,256,7168,0.001977,1856.51,0.08,1864.03,0.9960,compute
+dsv3_router_gemm,gate,decode,2,1,2,256,7168,0.002234,3285.30,0.15,1655.94,1.9839,compute
+dsv3_router_gemm,gate,decode,4,1,4,256,7168,0.002710,5417.87,0.24,1376.39,3.9363,compute
+dsv3_router_gemm,gate,decode,8,1,8,256,7168,0.003572,8218.72,0.37,1060.59,7.7492,compute
+dsv3_router_gemm,gate,decode,16,1,16,256,7168,0.007113,8255.36,0.37,549.36,15.0273,compute
