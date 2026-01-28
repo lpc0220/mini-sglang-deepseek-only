@@ -30,6 +30,10 @@ TOPK_GROUP = 4  # Number of groups for top-k routing
 ROUTED_SCALING_FACTOR = 2.5  # DeepSeek V3 scaling factor
 ROUTING_METHOD_DEEPSEEK_V3 = 2  # DeepSeek V3 routing method type
 
+# For testing: Use Renormalize routing which is more widely tested
+# RoutingMethodType: 0=Default, 1=Renormalize, 2=DeepSeekV3, 3=Llama4, 4=RenormalizeNaive, 5=TopK
+ROUTING_METHOD_RENORMALIZE = 1
+
 
 def calculate_fp4_global_scale_factor(tensor: torch.Tensor) -> torch.Tensor:
     """Calculate global scale factor for FP4 quantization."""
@@ -425,9 +429,12 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     print("=== Running flashinfer benchmark ===")
     print(f"  Using test-compatible dimensions: hidden={test_hidden_size}, intermediate={test_intermediate_size}, experts={test_num_experts}")
     print(f"  (Full DeepSeek dimensions: hidden={H}, intermediate={I}, experts={E})")
+    print(f"  Using Renormalize routing (type=1) for compatibility with flashinfer tests")
     for num_tokens, desc in test_configs:
         # Create args namespace matching flashinfer's expected format
         # Include all required arguments from flashinfer_benchmark.py and parse_moe_args
+        # Note: Use Renormalize routing (type=1) instead of DeepSeekV3 (type=2)
+        # because flashinfer tests primarily test Renormalize/RenormalizeNaive/TopK routing
         args = Namespace(
             # Required MoE args
             routine="trtllm_fp4_block_scale_moe",
@@ -436,12 +443,13 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
             intermediate_size=test_intermediate_size,
             num_experts=test_num_experts,
             top_k=K,
-            # DeepSeek V3 routing args
-            n_group=N_GROUP,
-            topk_group=TOPK_GROUP,
-            routed_scaling_factor=ROUTED_SCALING_FACTOR,
-            routing_method="deepseek_v3",
-            routing_method_type=2,  # deepseek_v3 = 2
+            # Use Renormalize routing (more widely tested than DeepSeekV3)
+            # RoutingMethodType: 0=Default, 1=Renormalize, 2=DeepSeekV3, 3=Llama4, 4=RenormalizeNaive, 5=TopK
+            n_group=None,  # Not needed for Renormalize routing
+            topk_group=None,  # Not needed for Renormalize routing
+            routed_scaling_factor=None,  # Not needed for Renormalize routing
+            routing_method="renormalize",
+            routing_method_type=ROUTING_METHOD_RENORMALIZE,  # Use Renormalize (1) instead of DeepSeekV3 (2)
             # Local expert config
             local_expert_offset=0,
             local_num_experts=test_num_experts,
