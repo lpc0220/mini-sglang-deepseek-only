@@ -1,6 +1,6 @@
 kernel,op,phase,B,S,M,N,K,latency_ms,gflops,peak_pct,bandwidth_gbs,arith_intensity,bound
-dsv3_fused_a_gemm,fused_qkv_a_proj,decode,1,1,1,2112,7168,0.005132,5899.59,0.26,5903.21,0.9994,compute
-dsv3_fused_a_gemm,fused_qkv_a_proj,decode,2,1,2,2112,7168,0.005126,11812.63,0.53,5913.56,1.9976,compute
-dsv3_fused_a_gemm,fused_qkv_a_proj,decode,4,1,4,2112,7168,0.005152,23508.57,1.04,5891.55,3.9902,compute
-dsv3_fused_a_gemm,fused_qkv_a_proj,decode,8,1,8,2112,7168,0.005213,46464.00,2.07,5836.48,7.9610,compute
-dsv3_fused_a_gemm,fused_qkv_a_proj,decode,16,1,16,2112,7168,0.005832,83070.19,3.69,5242.81,15.8446,compute
+dsv3_fused_a_gemm,fused_qkv_a_proj,decode,1,1,1,2112,7168,0.005158,5870.17,0.26,5873.77,0.9994,compute
+dsv3_fused_a_gemm,fused_qkv_a_proj,decode,2,1,2,2112,7168,0.005143,11773.74,0.52,5894.09,1.9976,compute
+dsv3_fused_a_gemm,fused_qkv_a_proj,decode,4,1,4,2112,7168,0.005166,23442.60,1.04,5875.02,3.9902,compute
+dsv3_fused_a_gemm,fused_qkv_a_proj,decode,8,1,8,2112,7168,0.005237,46253.87,2.06,5810.09,7.9610,compute
+dsv3_fused_a_gemm,fused_qkv_a_proj,decode,16,1,16,2112,7168,0.005833,83048.85,3.69,5241.46,15.8446,compute

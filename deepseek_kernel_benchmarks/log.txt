@@ -1,9 +1,63 @@
 Traceback (most recent call last):
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 317, in <module>
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_prepare_moe_input.py", line 167, in <module>
     main()
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 313, in main
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_prepare_moe_input.py", line 163, in main
     run_benchmarks(batch_sizes, seq_lens, args.output)
-  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 278, in run_benchmarks
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_prepare_moe_input.py", line 137, in run_benchmarks
+    result = bench_prepare_moe_input(sgl_kernel, B, S, H, E, K, I, "prefill")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_prepare_moe_input.py", line 52, in bench_prepare_moe_input
+    topk_ids = torch.randint(0, num_experts, (tokens, topk), dtype=torch.int32, device=device)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_scaled_fp4_experts_quant.py", line 169, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_scaled_fp4_experts_quant.py", line 165, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_scaled_fp4_experts_quant.py", line 139, in run_benchmarks
+    result = bench_scaled_fp4_experts_quant(sgl_kernel, B, S, H, E, K, "prefill")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_scaled_fp4_experts_quant.py", line 48, in bench_scaled_fp4_experts_quant
+    expert_inputs = torch.randn(total_expert_tokens, hidden_size, dtype=torch.bfloat16, device=device)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_cutlass_fp4_group_mm.py", line 229, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_cutlass_fp4_group_mm.py", line 225, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_cutlass_fp4_group_mm.py", line 175, in run_benchmarks
+    result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "gate_up", "decode")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_cutlass_fp4_group_mm.py", line 62, in bench_cutlass_fp4_group_mm
+    a = torch.randn((M, K_dim), dtype=torch.bfloat16, device=device)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+Traceback (most recent call last):
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 318, in <module>
+    main()
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 314, in main
+    run_benchmarks(batch_sizes, seq_lens, args.output)
+  File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 279, in run_benchmarks
     result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, 1, H, E, K, I, "decode")
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/lustre/fsw/sw_aidot/pengchengl/sglang_deepseek_only/mini-sglang-deepseek-only/deepseek_kernel_benchmarks/scripts/bench_trtllm_fp4_block_scale_moe.py", line 95, in bench_trtllm_fp4_block_scale_moe
@@ -43,36 +97,36 @@ Benchmark: rmsnorm (Kernel #1)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0020 ms, 14.4 GB/s, 0.2% peak
-  B=2: 0.0020 ms, 28.6 GB/s, 0.4% peak
-  B=4: 0.0020 ms, 57.3 GB/s, 0.7% peak
-  B=8: 0.0020 ms, 114.7 GB/s, 1.4% peak
-  B=16: 0.0020 ms, 229.2 GB/s, 2.9% peak
-  B=32: 0.0020 ms, 456.1 GB/s, 5.7% peak
-  B=64: 0.0020 ms, 902.2 GB/s, 11.3% peak
-  B=128: 0.0021 ms, 1760.7 GB/s, 22.0% peak
+  B=1: 0.0020 ms, 14.6 GB/s, 0.2% peak
+  B=2: 0.0020 ms, 29.0 GB/s, 0.4% peak
+  B=4: 0.0020 ms, 58.1 GB/s, 0.7% peak
+  B=8: 0.0020 ms, 116.5 GB/s, 1.5% peak
+  B=16: 0.0020 ms, 231.0 GB/s, 2.9% peak
+  B=32: 0.0020 ms, 459.4 GB/s, 5.7% peak
+  B=64: 0.0020 ms, 911.0 GB/s, 11.4% peak
+  B=128: 0.0021 ms, 1763.9 GB/s, 22.0% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0021 ms, 1760.5 GB/s, 22.0% peak
-  B=1, S=256: 0.0027 ms, 2691.9 GB/s, 33.6% peak
-  B=1, S=512: 0.0046 ms, 3206.0 GB/s, 40.1% peak
-  B=1, S=1024: 0.0082 ms, 3565.5 GB/s, 44.6% peak
-  B=1, S=2048: 0.0152 ms, 3860.2 GB/s, 48.3% peak
-  B=2, S=128: 0.0027 ms, 2689.8 GB/s, 33.6% peak
-  B=2, S=256: 0.0046 ms, 3196.0 GB/s, 39.9% peak
-  B=2, S=512: 0.0082 ms, 3566.9 GB/s, 44.6% peak
-  B=2, S=1024: 0.0152 ms, 3873.0 GB/s, 48.4% peak
-  B=2, S=2048: 0.0360 ms, 3263.2 GB/s, 40.8% peak
-  B=4, S=128: 0.0046 ms, 3198.0 GB/s, 40.0% peak
-  B=4, S=256: 0.0082 ms, 3567.3 GB/s, 44.6% peak
-  B=4, S=512: 0.0152 ms, 3873.8 GB/s, 48.4% peak
-  B=4, S=1024: 0.0366 ms, 3212.7 GB/s, 40.2% peak
-  B=4, S=2048: 0.0701 ms, 3349.9 GB/s, 41.9% peak
-  B=8, S=128: 0.0081 ms, 3627.3 GB/s, 45.3% peak
-  B=8, S=256: 0.0151 ms, 3896.4 GB/s, 48.7% peak
-  B=8, S=512: 0.0364 ms, 3229.6 GB/s, 40.4% peak
-  B=8, S=1024: 0.0699 ms, 3359.9 GB/s, 42.0% peak
-  B=8, S=2048: 0.1364 ms, 3443.3 GB/s, 43.0% peak
+  B=1, S=128: 0.0021 ms, 1765.5 GB/s, 22.1% peak
+  B=1, S=256: 0.0027 ms, 2725.4 GB/s, 34.1% peak
+  B=1, S=512: 0.0046 ms, 3203.5 GB/s, 40.0% peak
+  B=1, S=1024: 0.0082 ms, 3589.0 GB/s, 44.9% peak
+  B=1, S=2048: 0.0151 ms, 3879.1 GB/s, 48.5% peak
+  B=2, S=128: 0.0027 ms, 2724.6 GB/s, 34.1% peak
+  B=2, S=256: 0.0046 ms, 3203.3 GB/s, 40.0% peak
+  B=2, S=512: 0.0082 ms, 3586.9 GB/s, 44.8% peak
+  B=2, S=1024: 0.0151 ms, 3889.7 GB/s, 48.6% peak
+  B=2, S=2048: 0.0364 ms, 3230.6 GB/s, 40.4% peak
+  B=4, S=128: 0.0046 ms, 3194.1 GB/s, 39.9% peak
+  B=4, S=256: 0.0082 ms, 3589.7 GB/s, 44.9% peak
+  B=4, S=512: 0.0152 ms, 3875.2 GB/s, 48.4% peak
+  B=4, S=1024: 0.0363 ms, 3237.1 GB/s, 40.5% peak
+  B=4, S=2048: 0.0701 ms, 3350.7 GB/s, 41.9% peak
+  B=8, S=128: 0.0081 ms, 3627.4 GB/s, 45.3% peak
+  B=8, S=256: 0.0149 ms, 3941.5 GB/s, 49.3% peak
+  B=8, S=512: 0.0360 ms, 3261.9 GB/s, 40.8% peak
+  B=8, S=1024: 0.0703 ms, 3342.7 GB/s, 41.8% peak
+  B=8, S=2048: 0.1368 ms, 3434.7 GB/s, 42.9% peak
 Saved ../results/rmsnorm.csv
 
 [OK] rmsnorm completed successfully
@@ -85,36 +139,36 @@ Benchmark: fused_add_rmsnorm (Kernel #2)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0025 ms, 23.4 GB/s, 0.3% peak
-  B=2: 0.0025 ms, 46.7 GB/s, 0.6% peak
-  B=4: 0.0024 ms, 93.8 GB/s, 1.2% peak
-  B=8: 0.0025 ms, 183.4 GB/s, 2.3% peak
-  B=16: 0.0025 ms, 367.3 GB/s, 4.6% peak
-  B=32: 0.0025 ms, 724.8 GB/s, 9.1% peak
-  B=64: 0.0025 ms, 1468.8 GB/s, 18.4% peak
-  B=128: 0.0026 ms, 2860.4 GB/s, 35.8% peak
+  B=1: 0.0024 ms, 23.6 GB/s, 0.3% peak
+  B=2: 0.0024 ms, 47.3 GB/s, 0.6% peak
+  B=4: 0.0024 ms, 94.5 GB/s, 1.2% peak
+  B=8: 0.0025 ms, 184.5 GB/s, 2.3% peak
+  B=16: 0.0025 ms, 369.5 GB/s, 4.6% peak
+  B=32: 0.0025 ms, 734.4 GB/s, 9.2% peak
+  B=64: 0.0025 ms, 1467.5 GB/s, 18.3% peak
+  B=128: 0.0026 ms, 2850.7 GB/s, 35.6% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0026 ms, 2859.3 GB/s, 35.7% peak
-  B=1, S=256: 0.0045 ms, 3274.4 GB/s, 40.9% peak
-  B=1, S=512: 0.0080 ms, 3661.4 GB/s, 45.8% peak
-  B=1, S=1024: 0.0144 ms, 4078.0 GB/s, 51.0% peak
-  B=1, S=2048: 0.0266 ms, 4412.0 GB/s, 55.1% peak
-  B=2, S=128: 0.0045 ms, 3279.9 GB/s, 41.0% peak
-  B=2, S=256: 0.0080 ms, 3656.3 GB/s, 45.7% peak
-  B=2, S=512: 0.0143 ms, 4115.8 GB/s, 51.4% peak
-  B=2, S=1024: 0.0267 ms, 4402.8 GB/s, 55.0% peak
-  B=2, S=2048: 0.0672 ms, 3494.7 GB/s, 43.7% peak
-  B=4, S=128: 0.0080 ms, 3656.6 GB/s, 45.7% peak
-  B=4, S=256: 0.0144 ms, 4087.5 GB/s, 51.1% peak
-  B=4, S=512: 0.0266 ms, 4407.5 GB/s, 55.1% peak
-  B=4, S=1024: 0.0675 ms, 3478.3 GB/s, 43.5% peak
-  B=4, S=2048: 0.1312 ms, 3580.9 GB/s, 44.8% peak
-  B=8, S=128: 0.0143 ms, 4103.1 GB/s, 51.3% peak
-  B=8, S=256: 0.0267 ms, 4404.5 GB/s, 55.1% peak
-  B=8, S=512: 0.0676 ms, 3474.3 GB/s, 43.4% peak
-  B=8, S=1024: 0.1318 ms, 3564.1 GB/s, 44.6% peak
-  B=8, S=2048: 0.2578 ms, 3644.8 GB/s, 45.6% peak
+  B=1, S=128: 0.0026 ms, 2851.5 GB/s, 35.6% peak
+  B=1, S=256: 0.0045 ms, 3269.1 GB/s, 40.9% peak
+  B=1, S=512: 0.0080 ms, 3656.3 GB/s, 45.7% peak
+  B=1, S=1024: 0.0143 ms, 4097.5 GB/s, 51.2% peak
+  B=1, S=2048: 0.0266 ms, 4415.2 GB/s, 55.2% peak
+  B=2, S=128: 0.0045 ms, 3275.5 GB/s, 40.9% peak
+  B=2, S=256: 0.0080 ms, 3658.6 GB/s, 45.7% peak
+  B=2, S=512: 0.0143 ms, 4113.5 GB/s, 51.4% peak
+  B=2, S=1024: 0.0267 ms, 4405.6 GB/s, 55.1% peak
+  B=2, S=2048: 0.0675 ms, 3478.7 GB/s, 43.5% peak
+  B=4, S=128: 0.0081 ms, 3646.5 GB/s, 45.6% peak
+  B=4, S=256: 0.0143 ms, 4109.0 GB/s, 51.4% peak
+  B=4, S=512: 0.0269 ms, 4363.1 GB/s, 54.5% peak
+  B=4, S=1024: 0.0678 ms, 3463.9 GB/s, 43.3% peak
+  B=4, S=2048: 0.1316 ms, 3569.0 GB/s, 44.6% peak
+  B=8, S=128: 0.0143 ms, 4096.2 GB/s, 51.2% peak
+  B=8, S=256: 0.0270 ms, 4343.9 GB/s, 54.3% peak
+  B=8, S=512: 0.0669 ms, 3509.9 GB/s, 43.9% peak
+  B=8, S=1024: 0.1311 ms, 3584.0 GB/s, 44.8% peak
+  B=8, S=2048: 0.2603 ms, 3609.1 GB/s, 45.1% peak
 Saved ../results/fused_add_rmsnorm.csv
 
 [OK] fused_add_rmsnorm completed successfully
@@ -127,92 +181,92 @@ Benchmark: cutlass_scaled_fp4_mm (Kernel #3)
 ============================================================
 
 === Decode Phase ===
-  q_b_proj B=1: 0.0064 ms, 11815.2 GFLOPS, 0.13% peak
-  kv_b_proj B=1: 0.0051 ms, 6589.1 GFLOPS, 0.07% peak
-  o_proj B=1: 0.0234 ms, 10043.0 GFLOPS, 0.11% peak
-  q_b_proj B=2: 0.0064 ms, 23567.3 GFLOPS, 0.26% peak
-  kv_b_proj B=2: 0.0050 ms, 13303.5 GFLOPS, 0.15% peak
-  o_proj B=2: 0.0234 ms, 20078.1 GFLOPS, 0.22% peak
-  q_b_proj B=4: 0.0063 ms, 47695.1 GFLOPS, 0.53% peak
-  kv_b_proj B=4: 0.0051 ms, 26310.7 GFLOPS, 0.29% peak
-  o_proj B=4: 0.0233 ms, 40328.7 GFLOPS, 0.45% peak
-  q_b_proj B=8: 0.0064 ms, 94632.5 GFLOPS, 1.05% peak
-  kv_b_proj B=8: 0.0050 ms, 53628.7 GFLOPS, 0.60% peak
-  o_proj B=8: 0.0233 ms, 80657.2 GFLOPS, 0.90% peak
-  q_b_proj B=16: 0.0063 ms, 190755.8 GFLOPS, 2.12% peak
-  kv_b_proj B=16: 0.0050 ms, 106661.2 GFLOPS, 1.19% peak
-  o_proj B=16: 0.0233 ms, 161416.6 GFLOPS, 1.79% peak
-  q_b_proj B=32: 0.0063 ms, 381133.2 GFLOPS, 4.23% peak
-  kv_b_proj B=32: 0.0050 ms, 215701.1 GFLOPS, 2.40% peak
-  o_proj B=32: 0.0234 ms, 321117.2 GFLOPS, 3.57% peak
-  q_b_proj B=64: 0.0064 ms, 753809.2 GFLOPS, 8.38% peak
-  kv_b_proj B=64: 0.0050 ms, 426644.2 GFLOPS, 4.74% peak
-  o_proj B=64: 0.0234 ms, 641321.1 GFLOPS, 7.13% peak
-  q_b_proj B=128: 0.0069 ms, 1407622.2 GFLOPS, 15.64% peak
-  kv_b_proj B=128: 0.0054 ms, 797251.0 GFLOPS, 8.86% peak
-  o_proj B=128: 0.0240 ms, 1250699.1 GFLOPS, 13.90% peak
+  q_b_proj B=1: 0.0064 ms, 11759.1 GFLOPS, 0.13% peak
+  kv_b_proj B=1: 0.0050 ms, 6682.8 GFLOPS, 0.07% peak
+  o_proj B=1: 0.0233 ms, 10068.7 GFLOPS, 0.11% peak
+  q_b_proj B=2: 0.0064 ms, 23413.9 GFLOPS, 0.26% peak
+  kv_b_proj B=2: 0.0051 ms, 13235.3 GFLOPS, 0.15% peak
+  o_proj B=2: 0.0234 ms, 20114.3 GFLOPS, 0.22% peak
+  q_b_proj B=4: 0.0063 ms, 47565.8 GFLOPS, 0.53% peak
+  kv_b_proj B=4: 0.0050 ms, 26600.4 GFLOPS, 0.30% peak
+  o_proj B=4: 0.0235 ms, 40014.4 GFLOPS, 0.44% peak
+  q_b_proj B=8: 0.0063 ms, 95255.5 GFLOPS, 1.06% peak
+  kv_b_proj B=8: 0.0050 ms, 53423.3 GFLOPS, 0.59% peak
+  o_proj B=8: 0.0233 ms, 80568.3 GFLOPS, 0.90% peak
+  q_b_proj B=16: 0.0063 ms, 190641.4 GFLOPS, 2.12% peak
+  kv_b_proj B=16: 0.0050 ms, 107661.5 GFLOPS, 1.20% peak
+  o_proj B=16: 0.0234 ms, 160473.9 GFLOPS, 1.78% peak
+  q_b_proj B=32: 0.0063 ms, 380532.3 GFLOPS, 4.23% peak
+  kv_b_proj B=32: 0.0050 ms, 215090.3 GFLOPS, 2.39% peak
+  o_proj B=32: 0.0233 ms, 322315.7 GFLOPS, 3.58% peak
+  q_b_proj B=64: 0.0064 ms, 755214.3 GFLOPS, 8.39% peak
+  kv_b_proj B=64: 0.0051 ms, 423350.2 GFLOPS, 4.70% peak
+  o_proj B=64: 0.0235 ms, 639259.2 GFLOPS, 7.10% peak
+  q_b_proj B=128: 0.0068 ms, 1413500.2 GFLOPS, 15.71% peak
+  kv_b_proj B=128: 0.0054 ms, 794435.7 GFLOPS, 8.83% peak
+  o_proj B=128: 0.0240 ms, 1251671.2 GFLOPS, 13.91% peak
 
 === Prefill Phase ===
-  q_b_proj B=1, S=128: 0.0069 ms, 1407735.6 GFLOPS, 15.64% peak
-  kv_b_proj B=1, S=128: 0.0054 ms, 798021.8 GFLOPS, 8.87% peak
-  o_proj B=1, S=128: 0.0240 ms, 1250570.7 GFLOPS, 13.90% peak
-  q_b_proj B=1, S=256: 0.0090 ms, 2137424.2 GFLOPS, 23.75% peak
-  kv_b_proj B=1, S=256: 0.0070 ms, 1226671.2 GFLOPS, 13.63% peak
-  o_proj B=1, S=256: 0.0221 ms, 2716239.8 GFLOPS, 30.18% peak
-  q_b_proj B=1, S=512: 0.0123 ms, 3142575.6 GFLOPS, 34.92% peak
-  kv_b_proj B=1, S=512: 0.0102 ms, 1690961.8 GFLOPS, 18.79% peak
-  o_proj B=1, S=512: 0.0237 ms, 5078463.9 GFLOPS, 56.43% peak
-  q_b_proj B=1, S=1024: 0.0200 ms, 3871926.8 GFLOPS, 43.02% peak
-  kv_b_proj B=1, S=1024: 0.0152 ms, 2259882.8 GFLOPS, 25.11% peak
-  o_proj B=1, S=1024: 0.0517 ms, 4650911.2 GFLOPS, 51.68% peak
-  q_b_proj B=1, S=2048: 0.0399 ms, 3870582.6 GFLOPS, 43.01% peak
-  kv_b_proj B=1, S=2048: 0.0285 ms, 2414372.4 GFLOPS, 26.83% peak
-  o_proj B=1, S=2048: 0.1013 ms, 4747721.8 GFLOPS, 52.75% peak
-  q_b_proj B=2, S=128: 0.0090 ms, 2152093.1 GFLOPS, 23.91% peak
-  kv_b_proj B=2, S=128: 0.0070 ms, 1224571.1 GFLOPS, 13.61% peak
-  o_proj B=2, S=128: 0.0225 ms, 2672938.5 GFLOPS, 29.70% peak
-  q_b_proj B=2, S=256: 0.0123 ms, 3142752.4 GFLOPS, 34.92% peak
-  kv_b_proj B=2, S=256: 0.0102 ms, 1687072.8 GFLOPS, 18.75% peak
-  o_proj B=2, S=256: 0.0242 ms, 4971400.3 GFLOPS, 55.24% peak
-  q_b_proj B=2, S=512: 0.0197 ms, 3918528.5 GFLOPS, 43.54% peak
-  kv_b_proj B=2, S=512: 0.0153 ms, 2241686.4 GFLOPS, 24.91% peak
-  o_proj B=2, S=512: 0.0515 ms, 4665806.4 GFLOPS, 51.84% peak
-  q_b_proj B=2, S=1024: 0.0400 ms, 3869096.5 GFLOPS, 42.99% peak
-  kv_b_proj B=2, S=1024: 0.0285 ms, 2409274.0 GFLOPS, 26.77% peak
-  o_proj B=2, S=1024: 0.1020 ms, 4717963.8 GFLOPS, 52.42% peak
-  q_b_proj B=2, S=2048: 0.0714 ms, 4330131.6 GFLOPS, 48.11% peak
-  kv_b_proj B=2, S=2048: 0.0517 ms, 2657990.3 GFLOPS, 29.53% peak
-  o_proj B=2, S=2048: 0.1809 ms, 5319041.9 GFLOPS, 59.10% peak
-  q_b_proj B=4, S=128: 0.0127 ms, 3036218.1 GFLOPS, 33.74% peak
-  kv_b_proj B=4, S=128: 0.0102 ms, 1689788.1 GFLOPS, 18.78% peak
-  o_proj B=4, S=128: 0.0241 ms, 4984049.7 GFLOPS, 55.38% peak
-  q_b_proj B=4, S=256: 0.0199 ms, 3880238.9 GFLOPS, 43.11% peak
-  kv_b_proj B=4, S=256: 0.0154 ms, 2231270.5 GFLOPS, 24.79% peak
-  o_proj B=4, S=256: 0.0520 ms, 4627697.3 GFLOPS, 51.42% peak
-  q_b_proj B=4, S=512: 0.0399 ms, 3878896.7 GFLOPS, 43.10% peak
-  kv_b_proj B=4, S=512: 0.0283 ms, 2432004.3 GFLOPS, 27.02% peak
-  o_proj B=4, S=512: 0.1012 ms, 4754631.2 GFLOPS, 52.83% peak
-  q_b_proj B=4, S=1024: 0.0726 ms, 4261139.0 GFLOPS, 47.35% peak
-  kv_b_proj B=4, S=1024: 0.0528 ms, 2602749.2 GFLOPS, 28.92% peak
-  o_proj B=4, S=1024: 0.1781 ms, 5403210.0 GFLOPS, 60.04% peak
-  q_b_proj B=4, S=2048: 0.1459 ms, 4237664.3 GFLOPS, 47.09% peak
-  kv_b_proj B=4, S=2048: 0.1000 ms, 2748326.3 GFLOPS, 30.54% peak
-  o_proj B=4, S=2048: 0.3514 ms, 5476290.1 GFLOPS, 60.85% peak
-  q_b_proj B=8, S=128: 0.0198 ms, 3914393.8 GFLOPS, 43.49% peak
-  kv_b_proj B=8, S=128: 0.0151 ms, 2275145.3 GFLOPS, 25.28% peak
-  o_proj B=8, S=128: 0.0517 ms, 4656505.9 GFLOPS, 51.74% peak
-  q_b_proj B=8, S=256: 0.0400 ms, 3868447.8 GFLOPS, 42.98% peak
-  kv_b_proj B=8, S=256: 0.0283 ms, 2426278.5 GFLOPS, 26.96% peak
-  o_proj B=8, S=256: 0.1014 ms, 4745427.7 GFLOPS, 52.73% peak
-  q_b_proj B=8, S=512: 0.0732 ms, 4226302.5 GFLOPS, 46.96% peak
-  kv_b_proj B=8, S=512: 0.0528 ms, 2600632.0 GFLOPS, 28.90% peak
-  o_proj B=8, S=512: 0.1783 ms, 5396800.7 GFLOPS, 59.96% peak
-  q_b_proj B=8, S=1024: 0.1442 ms, 4288381.3 GFLOPS, 47.65% peak
-  kv_b_proj B=8, S=1024: 0.0997 ms, 2758064.0 GFLOPS, 30.65% peak
-  o_proj B=8, S=1024: 0.3505 ms, 5489752.4 GFLOPS, 61.00% peak
-  q_b_proj B=8, S=2048: 0.2879 ms, 4297020.4 GFLOPS, 47.74% peak
-  kv_b_proj B=8, S=2048: 0.1953 ms, 2815040.0 GFLOPS, 31.28% peak
-  o_proj B=8, S=2048: 0.7093 ms, 5425589.0 GFLOPS, 60.28% peak
+  q_b_proj B=1, S=128: 0.0068 ms, 1418835.0 GFLOPS, 15.76% peak
+  kv_b_proj B=1, S=128: 0.0054 ms, 794136.8 GFLOPS, 8.82% peak
+  o_proj B=1, S=128: 0.0240 ms, 1251905.2 GFLOPS, 13.91% peak
+  q_b_proj B=1, S=256: 0.0089 ms, 2164808.6 GFLOPS, 24.05% peak
+  kv_b_proj B=1, S=256: 0.0071 ms, 1212325.9 GFLOPS, 13.47% peak
+  o_proj B=1, S=256: 0.0221 ms, 2717655.6 GFLOPS, 30.20% peak
+  q_b_proj B=1, S=512: 0.0123 ms, 3135135.4 GFLOPS, 34.83% peak
+  kv_b_proj B=1, S=512: 0.0102 ms, 1686804.1 GFLOPS, 18.74% peak
+  o_proj B=1, S=512: 0.0239 ms, 5022116.7 GFLOPS, 55.80% peak
+  q_b_proj B=1, S=1024: 0.0200 ms, 3869272.7 GFLOPS, 42.99% peak
+  kv_b_proj B=1, S=1024: 0.0154 ms, 2234796.9 GFLOPS, 24.83% peak
+  o_proj B=1, S=1024: 0.0500 ms, 4811082.7 GFLOPS, 53.46% peak
+  q_b_proj B=1, S=2048: 0.0397 ms, 3893623.8 GFLOPS, 43.26% peak
+  kv_b_proj B=1, S=2048: 0.0285 ms, 2409758.0 GFLOPS, 26.78% peak
+  o_proj B=1, S=2048: 0.1014 ms, 4743230.6 GFLOPS, 52.70% peak
+  q_b_proj B=2, S=128: 0.0091 ms, 2133257.2 GFLOPS, 23.70% peak
+  kv_b_proj B=2, S=128: 0.0071 ms, 1216110.0 GFLOPS, 13.51% peak
+  o_proj B=2, S=128: 0.0221 ms, 2721416.3 GFLOPS, 30.24% peak
+  q_b_proj B=2, S=256: 0.0124 ms, 3118456.9 GFLOPS, 34.65% peak
+  kv_b_proj B=2, S=256: 0.0102 ms, 1690294.2 GFLOPS, 18.78% peak
+  o_proj B=2, S=256: 0.0236 ms, 5092817.6 GFLOPS, 56.59% peak
+  q_b_proj B=2, S=512: 0.0198 ms, 3912548.9 GFLOPS, 43.47% peak
+  kv_b_proj B=2, S=512: 0.0153 ms, 2243266.2 GFLOPS, 24.93% peak
+  o_proj B=2, S=512: 0.0521 ms, 4619863.9 GFLOPS, 51.33% peak
+  q_b_proj B=2, S=1024: 0.0399 ms, 3874023.1 GFLOPS, 43.04% peak
+  kv_b_proj B=2, S=1024: 0.0287 ms, 2395278.3 GFLOPS, 26.61% peak
+  o_proj B=2, S=1024: 0.1011 ms, 4759559.0 GFLOPS, 52.88% peak
+  q_b_proj B=2, S=2048: 0.0725 ms, 4264138.6 GFLOPS, 47.38% peak
+  kv_b_proj B=2, S=2048: 0.0515 ms, 2670446.9 GFLOPS, 29.67% peak
+  o_proj B=2, S=2048: 0.1829 ms, 5261458.6 GFLOPS, 58.46% peak
+  q_b_proj B=4, S=128: 0.0125 ms, 3100758.7 GFLOPS, 34.45% peak
+  kv_b_proj B=4, S=128: 0.0102 ms, 1680455.1 GFLOPS, 18.67% peak
+  o_proj B=4, S=128: 0.0246 ms, 4896105.0 GFLOPS, 54.40% peak
+  q_b_proj B=4, S=256: 0.0201 ms, 3837348.5 GFLOPS, 42.64% peak
+  kv_b_proj B=4, S=256: 0.0153 ms, 2249002.2 GFLOPS, 24.99% peak
+  o_proj B=4, S=256: 0.0519 ms, 4629878.6 GFLOPS, 51.44% peak
+  q_b_proj B=4, S=512: 0.0393 ms, 3939194.3 GFLOPS, 43.77% peak
+  kv_b_proj B=4, S=512: 0.0284 ms, 2422808.0 GFLOPS, 26.92% peak
+  o_proj B=4, S=512: 0.1030 ms, 4669198.8 GFLOPS, 51.88% peak
+  q_b_proj B=4, S=1024: 0.0724 ms, 4274017.8 GFLOPS, 47.49% peak
+  kv_b_proj B=4, S=1024: 0.0524 ms, 2624726.5 GFLOPS, 29.16% peak
+  o_proj B=4, S=1024: 0.1777 ms, 5414285.5 GFLOPS, 60.16% peak
+  q_b_proj B=4, S=2048: 0.1444 ms, 4283718.7 GFLOPS, 47.60% peak
+  kv_b_proj B=4, S=2048: 0.0988 ms, 2781256.4 GFLOPS, 30.90% peak
+  o_proj B=4, S=2048: 0.3477 ms, 5534709.8 GFLOPS, 61.50% peak
+  q_b_proj B=8, S=128: 0.0200 ms, 3871502.1 GFLOPS, 43.02% peak
+  kv_b_proj B=8, S=128: 0.0154 ms, 2235353.7 GFLOPS, 24.84% peak
+  o_proj B=8, S=128: 0.0495 ms, 4859931.8 GFLOPS, 54.00% peak
+  q_b_proj B=8, S=256: 0.0390 ms, 3964753.9 GFLOPS, 44.05% peak
+  kv_b_proj B=8, S=256: 0.0284 ms, 2418659.2 GFLOPS, 26.87% peak
+  o_proj B=8, S=256: 0.1028 ms, 4680629.4 GFLOPS, 52.01% peak
+  q_b_proj B=8, S=512: 0.0718 ms, 4306906.1 GFLOPS, 47.85% peak
+  kv_b_proj B=8, S=512: 0.0518 ms, 2655770.1 GFLOPS, 29.51% peak
+  o_proj B=8, S=512: 0.1780 ms, 5404986.8 GFLOPS, 60.06% peak
+  q_b_proj B=8, S=1024: 0.1446 ms, 4278313.6 GFLOPS, 47.54% peak
+  kv_b_proj B=8, S=1024: 0.1000 ms, 2749162.9 GFLOPS, 30.55% peak
+  o_proj B=8, S=1024: 0.3488 ms, 5517170.5 GFLOPS, 61.30% peak
+  q_b_proj B=8, S=2048: 0.2876 ms, 4301427.4 GFLOPS, 47.79% peak
+  kv_b_proj B=8, S=2048: 0.1962 ms, 2801464.2 GFLOPS, 31.13% peak
+  o_proj B=8, S=2048: 0.6990 ms, 5505073.8 GFLOPS, 61.17% peak
 Saved ../results/cutlass_scaled_fp4_mm.csv
 
 [OK] cutlass_scaled_fp4_mm completed successfully
@@ -225,11 +279,11 @@ Benchmark: dsv3_fused_a_gemm (Kernel #4)
 ============================================================
 
 === Decode Phase (B<=16, low-latency path) ===
-  B=1: 0.0051 ms, 5899.6 GFLOPS, 0.26% peak
-  B=2: 0.0051 ms, 11812.6 GFLOPS, 0.53% peak
-  B=4: 0.0052 ms, 23508.6 GFLOPS, 1.04% peak
-  B=8: 0.0052 ms, 46464.0 GFLOPS, 2.07% peak
-  B=16: 0.0058 ms, 83070.2 GFLOPS, 3.69% peak
+  B=1: 0.0052 ms, 5870.2 GFLOPS, 0.26% peak
+  B=2: 0.0051 ms, 11773.7 GFLOPS, 0.52% peak
+  B=4: 0.0052 ms, 23442.6 GFLOPS, 1.04% peak
+  B=8: 0.0052 ms, 46253.9 GFLOPS, 2.06% peak
+  B=16: 0.0058 ms, 83048.8 GFLOPS, 3.69% peak
 Saved ../results/dsv3_fused_a_gemm.csv
 
 [OK] dsv3_fused_a_gemm completed successfully
@@ -242,11 +296,11 @@ Benchmark: dsv3_router_gemm (Kernel #5)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0021 ms, 1790.0 GFLOPS, 0.08% peak
-  B=2: 0.0022 ms, 3271.5 GFLOPS, 0.15% peak
-  B=4: 0.0027 ms, 5386.2 GFLOPS, 0.24% peak
-  B=8: 0.0036 ms, 8237.3 GFLOPS, 0.37% peak
-  B=16: 0.0072 ms, 8173.3 GFLOPS, 0.36% peak
+  B=1: 0.0020 ms, 1822.9 GFLOPS, 0.08% peak
+  B=2: 0.0022 ms, 3298.5 GFLOPS, 0.15% peak
+  B=4: 0.0027 ms, 5453.1 GFLOPS, 0.24% peak
+  B=8: 0.0036 ms, 8197.0 GFLOPS, 0.36% peak
+  B=16: 0.0072 ms, 8153.1 GFLOPS, 0.36% peak
   Skipping B=32: kernel limited to num_tokens <= 16
   Skipping B=64: kernel limited to num_tokens <= 16
   Skipping B=128: kernel limited to num_tokens <= 16
@@ -264,24 +318,24 @@ Benchmark: bmm_fp8 (Kernel #6)
 ============================================================
 
 === Decode Phase: q_nope * w_kc ===
-  B=1: 0.0055 ms, 3061.3 GFLOPS, 0.07% peak
-  B=2: 0.0055 ms, 6113.1 GFLOPS, 0.14% peak
-  B=4: 0.0055 ms, 12242.1 GFLOPS, 0.27% peak
-  B=8: 0.0055 ms, 24439.6 GFLOPS, 0.54% peak
-  B=16: 0.0056 ms, 47718.9 GFLOPS, 1.06% peak
-  B=32: 0.0057 ms, 93629.7 GFLOPS, 2.08% peak
-  B=64: 0.0061 ms, 175813.7 GFLOPS, 3.91% peak
-  B=128: 0.0069 ms, 309615.8 GFLOPS, 6.88% peak
+  B=1: 0.0055 ms, 3036.9 GFLOPS, 0.07% peak
+  B=2: 0.0055 ms, 6086.0 GFLOPS, 0.14% peak
+  B=4: 0.0055 ms, 12202.6 GFLOPS, 0.27% peak
+  B=8: 0.0055 ms, 24356.6 GFLOPS, 0.54% peak
+  B=16: 0.0056 ms, 47603.8 GFLOPS, 1.06% peak
+  B=32: 0.0058 ms, 93239.7 GFLOPS, 2.07% peak
+  B=64: 0.0061 ms, 175169.4 GFLOPS, 3.89% peak
+  B=128: 0.0069 ms, 310063.8 GFLOPS, 6.89% peak
 
 === Decode Phase: attn * w_vc ===
-  B=1: 0.0028 ms, 6089.3 GFLOPS, 0.14% peak
-  B=2: 0.0028 ms, 12187.7 GFLOPS, 0.27% peak
-  B=4: 0.0027 ms, 24418.3 GFLOPS, 0.54% peak
-  B=8: 0.0028 ms, 48660.5 GFLOPS, 1.08% peak
-  B=16: 0.0031 ms, 85863.7 GFLOPS, 1.91% peak
-  B=32: 0.0032 ms, 169051.8 GFLOPS, 3.76% peak
-  B=64: 0.0033 ms, 321346.7 GFLOPS, 7.14% peak
-  B=128: 0.0038 ms, 572034.8 GFLOPS, 12.71% peak
+  B=1: 0.0028 ms, 6066.3 GFLOPS, 0.13% peak
+  B=2: 0.0028 ms, 12127.0 GFLOPS, 0.27% peak
+  B=4: 0.0028 ms, 24196.8 GFLOPS, 0.54% peak
+  B=8: 0.0028 ms, 48358.2 GFLOPS, 1.07% peak
+  B=16: 0.0031 ms, 85541.8 GFLOPS, 1.90% peak
+  B=32: 0.0032 ms, 168771.9 GFLOPS, 3.75% peak
+  B=64: 0.0034 ms, 319556.3 GFLOPS, 7.10% peak
+  B=128: 0.0038 ms, 572470.9 GFLOPS, 12.72% peak
 Saved ../results/bmm_fp8.csv
 
 [OK] bmm_fp8 completed successfully
@@ -294,22 +348,22 @@ Benchmark: cutlass_mla_decode (Kernel #7)
 ============================================================
 
 === Decode Phase (MLA Attention) ===
-  B=1, seq_len=128: 0.0182 ms, 16.2 GB/s, memory
-  B=1, seq_len=256: 0.0296 ms, 14.9 GB/s, memory
+  B=1, seq_len=128: 0.0181 ms, 16.3 GB/s, memory
+  B=1, seq_len=256: 0.0296 ms, 15.0 GB/s, memory
   B=1, seq_len=512: 0.0308 ms, 23.9 GB/s, memory
   B=1, seq_len=1024: 0.0301 ms, 44.1 GB/s, memory
   Skipping B=1, seq_len=2048: B*seq_len=2048 > 1024 (crash risk)
-  B=2, seq_len=128: 0.0181 ms, 32.6 GB/s, memory
+  B=2, seq_len=128: 0.0181 ms, 32.7 GB/s, memory
   B=2, seq_len=256: 0.0296 ms, 29.9 GB/s, memory
-  B=2, seq_len=512: 0.0292 ms, 50.4 GB/s, memory
+  B=2, seq_len=512: 0.0293 ms, 50.4 GB/s, memory
   Skipping B=2, seq_len=1024: B*seq_len=2048 > 1024 (crash risk)
   Skipping B=2, seq_len=2048: B*seq_len=4096 > 1024 (crash risk)
   B=4, seq_len=128: 0.0181 ms, 65.1 GB/s, memory
-  B=4, seq_len=256: 0.0296 ms, 59.8 GB/s, memory
+  B=4, seq_len=256: 0.0298 ms, 59.5 GB/s, memory
   Skipping B=4, seq_len=512: B*seq_len=2048 > 1024 (crash risk)
   Skipping B=4, seq_len=1024: B*seq_len=4096 > 1024 (crash risk)
   Skipping B=4, seq_len=2048: B*seq_len=8192 > 1024 (crash risk)
-  B=8, seq_len=128: 0.0182 ms, 129.9 GB/s, memory
+  B=8, seq_len=128: 0.0181 ms, 130.2 GB/s, memory
   Skipping B=8, seq_len=256: B*seq_len=2048 > 1024 (crash risk)
   Skipping B=8, seq_len=512: B*seq_len=4096 > 1024 (crash risk)
   Skipping B=8, seq_len=1024: B*seq_len=8192 > 1024 (crash risk)
@@ -348,88 +402,88 @@ Benchmark: trtllm_batch_decode_with_kv_cache_mla (Kernel #8)
 === Decode Phase (TRT-LLM MLA Attention) ===
 
   Page size: 32
-    B=1, seq_len=128: 0.0054 ms, 54.5 GB/s, memory
-    B=1, seq_len=256: 0.0054 ms, 82.0 GB/s, memory
-    B=1, seq_len=512: 0.0074 ms, 100.0 GB/s, memory
-    B=1, seq_len=1024: 0.0098 ms, 135.4 GB/s, memory
-    B=1, seq_len=2048: 0.0112 ms, 223.1 GB/s, memory
-    B=2, seq_len=128: 0.0061 ms, 96.2 GB/s, memory
-    B=2, seq_len=256: 0.0060 ms, 148.1 GB/s, memory
-    B=2, seq_len=512: 0.0080 ms, 183.8 GB/s, memory
-    B=2, seq_len=1024: 0.0102 ms, 259.0 GB/s, memory
-    B=2, seq_len=2048: 0.0126 ms, 397.2 GB/s, memory
-    B=4, seq_len=128: 0.0069 ms, 171.1 GB/s, memory
-    B=4, seq_len=256: 0.0069 ms, 257.6 GB/s, memory
-    B=4, seq_len=512: 0.0091 ms, 324.5 GB/s, memory
-    B=4, seq_len=1024: 0.0115 ms, 459.9 GB/s, memory
-    B=4, seq_len=2048: 0.0164 ms, 613.0 GB/s, memory
-    B=8, seq_len=128: 0.0077 ms, 307.1 GB/s, memory
-    B=8, seq_len=256: 0.0077 ms, 462.2 GB/s, memory
-    B=8, seq_len=512: 0.0106 ms, 558.9 GB/s, memory
-    B=8, seq_len=1024: 0.0156 ms, 682.2 GB/s, memory
-    B=8, seq_len=2048: 0.0234 ms, 856.6 GB/s, memory
-    B=16, seq_len=128: 0.0094 ms, 503.5 GB/s, memory
-    B=16, seq_len=256: 0.0093 ms, 758.9 GB/s, memory
-    B=16, seq_len=512: 0.0132 ms, 892.5 GB/s, memory
-    B=16, seq_len=1024: 0.0203 ms, 1048.0 GB/s, memory
-    B=16, seq_len=2048: 0.0160 ms, 2501.0 GB/s, memory
-    B=32, seq_len=128: 0.0075 ms, 1261.5 GB/s, memory
-    B=32, seq_len=256: 0.0088 ms, 1608.6 GB/s, memory
-    B=32, seq_len=512: 0.0143 ms, 1652.6 GB/s, memory
-    B=32, seq_len=1024: 0.0172 ms, 2467.9 GB/s, memory
-    B=32, seq_len=2048: 0.0236 ms, 3394.0 GB/s, memory
-    B=64, seq_len=128: 0.0081 ms, 2329.0 GB/s, memory
-    B=64, seq_len=256: 0.0100 ms, 2837.1 GB/s, memory
-    B=64, seq_len=512: 0.0130 ms, 3629.8 GB/s, memory
-    B=64, seq_len=1024: 0.0195 ms, 4363.7 GB/s, memory
-    B=64, seq_len=2048: 0.0413 ms, 3888.9 GB/s, memory
-    B=128, seq_len=128: 0.0127 ms, 2976.1 GB/s, memory
-    B=128, seq_len=256: 0.0174 ms, 3259.3 GB/s, memory
-    B=128, seq_len=512: 0.0250 ms, 3768.0 GB/s, memory
-    B=128, seq_len=1024: 0.0471 ms, 3605.7 GB/s, memory
-    B=128, seq_len=2048: 0.0862 ms, 3720.8 GB/s, memory
+    B=1, seq_len=128: 0.0054 ms, 54.4 GB/s, memory
+    B=1, seq_len=256: 0.0054 ms, 81.8 GB/s, memory
+    B=1, seq_len=512: 0.0074 ms, 100.2 GB/s, memory
+    B=1, seq_len=1024: 0.0098 ms, 134.9 GB/s, memory
+    B=1, seq_len=2048: 0.0112 ms, 222.9 GB/s, memory
+    B=2, seq_len=128: 0.0062 ms, 95.5 GB/s, memory
+    B=2, seq_len=256: 0.0060 ms, 147.7 GB/s, memory
+    B=2, seq_len=512: 0.0080 ms, 183.7 GB/s, memory
+    B=2, seq_len=1024: 0.0102 ms, 259.2 GB/s, memory
+    B=2, seq_len=2048: 0.0127 ms, 395.9 GB/s, memory
+    B=4, seq_len=128: 0.0069 ms, 171.0 GB/s, memory
+    B=4, seq_len=256: 0.0069 ms, 257.2 GB/s, memory
+    B=4, seq_len=512: 0.0091 ms, 324.3 GB/s, memory
+    B=4, seq_len=1024: 0.0116 ms, 459.3 GB/s, memory
+    B=4, seq_len=2048: 0.0163 ms, 616.2 GB/s, memory
+    B=8, seq_len=128: 0.0076 ms, 309.1 GB/s, memory
+    B=8, seq_len=256: 0.0076 ms, 464.7 GB/s, memory
+    B=8, seq_len=512: 0.0105 ms, 562.2 GB/s, memory
+    B=8, seq_len=1024: 0.0155 ms, 684.9 GB/s, memory
+    B=8, seq_len=2048: 0.0233 ms, 862.4 GB/s, memory
+    B=16, seq_len=128: 0.0094 ms, 501.6 GB/s, memory
+    B=16, seq_len=256: 0.0094 ms, 756.1 GB/s, memory
+    B=16, seq_len=512: 0.0132 ms, 891.4 GB/s, memory
+    B=16, seq_len=1024: 0.0203 ms, 1047.4 GB/s, memory
+    B=16, seq_len=2048: 0.0160 ms, 2509.4 GB/s, memory
+    B=32, seq_len=128: 0.0076 ms, 1247.6 GB/s, memory
+    B=32, seq_len=256: 0.0088 ms, 1606.7 GB/s, memory
+    B=32, seq_len=512: 0.0143 ms, 1650.5 GB/s, memory
+    B=32, seq_len=1024: 0.0173 ms, 2453.4 GB/s, memory
+    B=32, seq_len=2048: 0.0237 ms, 3384.4 GB/s, memory
+    B=64, seq_len=128: 0.0081 ms, 2324.8 GB/s, memory
+    B=64, seq_len=256: 0.0100 ms, 2834.1 GB/s, memory
+    B=64, seq_len=512: 0.0128 ms, 3699.5 GB/s, memory
+    B=64, seq_len=1024: 0.0189 ms, 4491.7 GB/s, memory
+    B=64, seq_len=2048: 0.0435 ms, 3689.6 GB/s, memory
+    B=128, seq_len=128: 0.0127 ms, 2975.3 GB/s, memory
+    B=128, seq_len=256: 0.0173 ms, 3270.6 GB/s, memory
+    B=128, seq_len=512: 0.0243 ms, 3890.2 GB/s, memory
+    B=128, seq_len=1024: 0.0472 ms, 3598.3 GB/s, memory
+    B=128, seq_len=2048: 0.0852 ms, 3764.5 GB/s, memory
 
   Page size: 64
-    B=1, seq_len=128: 0.0059 ms, 49.9 GB/s, memory
+    B=1, seq_len=128: 0.0055 ms, 53.8 GB/s, memory
     B=1, seq_len=256: 0.0055 ms, 81.0 GB/s, memory
-    B=1, seq_len=512: 0.0074 ms, 99.1 GB/s, memory
-    B=1, seq_len=1024: 0.0099 ms, 134.7 GB/s, memory
-    B=1, seq_len=2048: 0.0111 ms, 225.7 GB/s, memory
-    B=2, seq_len=128: 0.0057 ms, 104.2 GB/s, memory
-    B=2, seq_len=256: 0.0056 ms, 156.8 GB/s, memory
-    B=2, seq_len=512: 0.0076 ms, 193.6 GB/s, memory
-    B=2, seq_len=1024: 0.0097 ms, 272.8 GB/s, memory
-    B=2, seq_len=2048: 0.0114 ms, 441.6 GB/s, memory
-    B=4, seq_len=128: 0.0064 ms, 185.4 GB/s, memory
-    B=4, seq_len=256: 0.0064 ms, 275.4 GB/s, memory
-    B=4, seq_len=512: 0.0083 ms, 353.5 GB/s, memory
-    B=4, seq_len=1024: 0.0109 ms, 487.6 GB/s, memory
-    B=4, seq_len=2048: 0.0143 ms, 701.9 GB/s, memory
-    B=8, seq_len=128: 0.0070 ms, 339.3 GB/s, memory
-    B=8, seq_len=256: 0.0069 ms, 513.2 GB/s, memory
-    B=8, seq_len=512: 0.0095 ms, 623.4 GB/s, memory
-    B=8, seq_len=1024: 0.0136 ms, 783.0 GB/s, memory
-    B=8, seq_len=2048: 0.0203 ms, 987.6 GB/s, memory
-    B=16, seq_len=128: 0.0082 ms, 578.3 GB/s, memory
-    B=16, seq_len=256: 0.0081 ms, 868.9 GB/s, memory
-    B=16, seq_len=512: 0.0116 ms, 1013.4 GB/s, memory
-    B=16, seq_len=1024: 0.0184 ms, 1151.3 GB/s, memory
-    B=16, seq_len=2048: 0.0155 ms, 2588.2 GB/s, memory
-    B=32, seq_len=128: 0.0072 ms, 1309.3 GB/s, memory
-    B=32, seq_len=256: 0.0084 ms, 1675.8 GB/s, memory
-    B=32, seq_len=512: 0.0140 ms, 1682.8 GB/s, memory
-    B=32, seq_len=1024: 0.0170 ms, 2492.9 GB/s, memory
-    B=32, seq_len=2048: 0.0233 ms, 3439.0 GB/s, memory
-    B=64, seq_len=128: 0.0081 ms, 2330.9 GB/s, memory
-    B=64, seq_len=256: 0.0098 ms, 2877.2 GB/s, memory
-    B=64, seq_len=512: 0.0127 ms, 3716.0 GB/s, memory
-    B=64, seq_len=1024: 0.0189 ms, 4489.2 GB/s, memory
-    B=64, seq_len=2048: 0.0422 ms, 3802.7 GB/s, memory
-    B=128, seq_len=128: 0.0124 ms, 3034.5 GB/s, memory
-    B=128, seq_len=256: 0.0168 ms, 3362.7 GB/s, memory
-    B=128, seq_len=512: 0.0238 ms, 3959.2 GB/s, memory
-    B=128, seq_len=1024: 0.0472 ms, 3596.5 GB/s, memory
-    B=128, seq_len=2048: 0.0852 ms, 3764.4 GB/s, memory
+    B=1, seq_len=512: 0.0074 ms, 99.0 GB/s, memory
+    B=1, seq_len=1024: 0.0098 ms, 135.2 GB/s, memory
+    B=1, seq_len=2048: 0.0111 ms, 225.9 GB/s, memory
+    B=2, seq_len=128: 0.0057 ms, 103.9 GB/s, memory
+    B=2, seq_len=256: 0.0056 ms, 156.6 GB/s, memory
+    B=2, seq_len=512: 0.0076 ms, 193.4 GB/s, memory
+    B=2, seq_len=1024: 0.0097 ms, 272.6 GB/s, memory
+    B=2, seq_len=2048: 0.0114 ms, 440.4 GB/s, memory
+    B=4, seq_len=128: 0.0064 ms, 184.9 GB/s, memory
+    B=4, seq_len=256: 0.0063 ms, 278.7 GB/s, memory
+    B=4, seq_len=512: 0.0084 ms, 352.9 GB/s, memory
+    B=4, seq_len=1024: 0.0109 ms, 487.7 GB/s, memory
+    B=4, seq_len=2048: 0.0144 ms, 697.9 GB/s, memory
+    B=8, seq_len=128: 0.0070 ms, 335.2 GB/s, memory
+    B=8, seq_len=256: 0.0069 ms, 511.1 GB/s, memory
+    B=8, seq_len=512: 0.0095 ms, 621.2 GB/s, memory
+    B=8, seq_len=1024: 0.0136 ms, 782.0 GB/s, memory
+    B=8, seq_len=2048: 0.0203 ms, 989.7 GB/s, memory
+    B=16, seq_len=128: 0.0083 ms, 571.3 GB/s, memory
+    B=16, seq_len=256: 0.0082 ms, 868.3 GB/s, memory
+    B=16, seq_len=512: 0.0117 ms, 1009.4 GB/s, memory
+    B=16, seq_len=1024: 0.0184 ms, 1151.4 GB/s, memory
+    B=16, seq_len=2048: 0.0154 ms, 2600.0 GB/s, memory
+    B=32, seq_len=128: 0.0072 ms, 1311.6 GB/s, memory
+    B=32, seq_len=256: 0.0085 ms, 1673.9 GB/s, memory
+    B=32, seq_len=512: 0.0140 ms, 1686.1 GB/s, memory
+    B=32, seq_len=1024: 0.0170 ms, 2502.2 GB/s, memory
+    B=32, seq_len=2048: 0.0233 ms, 3445.4 GB/s, memory
+    B=64, seq_len=128: 0.0081 ms, 2330.6 GB/s, memory
+    B=64, seq_len=256: 0.0099 ms, 2872.4 GB/s, memory
+    B=64, seq_len=512: 0.0126 ms, 3750.3 GB/s, memory
+    B=64, seq_len=1024: 0.0188 ms, 4512.6 GB/s, memory
+    B=64, seq_len=2048: 0.0421 ms, 3813.2 GB/s, memory
+    B=128, seq_len=128: 0.0125 ms, 3029.1 GB/s, memory
+    B=128, seq_len=256: 0.0170 ms, 3324.3 GB/s, memory
+    B=128, seq_len=512: 0.0238 ms, 3959.1 GB/s, memory
+    B=128, seq_len=1024: 0.0446 ms, 3811.4 GB/s, memory
+    B=128, seq_len=2048: 0.0844 ms, 3801.5 GB/s, memory
 Saved ../results/trtllm_batch_decode_with_kv_cache_mla.csv
 
 [OK] trtllm_batch_decode_with_kv_cache_mla completed successfully
@@ -442,45 +496,45 @@ Benchmark: trtllm_ragged_attention_deepseek (Kernel #9)
 ============================================================
 
 === Prefill Phase (TRT-LLM Ragged Attention) ===
-  B=1, S=128: 0.0072 ms, 739.2 GFLOPS, memory
-  B=1, S=256: 0.0104 ms, 3287.9 GFLOPS, memory
-  B=1, S=512: 0.0186 ms, 4755.7 GFLOPS, memory
-  B=1, S=1024: 0.0356 ms, 7647.3 GFLOPS, memory
-  B=1, S=2048: 0.0836 ms, 11257.3 GFLOPS, memory
-  B=2, S=128: 0.0117 ms, 1163.0 GFLOPS, memory
-  B=2, S=256: 0.0176 ms, 4300.4 GFLOPS, memory
-  B=2, S=512: 0.0356 ms, 5278.2 GFLOPS, memory
-  B=2, S=1024: 0.0903 ms, 9159.6 GFLOPS, memory
-  B=2, S=2048: 0.2511 ms, 13797.8 GFLOPS, memory
-  B=4, S=128: 0.0196 ms, 1601.9 GFLOPS, memory
-  B=4, S=256: 0.0341 ms, 3499.4 GFLOPS, memory
-  B=4, S=512: 0.0741 ms, 6271.6 GFLOPS, memory
-  B=4, S=1024: 0.1568 ms, 9847.1 GFLOPS, memory
-  B=4, S=2048: 0.4797 ms, 13971.2 GFLOPS, memory
-  B=8, S=128: 0.0351 ms, 1813.3 GFLOPS, memory
-  B=8, S=256: 0.0593 ms, 3732.9 GFLOPS, memory
-  B=8, S=512: 0.1347 ms, 6100.2 GFLOPS, memory
-  B=8, S=1024: 0.3353 ms, 9439.1 GFLOPS, memory
-  B=8, S=2048: 0.9745 ms, 13917.5 GFLOPS, memory
-  B=16, S=128: 0.0651 ms, 1765.5 GFLOPS, memory
-  B=16, S=256: 0.1132 ms, 3865.9 GFLOPS, memory
-  B=16, S=512: 0.2739 ms, 6231.4 GFLOPS, memory
-  B=16, S=1024: 0.7101 ms, 9907.8 GFLOPS, memory
-  B=16, S=2048: 2.0186 ms, 14151.2 GFLOPS, memory
-  B=32, S=128: 0.1268 ms, 1730.2 GFLOPS, memory
-  B=32, S=256: 0.2248 ms, 3966.7 GFLOPS, memory
-  B=32, S=512: 0.5594 ms, 6561.2 GFLOPS, memory
-  B=32, S=1024: 1.4343 ms, 10171.4 GFLOPS, memory
-  B=32, S=2048: 4.1037 ms, 14770.5 GFLOPS, memory
-  B=64, S=128: 0.2470 ms, 1754.3 GFLOPS, memory
-  B=64, S=256: 0.4480 ms, 3750.8 GFLOPS, memory
-  B=64, S=512: 1.1146 ms, 6465.1 GFLOPS, memory
-  B=64, S=1024: 2.8861 ms, 10226.1 GFLOPS, memory
-  B=64, S=2048: 7.8170 ms, 14813.3 GFLOPS, memory
-  B=128, S=128: 0.4912 ms, 1825.6 GFLOPS, memory
-  B=128, S=256: 0.8824 ms, 3875.2 GFLOPS, memory
-  B=128, S=512: 2.2557 ms, 6210.6 GFLOPS, memory
-  B=128, S=1024: 5.5675 ms, 10078.4 GFLOPS, memory
+  B=1, S=128: 0.0072 ms, 731.2 GFLOPS, memory
+  B=1, S=256: 0.0105 ms, 3247.0 GFLOPS, memory
+  B=1, S=512: 0.0185 ms, 4766.4 GFLOPS, memory
+  B=1, S=1024: 0.0353 ms, 7698.5 GFLOPS, memory
+  B=1, S=2048: 0.0826 ms, 11390.6 GFLOPS, memory
+  B=2, S=128: 0.0117 ms, 1160.1 GFLOPS, memory
+  B=2, S=256: 0.0177 ms, 4278.1 GFLOPS, memory
+  B=2, S=512: 0.0357 ms, 5264.7 GFLOPS, memory
+  B=2, S=1024: 0.0895 ms, 9243.9 GFLOPS, memory
+  B=2, S=2048: 0.2499 ms, 13867.5 GFLOPS, memory
+  B=4, S=128: 0.0195 ms, 1603.0 GFLOPS, memory
+  B=4, S=256: 0.0346 ms, 3441.8 GFLOPS, memory
+  B=4, S=512: 0.0738 ms, 6300.2 GFLOPS, memory
+  B=4, S=1024: 0.1590 ms, 9710.1 GFLOPS, memory
+  B=4, S=2048: 0.4668 ms, 14357.3 GFLOPS, memory
+  B=8, S=128: 0.0351 ms, 1810.0 GFLOPS, memory
+  B=8, S=256: 0.0582 ms, 3800.9 GFLOPS, memory
+  B=8, S=512: 0.1350 ms, 6087.4 GFLOPS, memory
+  B=8, S=1024: 0.3237 ms, 9779.0 GFLOPS, memory
+  B=8, S=2048: 0.9765 ms, 13888.6 GFLOPS, memory
+  B=16, S=128: 0.0652 ms, 1761.6 GFLOPS, memory
+  B=16, S=256: 0.1136 ms, 3850.6 GFLOPS, memory
+  B=16, S=512: 0.2679 ms, 6371.6 GFLOPS, memory
+  B=16, S=1024: 0.7185 ms, 9792.7 GFLOPS, memory
+  B=16, S=2048: 1.9920 ms, 14340.2 GFLOPS, memory
+  B=32, S=128: 0.1238 ms, 1771.5 GFLOPS, memory
+  B=32, S=256: 0.2248 ms, 3966.0 GFLOPS, memory
+  B=32, S=512: 0.5625 ms, 6526.0 GFLOPS, memory
+  B=32, S=1024: 1.4333 ms, 10178.5 GFLOPS, memory
+  B=32, S=2048: 4.1183 ms, 14718.1 GFLOPS, memory
+  B=64, S=128: 0.2501 ms, 1732.7 GFLOPS, memory
+  B=64, S=256: 0.4510 ms, 3725.8 GFLOPS, memory
+  B=64, S=512: 1.1199 ms, 6434.6 GFLOPS, memory
+  B=64, S=1024: 2.8453 ms, 10372.7 GFLOPS, memory
+  B=64, S=2048: 7.8623 ms, 14728.2 GFLOPS, memory
+  B=128, S=128: 0.4910 ms, 1826.2 GFLOPS, memory
+  B=128, S=256: 0.8979 ms, 3808.5 GFLOPS, memory
+  B=128, S=512: 2.2300 ms, 6282.2 GFLOPS, memory
+  B=128, S=1024: 5.4169 ms, 10358.5 GFLOPS, memory
 Warning: Kernel failed for B=128, S=2048: Error in function 'aligned_alloc' at /usr/local/lib/python3.12/dist-packages/flashinfer/data/include/flashinfer/allocator.h:49: Buffer overflow when allocating memory for trtllm_gen_softmax_workspace with size 200737792 and alignment 16, but only 125829120 bytes available in AlignedAllocator. Increase the workspace buffer size.
 Saved ../results/trtllm_ragged_attention_deepseek.csv
 
@@ -495,18 +549,18 @@ MLA: 128 Q heads, 1 K head, 64 rope_dim + 512 no_rope_dim
 ============================================================
 
 === MLA RoPE + FP8 Quantization ===
-  tokens=128: 0.0064 ms, 4638.1 GB/s, 58.0% peak
-  tokens=256: 0.0114 ms, 5097.4 GB/s, 63.7% peak
-  tokens=512: 0.0237 ms, 4856.8 GB/s, 60.7% peak
-  tokens=1024: 0.0465 ms, 4932.5 GB/s, 61.7% peak
-  tokens=2048: 0.0917 ms, 4992.4 GB/s, 62.4% peak
-  tokens=4096: 0.1833 ms, 4986.1 GB/s, 62.3% peak
-  tokens=8192: 0.3674 ms, 4976.4 GB/s, 62.2% peak
-  tokens=16384: 0.7536 ms, 4851.8 GB/s, 60.6% peak
-  tokens=32768: 1.5394 ms, 4750.4 GB/s, 59.4% peak
-  tokens=65536: 3.0659 ms, 4770.5 GB/s, 59.6% peak
-  tokens=131072: 6.1875 ms, 4727.4 GB/s, 59.1% peak
-  tokens=262144: 13.9208 ms, 4202.5 GB/s, 52.5% peak
+  tokens=128: 0.0064 ms, 4638.6 GB/s, 58.0% peak
+  tokens=256: 0.0114 ms, 5098.1 GB/s, 63.7% peak
+  tokens=512: 0.0236 ms, 4889.0 GB/s, 61.1% peak
+  tokens=1024: 0.0466 ms, 4924.0 GB/s, 61.5% peak
+  tokens=2048: 0.0915 ms, 4999.8 GB/s, 62.5% peak
+  tokens=4096: 0.1828 ms, 5000.5 GB/s, 62.5% peak
+  tokens=8192: 0.3662 ms, 4992.8 GB/s, 62.4% peak
+  tokens=16384: 0.7474 ms, 4892.4 GB/s, 61.2% peak
+  tokens=32768: 1.5353 ms, 4763.2 GB/s, 59.5% peak
+  tokens=65536: 3.0687 ms, 4766.1 GB/s, 59.6% peak
+  tokens=131072: 6.1871 ms, 4727.8 GB/s, 59.1% peak
+  tokens=262144: 13.9632 ms, 4189.7 GB/s, 52.4% peak
 Saved ../results/mla_rope_quantize_fp8.csv
 
 [OK] mla_rope_quantize_fp8 completed successfully
@@ -519,36 +573,36 @@ Benchmark: apply_rope_with_cos_sin_cache_inplace (Kernel #11)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0017 ms, 347.8 GB/s, 4.3% peak
-  B=2: 0.0017 ms, 379.0 GB/s, 4.7% peak
-  B=4: 0.0017 ms, 455.2 GB/s, 5.7% peak
-  B=8: 0.0018 ms, 595.7 GB/s, 7.4% peak
-  B=16: 0.0018 ms, 882.7 GB/s, 11.0% peak
-  B=32: 0.0019 ms, 1359.9 GB/s, 17.0% peak
-  B=64: 0.0022 ms, 2161.8 GB/s, 27.0% peak
-  B=128: 0.0033 ms, 2705.9 GB/s, 33.8% peak
+  B=1: 0.0017 ms, 344.4 GB/s, 4.3% peak
+  B=2: 0.0017 ms, 382.5 GB/s, 4.8% peak
+  B=4: 0.0017 ms, 454.9 GB/s, 5.7% peak
+  B=8: 0.0018 ms, 597.0 GB/s, 7.5% peak
+  B=16: 0.0018 ms, 870.8 GB/s, 10.9% peak
+  B=32: 0.0019 ms, 1373.7 GB/s, 17.2% peak
+  B=64: 0.0022 ms, 2179.0 GB/s, 27.2% peak
+  B=128: 0.0033 ms, 2730.2 GB/s, 34.1% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0033 ms, 2685.6 GB/s, 33.6% peak
-  B=1, S=256: 0.0046 ms, 3729.5 GB/s, 46.6% peak
-  B=1, S=512: 0.0073 ms, 4654.0 GB/s, 58.2% peak
-  B=1, S=1024: 0.0128 ms, 5288.8 GB/s, 66.1% peak
-  B=1, S=2048: 0.0240 ms, 5605.0 GB/s, 70.1% peak
-  B=2, S=128: 0.0047 ms, 3719.3 GB/s, 46.5% peak
-  B=2, S=256: 0.0073 ms, 4655.5 GB/s, 58.2% peak
-  B=2, S=512: 0.0128 ms, 5294.0 GB/s, 66.2% peak
-  B=2, S=1024: 0.0244 ms, 5527.5 GB/s, 69.1% peak
-  B=2, S=2048: 0.0679 ms, 3963.9 GB/s, 49.5% peak
-  B=4, S=128: 0.0073 ms, 4655.6 GB/s, 58.2% peak
-  B=4, S=256: 0.0127 ms, 5343.8 GB/s, 66.8% peak
-  B=4, S=512: 0.0239 ms, 5650.0 GB/s, 70.6% peak
-  B=4, S=1024: 0.0671 ms, 4011.4 GB/s, 50.1% peak
-  B=4, S=2048: 0.1384 ms, 3883.7 GB/s, 48.5% peak
-  B=8, S=128: 0.0126 ms, 5352.5 GB/s, 66.9% peak
-  B=8, S=256: 0.0247 ms, 5451.0 GB/s, 68.1% peak
-  B=8, S=512: 0.0669 ms, 4018.6 GB/s, 50.2% peak
-  B=8, S=1024: 0.1385 ms, 3880.3 GB/s, 48.5% peak
-  B=8, S=2048: 0.2832 ms, 3793.5 GB/s, 47.4% peak
+  B=1, S=128: 0.0033 ms, 2723.6 GB/s, 34.0% peak
+  B=1, S=256: 0.0046 ms, 3737.6 GB/s, 46.7% peak
+  B=1, S=512: 0.0073 ms, 4653.4 GB/s, 58.2% peak
+  B=1, S=1024: 0.0128 ms, 5283.4 GB/s, 66.0% peak
+  B=1, S=2048: 0.0243 ms, 5547.0 GB/s, 69.3% peak
+  B=2, S=128: 0.0047 ms, 3652.3 GB/s, 45.7% peak
+  B=2, S=256: 0.0073 ms, 4657.4 GB/s, 58.2% peak
+  B=2, S=512: 0.0127 ms, 5317.3 GB/s, 66.5% peak
+  B=2, S=1024: 0.0245 ms, 5494.2 GB/s, 68.7% peak
+  B=2, S=2048: 0.0675 ms, 3985.4 GB/s, 49.8% peak
+  B=4, S=128: 0.0073 ms, 4672.9 GB/s, 58.4% peak
+  B=4, S=256: 0.0127 ms, 5345.8 GB/s, 66.8% peak
+  B=4, S=512: 0.0245 ms, 5503.0 GB/s, 68.8% peak
+  B=4, S=1024: 0.0672 ms, 4000.9 GB/s, 50.0% peak
+  B=4, S=2048: 0.1377 ms, 3904.3 GB/s, 48.8% peak
+  B=8, S=128: 0.0126 ms, 5353.5 GB/s, 66.9% peak
+  B=8, S=256: 0.0240 ms, 5611.2 GB/s, 70.1% peak
+  B=8, S=512: 0.0668 ms, 4025.6 GB/s, 50.3% peak
+  B=8, S=1024: 0.1378 ms, 3901.4 GB/s, 48.8% peak
+  B=8, S=2048: 0.2830 ms, 3796.6 GB/s, 47.5% peak
 Saved ../results/apply_rope_with_cos_sin_cache_inplace.csv
 
 [OK] apply_rope_with_cos_sin_cache_inplace completed successfully
@@ -561,36 +615,36 @@ Benchmark: concat_mla_k (Kernel #12)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0022 ms, 37.3 GB/s, 0.5% peak
+  B=1: 0.0022 ms, 37.6 GB/s, 0.5% peak
   B=2: 0.0031 ms, 53.3 GB/s, 0.7% peak
-  B=4: 0.0049 ms, 66.9 GB/s, 0.8% peak
-  B=8: 0.0049 ms, 132.9 GB/s, 1.7% peak
-  B=16: 0.0049 ms, 266.3 GB/s, 3.3% peak
-  B=32: 0.0049 ms, 532.8 GB/s, 6.7% peak
-  B=64: 0.0049 ms, 1065.4 GB/s, 13.3% peak
-  B=128: 0.0049 ms, 2130.8 GB/s, 26.6% peak
+  B=4: 0.0049 ms, 67.1 GB/s, 0.8% peak
+  B=8: 0.0049 ms, 133.3 GB/s, 1.7% peak
+  B=16: 0.0049 ms, 266.6 GB/s, 3.3% peak
+  B=32: 0.0049 ms, 533.1 GB/s, 6.7% peak
+  B=64: 0.0049 ms, 1066.8 GB/s, 13.3% peak
+  B=128: 0.0049 ms, 2124.5 GB/s, 26.6% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0049 ms, 2131.0 GB/s, 26.6% peak
+  B=1, S=128: 0.0049 ms, 2124.3 GB/s, 26.6% peak
   B=1, S=256: 0.0050 ms, 4223.5 GB/s, 52.8% peak
-  B=1, S=512: 0.0053 ms, 7902.4 GB/s, 98.8% peak
-  B=1, S=1024: 0.0106 ms, 7918.4 GB/s, 99.0% peak
-  B=1, S=2048: 0.0273 ms, 6147.0 GB/s, 76.8% peak
-  B=2, S=128: 0.0050 ms, 4213.3 GB/s, 52.7% peak
-  B=2, S=256: 0.0052 ms, 8106.4 GB/s, 101.3% peak
-  B=2, S=512: 0.0097 ms, 8660.6 GB/s, 108.3% peak
-  B=2, S=1024: 0.0272 ms, 6185.9 GB/s, 77.3% peak
-  B=2, S=2048: 0.0523 ms, 6422.0 GB/s, 80.3% peak
-  B=4, S=128: 0.0052 ms, 8139.5 GB/s, 101.7% peak
-  B=4, S=256: 0.0094 ms, 8925.4 GB/s, 111.6% peak
-  B=4, S=512: 0.0272 ms, 6170.0 GB/s, 77.1% peak
-  B=4, S=1024: 0.0523 ms, 6424.9 GB/s, 80.3% peak
-  B=4, S=2048: 0.1013 ms, 6634.9 GB/s, 82.9% peak
-  B=8, S=128: 0.0095 ms, 8880.6 GB/s, 111.0% peak
-  B=8, S=256: 0.0275 ms, 6111.1 GB/s, 76.4% peak
-  B=8, S=512: 0.0528 ms, 6364.0 GB/s, 79.6% peak
-  B=8, S=1024: 0.1014 ms, 6629.5 GB/s, 82.9% peak
-  B=8, S=2048: 0.1988 ms, 6762.8 GB/s, 84.5% peak
+  B=1, S=512: 0.0053 ms, 7922.9 GB/s, 99.0% peak
+  B=1, S=1024: 0.0106 ms, 7916.6 GB/s, 99.0% peak
+  B=1, S=2048: 0.0273 ms, 6151.3 GB/s, 76.9% peak
+  B=2, S=128: 0.0050 ms, 4216.0 GB/s, 52.7% peak
+  B=2, S=256: 0.0052 ms, 8116.2 GB/s, 101.5% peak
+  B=2, S=512: 0.0096 ms, 8707.4 GB/s, 108.8% peak
+  B=2, S=1024: 0.0273 ms, 6147.5 GB/s, 76.8% peak
+  B=2, S=2048: 0.0522 ms, 6432.2 GB/s, 80.4% peak
+  B=4, S=128: 0.0051 ms, 8277.5 GB/s, 103.5% peak
+  B=4, S=256: 0.0095 ms, 8802.0 GB/s, 110.0% peak
+  B=4, S=512: 0.0272 ms, 6179.0 GB/s, 77.2% peak
+  B=4, S=1024: 0.0523 ms, 6422.3 GB/s, 80.3% peak
+  B=4, S=2048: 0.1010 ms, 6651.7 GB/s, 83.1% peak
+  B=8, S=128: 0.0095 ms, 8883.8 GB/s, 111.0% peak
+  B=8, S=256: 0.0273 ms, 6149.6 GB/s, 76.9% peak
+  B=8, S=512: 0.0525 ms, 6403.3 GB/s, 80.0% peak
+  B=8, S=1024: 0.1012 ms, 6644.3 GB/s, 83.1% peak
+  B=8, S=2048: 0.1985 ms, 6772.4 GB/s, 84.7% peak
 Saved ../results/concat_mla_k.csv
 
 [OK] concat_mla_k completed successfully
@@ -603,36 +657,36 @@ Benchmark: silu_and_mul (Kernel #13)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0019 ms, 6.4 GB/s, 0.1% peak
-  B=2: 0.0019 ms, 12.8 GB/s, 0.2% peak
-  B=4: 0.0019 ms, 25.6 GB/s, 0.3% peak
-  B=8: 0.0019 ms, 51.4 GB/s, 0.6% peak
-  B=16: 0.0019 ms, 104.1 GB/s, 1.3% peak
-  B=32: 0.0019 ms, 207.8 GB/s, 2.6% peak
-  B=64: 0.0019 ms, 409.6 GB/s, 5.1% peak
-  B=128: 0.0019 ms, 810.0 GB/s, 10.1% peak
+  B=1: 0.0019 ms, 6.5 GB/s, 0.1% peak
+  B=2: 0.0019 ms, 13.0 GB/s, 0.2% peak
+  B=4: 0.0019 ms, 26.0 GB/s, 0.3% peak
+  B=8: 0.0019 ms, 52.0 GB/s, 0.6% peak
+  B=16: 0.0019 ms, 104.0 GB/s, 1.3% peak
+  B=32: 0.0019 ms, 207.7 GB/s, 2.6% peak
+  B=64: 0.0019 ms, 409.0 GB/s, 5.1% peak
+  B=128: 0.0019 ms, 809.5 GB/s, 10.1% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0020 ms, 774.3 GB/s, 9.7% peak
-  B=1, S=256: 0.0021 ms, 1472.5 GB/s, 18.4% peak
-  B=1, S=512: 0.0028 ms, 2222.7 GB/s, 27.8% peak
-  B=1, S=1024: 0.0038 ms, 3313.5 GB/s, 41.4% peak
-  B=1, S=2048: 0.0058 ms, 4356.5 GB/s, 54.5% peak
-  B=2, S=128: 0.0021 ms, 1468.8 GB/s, 18.4% peak
-  B=2, S=256: 0.0028 ms, 2229.3 GB/s, 27.9% peak
-  B=2, S=512: 0.0038 ms, 3315.0 GB/s, 41.4% peak
-  B=2, S=1024: 0.0058 ms, 4355.2 GB/s, 54.4% peak
-  B=2, S=2048: 0.0099 ms, 5084.6 GB/s, 63.6% peak
-  B=4, S=128: 0.0028 ms, 2229.5 GB/s, 27.9% peak
-  B=4, S=256: 0.0038 ms, 3314.4 GB/s, 41.4% peak
-  B=4, S=512: 0.0058 ms, 4353.0 GB/s, 54.4% peak
-  B=4, S=1024: 0.0099 ms, 5083.7 GB/s, 63.5% peak
-  B=4, S=2048: 0.0197 ms, 5109.2 GB/s, 63.9% peak
-  B=8, S=128: 0.0038 ms, 3275.4 GB/s, 40.9% peak
-  B=8, S=256: 0.0058 ms, 4333.4 GB/s, 54.2% peak
-  B=8, S=512: 0.0099 ms, 5083.3 GB/s, 63.5% peak
-  B=8, S=1024: 0.0196 ms, 5124.9 GB/s, 64.1% peak
-  B=8, S=2048: 0.0399 ms, 5049.4 GB/s, 63.1% peak
+  B=1, S=128: 0.0019 ms, 810.7 GB/s, 10.1% peak
+  B=1, S=256: 0.0021 ms, 1472.0 GB/s, 18.4% peak
+  B=1, S=512: 0.0028 ms, 2225.3 GB/s, 27.8% peak
+  B=1, S=1024: 0.0038 ms, 3315.1 GB/s, 41.4% peak
+  B=1, S=2048: 0.0058 ms, 4357.4 GB/s, 54.5% peak
+  B=2, S=128: 0.0021 ms, 1469.2 GB/s, 18.4% peak
+  B=2, S=256: 0.0028 ms, 2227.3 GB/s, 27.8% peak
+  B=2, S=512: 0.0038 ms, 3315.5 GB/s, 41.4% peak
+  B=2, S=1024: 0.0058 ms, 4358.8 GB/s, 54.5% peak
+  B=2, S=2048: 0.0099 ms, 5081.9 GB/s, 63.5% peak
+  B=4, S=128: 0.0029 ms, 2201.1 GB/s, 27.5% peak
+  B=4, S=256: 0.0038 ms, 3314.9 GB/s, 41.4% peak
+  B=4, S=512: 0.0058 ms, 4356.8 GB/s, 54.5% peak
+  B=4, S=1024: 0.0099 ms, 5086.5 GB/s, 63.6% peak
+  B=4, S=2048: 0.0200 ms, 5040.8 GB/s, 63.0% peak
+  B=8, S=128: 0.0038 ms, 3300.9 GB/s, 41.3% peak
+  B=8, S=256: 0.0058 ms, 4344.9 GB/s, 54.3% peak
+  B=8, S=512: 0.0098 ms, 5112.7 GB/s, 63.9% peak
+  B=8, S=1024: 0.0200 ms, 5044.0 GB/s, 63.0% peak
+  B=8, S=2048: 0.0397 ms, 5068.8 GB/s, 63.4% peak
 Saved ../results/silu_and_mul.csv
 
 [OK] silu_and_mul completed successfully
@@ -648,33 +702,33 @@ Benchmark: topk_softmax (Kernel #14)
   B=1: 0.0035 ms, 0.3 GB/s, 0.0% peak
   B=2: 0.0035 ms, 0.6 GB/s, 0.0% peak
   B=4: 0.0035 ms, 1.2 GB/s, 0.0% peak
-  B=8: 0.0036 ms, 2.4 GB/s, 0.0% peak
-  B=16: 0.0036 ms, 4.9 GB/s, 0.1% peak
+  B=8: 0.0035 ms, 2.5 GB/s, 0.0% peak
+  B=16: 0.0035 ms, 4.9 GB/s, 0.1% peak
   B=32: 0.0035 ms, 9.8 GB/s, 0.1% peak
   B=64: 0.0035 ms, 19.6 GB/s, 0.2% peak
   B=128: 0.0036 ms, 39.2 GB/s, 0.5% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0035 ms, 39.2 GB/s, 0.5% peak
-  B=1, S=256: 0.0036 ms, 78.4 GB/s, 1.0% peak
-  B=1, S=512: 0.0036 ms, 154.9 GB/s, 1.9% peak
-  B=1, S=1024: 0.0039 ms, 283.4 GB/s, 3.5% peak
-  B=1, S=2048: 0.0053 ms, 418.6 GB/s, 5.2% peak
-  B=2, S=128: 0.0036 ms, 78.4 GB/s, 1.0% peak
-  B=2, S=256: 0.0036 ms, 155.0 GB/s, 1.9% peak
-  B=2, S=512: 0.0039 ms, 283.8 GB/s, 3.5% peak
+  B=1, S=128: 0.0036 ms, 39.2 GB/s, 0.5% peak
+  B=1, S=256: 0.0036 ms, 78.2 GB/s, 1.0% peak
+  B=1, S=512: 0.0036 ms, 154.6 GB/s, 1.9% peak
+  B=1, S=1024: 0.0039 ms, 283.8 GB/s, 3.5% peak
+  B=1, S=2048: 0.0053 ms, 418.5 GB/s, 5.2% peak
+  B=2, S=128: 0.0036 ms, 78.2 GB/s, 1.0% peak
+  B=2, S=256: 0.0036 ms, 154.6 GB/s, 1.9% peak
+  B=2, S=512: 0.0039 ms, 283.7 GB/s, 3.5% peak
   B=2, S=1024: 0.0053 ms, 418.6 GB/s, 5.2% peak
-  B=2, S=2048: 0.0079 ms, 567.1 GB/s, 7.1% peak
-  B=4, S=128: 0.0036 ms, 155.0 GB/s, 1.9% peak
+  B=2, S=2048: 0.0079 ms, 567.4 GB/s, 7.1% peak
+  B=4, S=128: 0.0036 ms, 154.6 GB/s, 1.9% peak
   B=4, S=256: 0.0039 ms, 283.8 GB/s, 3.5% peak
-  B=4, S=512: 0.0053 ms, 418.3 GB/s, 5.2% peak
-  B=4, S=1024: 0.0079 ms, 567.0 GB/s, 7.1% peak
-  B=4, S=2048: 0.0134 ms, 663.8 GB/s, 8.3% peak
-  B=8, S=128: 0.0039 ms, 283.8 GB/s, 3.5% peak
-  B=8, S=256: 0.0053 ms, 418.8 GB/s, 5.2% peak
-  B=8, S=512: 0.0079 ms, 567.2 GB/s, 7.1% peak
-  B=8, S=1024: 0.0134 ms, 663.9 GB/s, 8.3% peak
-  B=8, S=2048: 0.0240 ms, 743.5 GB/s, 9.3% peak
+  B=4, S=512: 0.0053 ms, 418.4 GB/s, 5.2% peak
+  B=4, S=1024: 0.0079 ms, 567.4 GB/s, 7.1% peak
+  B=4, S=2048: 0.0134 ms, 663.9 GB/s, 8.3% peak
+  B=8, S=128: 0.0039 ms, 283.6 GB/s, 3.5% peak
+  B=8, S=256: 0.0053 ms, 418.7 GB/s, 5.2% peak
+  B=8, S=512: 0.0079 ms, 567.3 GB/s, 7.1% peak
+  B=8, S=1024: 0.0134 ms, 663.7 GB/s, 8.3% peak
+  B=8, S=2048: 0.0240 ms, 743.4 GB/s, 9.3% peak
 Saved ../results/topk_softmax.csv
 
 [OK] topk_softmax completed successfully
@@ -693,30 +747,30 @@ Benchmark: topk_sigmoid (Kernel #15)
   B=8: 0.0038 ms, 2.3 GB/s, 0.0% peak
   B=16: 0.0038 ms, 4.6 GB/s, 0.1% peak
   B=32: 0.0038 ms, 9.1 GB/s, 0.1% peak
-  B=64: 0.0038 ms, 18.2 GB/s, 0.2% peak
+  B=64: 0.0038 ms, 18.3 GB/s, 0.2% peak
   B=128: 0.0038 ms, 36.5 GB/s, 0.5% peak
 
 === Prefill Phase ===
   B=1, S=128: 0.0038 ms, 36.5 GB/s, 0.5% peak
-  B=1, S=256: 0.0038 ms, 72.9 GB/s, 0.9% peak
-  B=1, S=512: 0.0039 ms, 144.5 GB/s, 1.8% peak
-  B=1, S=1024: 0.0041 ms, 268.9 GB/s, 3.4% peak
-  B=1, S=2048: 0.0054 ms, 411.9 GB/s, 5.1% peak
-  B=2, S=128: 0.0038 ms, 72.9 GB/s, 0.9% peak
-  B=2, S=256: 0.0039 ms, 144.5 GB/s, 1.8% peak
-  B=2, S=512: 0.0041 ms, 268.8 GB/s, 3.4% peak
-  B=2, S=1024: 0.0054 ms, 412.1 GB/s, 5.2% peak
-  B=2, S=2048: 0.0078 ms, 571.5 GB/s, 7.1% peak
-  B=4, S=128: 0.0039 ms, 144.5 GB/s, 1.8% peak
-  B=4, S=256: 0.0041 ms, 268.9 GB/s, 3.4% peak
-  B=4, S=512: 0.0054 ms, 412.0 GB/s, 5.2% peak
-  B=4, S=1024: 0.0078 ms, 571.8 GB/s, 7.1% peak
-  B=4, S=2048: 0.0131 ms, 680.0 GB/s, 8.5% peak
-  B=8, S=128: 0.0041 ms, 269.2 GB/s, 3.4% peak
-  B=8, S=256: 0.0054 ms, 412.1 GB/s, 5.2% peak
-  B=8, S=512: 0.0078 ms, 571.7 GB/s, 7.1% peak
+  B=1, S=256: 0.0038 ms, 72.8 GB/s, 0.9% peak
+  B=1, S=512: 0.0039 ms, 144.3 GB/s, 1.8% peak
+  B=1, S=1024: 0.0041 ms, 269.1 GB/s, 3.4% peak
+  B=1, S=2048: 0.0054 ms, 412.2 GB/s, 5.2% peak
+  B=2, S=128: 0.0038 ms, 72.8 GB/s, 0.9% peak
+  B=2, S=256: 0.0039 ms, 144.4 GB/s, 1.8% peak
+  B=2, S=512: 0.0041 ms, 269.1 GB/s, 3.4% peak
+  B=2, S=1024: 0.0054 ms, 412.0 GB/s, 5.1% peak
+  B=2, S=2048: 0.0078 ms, 571.3 GB/s, 7.1% peak
+  B=4, S=128: 0.0039 ms, 144.3 GB/s, 1.8% peak
+  B=4, S=256: 0.0041 ms, 269.1 GB/s, 3.4% peak
+  B=4, S=512: 0.0054 ms, 412.1 GB/s, 5.2% peak
+  B=4, S=1024: 0.0078 ms, 571.3 GB/s, 7.1% peak
+  B=4, S=2048: 0.0131 ms, 679.5 GB/s, 8.5% peak
+  B=8, S=128: 0.0041 ms, 269.0 GB/s, 3.4% peak
+  B=8, S=256: 0.0054 ms, 412.3 GB/s, 5.2% peak
+  B=8, S=512: 0.0078 ms, 571.4 GB/s, 7.1% peak
   B=8, S=1024: 0.0131 ms, 679.6 GB/s, 8.5% peak
-  B=8, S=2048: 0.0231 ms, 771.3 GB/s, 9.6% peak
+  B=8, S=2048: 0.0231 ms, 771.1 GB/s, 9.6% peak
 Saved ../results/topk_sigmoid.csv
 
 [OK] topk_sigmoid completed successfully
@@ -729,36 +783,36 @@ Benchmark: moe_fused_gate (Kernel #16)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0111 ms, 0.2 GB/s, 0.0% peak
+  B=1: 0.0112 ms, 0.2 GB/s, 0.0% peak
   B=2: 0.0113 ms, 0.3 GB/s, 0.0% peak
-  B=4: 0.0115 ms, 0.5 GB/s, 0.0% peak
+  B=4: 0.0116 ms, 0.5 GB/s, 0.0% peak
   B=8: 0.0122 ms, 0.8 GB/s, 0.0% peak
   B=16: 0.0139 ms, 1.3 GB/s, 0.0% peak
-  B=32: 0.0160 ms, 2.2 GB/s, 0.0% peak
-  B=64: 0.0158 ms, 4.5 GB/s, 0.1% peak
-  B=128: 0.0161 ms, 8.7 GB/s, 0.1% peak
+  B=32: 0.0159 ms, 2.3 GB/s, 0.0% peak
+  B=64: 0.0159 ms, 4.4 GB/s, 0.1% peak
+  B=128: 0.0159 ms, 8.8 GB/s, 0.1% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0161 ms, 8.7 GB/s, 0.1% peak
+  B=1, S=128: 0.0159 ms, 8.8 GB/s, 0.1% peak
   B=1, S=256: 0.0160 ms, 17.5 GB/s, 0.2% peak
   B=1, S=512: 0.0161 ms, 34.6 GB/s, 0.4% peak
-  B=1, S=1024: 0.0161 ms, 69.4 GB/s, 0.9% peak
-  B=1, S=2048: 0.0160 ms, 139.5 GB/s, 1.7% peak
-  B=2, S=128: 0.0159 ms, 17.6 GB/s, 0.2% peak
-  B=2, S=256: 0.0160 ms, 34.9 GB/s, 0.4% peak
-  B=2, S=512: 0.0160 ms, 69.8 GB/s, 0.9% peak
-  B=2, S=1024: 0.0162 ms, 137.8 GB/s, 1.7% peak
-  B=2, S=2048: 0.0222 ms, 200.6 GB/s, 2.5% peak
-  B=4, S=128: 0.0160 ms, 34.8 GB/s, 0.4% peak
-  B=4, S=256: 0.0159 ms, 70.0 GB/s, 0.9% peak
-  B=4, S=512: 0.0161 ms, 138.6 GB/s, 1.7% peak
-  B=4, S=1024: 0.0219 ms, 203.1 GB/s, 2.5% peak
-  B=4, S=2048: 0.0292 ms, 305.6 GB/s, 3.8% peak
-  B=8, S=128: 0.0160 ms, 69.8 GB/s, 0.9% peak
-  B=8, S=256: 0.0160 ms, 139.0 GB/s, 1.7% peak
-  B=8, S=512: 0.0219 ms, 203.5 GB/s, 2.5% peak
-  B=8, S=1024: 0.0289 ms, 308.2 GB/s, 3.9% peak
-  B=8, S=2048: 0.0456 ms, 391.3 GB/s, 4.9% peak
+  B=1, S=1024: 0.0159 ms, 70.0 GB/s, 0.9% peak
+  B=1, S=2048: 0.0161 ms, 138.4 GB/s, 1.7% peak
+  B=2, S=128: 0.0162 ms, 17.3 GB/s, 0.2% peak
+  B=2, S=256: 0.0160 ms, 34.8 GB/s, 0.4% peak
+  B=2, S=512: 0.0158 ms, 70.7 GB/s, 0.9% peak
+  B=2, S=1024: 0.0161 ms, 138.8 GB/s, 1.7% peak
+  B=2, S=2048: 0.0222 ms, 200.7 GB/s, 2.5% peak
+  B=4, S=128: 0.0160 ms, 35.0 GB/s, 0.4% peak
+  B=4, S=256: 0.0159 ms, 70.2 GB/s, 0.9% peak
+  B=4, S=512: 0.0161 ms, 138.2 GB/s, 1.7% peak
+  B=4, S=1024: 0.0219 ms, 204.0 GB/s, 2.5% peak
+  B=4, S=2048: 0.0288 ms, 309.3 GB/s, 3.9% peak
+  B=8, S=128: 0.0161 ms, 69.4 GB/s, 0.9% peak
+  B=8, S=256: 0.0161 ms, 138.3 GB/s, 1.7% peak
+  B=8, S=512: 0.0217 ms, 205.5 GB/s, 2.6% peak
+  B=8, S=1024: 0.0291 ms, 306.6 GB/s, 3.8% peak
+  B=8, S=2048: 0.0454 ms, 392.8 GB/s, 4.9% peak
 Saved ../results/moe_fused_gate.csv
 
 [OK] moe_fused_gate completed successfully
@@ -771,39 +825,30 @@ Benchmark: prepare_moe_input (Kernel #17)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0157 ms, 0.2 GB/s, 0.0% peak
-  B=2: 0.0158 ms, 0.2 GB/s, 0.0% peak
-  B=4: 0.0157 ms, 0.2 GB/s, 0.0% peak
-  B=8: 0.0159 ms, 0.2 GB/s, 0.0% peak
-  B=16: 0.0160 ms, 0.3 GB/s, 0.0% peak
-  B=32: 0.0151 ms, 0.4 GB/s, 0.0% peak
-  B=64: 0.0145 ms, 0.6 GB/s, 0.0% peak
-  B=128: 0.0148 ms, 1.0 GB/s, 0.0% peak
+  B=1: 0.0161 ms, 0.2 GB/s, 0.0% peak
+  B=2: 0.0161 ms, 0.2 GB/s, 0.0% peak
+  B=4: 0.0161 ms, 0.2 GB/s, 0.0% peak
+  B=8: 0.0162 ms, 0.2 GB/s, 0.0% peak
+  B=16: 0.0164 ms, 0.3 GB/s, 0.0% peak
+  B=32: 0.0161 ms, 0.4 GB/s, 0.0% peak
+  B=64: 0.0153 ms, 0.6 GB/s, 0.0% peak
+  B=128: 0.0152 ms, 1.0 GB/s, 0.0% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0149 ms, 1.0 GB/s, 0.0% peak
-  B=1, S=256: 0.0169 ms, 1.6 GB/s, 0.0% peak
-  B=1, S=512: 0.0186 ms, 2.8 GB/s, 0.0% peak
-  B=1, S=1024: 0.0223 ms, 4.5 GB/s, 0.1% peak
-  B=1, S=2048: 0.0326 ms, 6.1 GB/s, 0.1% peak
-  B=2, S=128: 0.0166 ms, 1.7 GB/s, 0.0% peak
-  B=2, S=256: 0.0185 ms, 2.8 GB/s, 0.0% peak
-  B=2, S=512: 0.0218 ms, 4.6 GB/s, 0.1% peak
-  B=2, S=1024: 0.0329 ms, 6.1 GB/s, 0.1% peak
-  B=2, S=2048: 0.0445 ms, 8.9 GB/s, 0.1% peak
-  B=4, S=128: 0.0182 ms, 2.9 GB/s, 0.0% peak
-  B=4, S=256: 0.0220 ms, 4.6 GB/s, 0.1% peak
-  B=4, S=512: 0.0329 ms, 6.1 GB/s, 0.1% peak
-  B=4, S=1024: 0.0448 ms, 8.8 GB/s, 0.1% peak
-  B=4, S=2048: 0.0736 ms, 10.7 GB/s, 0.1% peak
-  B=8, S=128: 0.0230 ms, 4.4 GB/s, 0.1% peak
-  B=8, S=256: 0.0327 ms, 6.1 GB/s, 0.1% peak
-  B=8, S=512: 0.0463 ms, 8.6 GB/s, 0.1% peak
-  B=8, S=1024: 0.0725 ms, 10.9 GB/s, 0.1% peak
-  B=8, S=2048: 0.1287 ms, 12.2 GB/s, 0.2% peak
-Saved ../results/prepare_moe_input.csv
+  B=1, S=128: 0.0152 ms, 1.0 GB/s, 0.0% peak
+  B=1, S=256: 0.0172 ms, 1.6 GB/s, 0.0% peak
+  B=1, S=512: 0.0193 ms, 2.7 GB/s, 0.0% peak
+  B=1, S=1024: 0.0231 ms, 4.4 GB/s, 0.1% peak
+  B=1, S=2048: 0.0334 ms, 6.0 GB/s, 0.1% peak
+  B=2, S=128: 0.0176 ms, 1.6 GB/s, 0.0% peak
+Warning: Kernel failed for B=2, S=256: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
 
-[OK] prepare_moe_input completed successfully
+
+[FAILED] prepare_moe_input: Exit code 1
 
 ======================================================================
 Running: scaled_fp4_experts_quant (MoE, Memory)
@@ -813,40 +858,25 @@ Benchmark: scaled_fp4_experts_quant (Kernel #18)
 ============================================================
 
 === Decode Phase ===
-Warning: Kernel failed for B=1, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=2, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=4, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=8, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=16, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=32, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=64, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=128, S=1: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
+  B=1: 0.0073 ms, 20.1 GB/s, 0.3% peak
+  B=2: 0.0075 ms, 39.0 GB/s, 0.5% peak
+  B=4: 0.0074 ms, 79.9 GB/s, 1.0% peak
+  B=8: 0.0080 ms, 146.1 GB/s, 1.8% peak
+  B=16: 0.0093 ms, 253.5 GB/s, 3.2% peak
+  B=32: 0.0123 ms, 380.8 GB/s, 4.8% peak
+  B=64: 0.0068 ms, 1383.3 GB/s, 17.3% peak
+  B=128: 0.0110 ms, 1711.1 GB/s, 21.4% peak
 
 === Prefill Phase ===
-Warning: Kernel failed for B=1, S=128: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=1, S=256: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=1, S=512: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=1, S=1024: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=1, S=2048: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=2, S=128: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=2, S=256: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=2, S=512: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=2, S=1024: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=2, S=2048: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=4, S=128: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=4, S=256: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=4, S=512: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=4, S=1024: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=4, S=2048: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=8, S=128: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=8, S=256: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=8, S=512: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=8, S=1024: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
-Warning: Kernel failed for B=8, S=2048: Expected input_global_scale.dim() == 1 to be true, but got false.  (Could this error message be improved?  If so, please report an enhancement request to PyTorch.)
+  B=1, S=128: 0.0110 ms, 1711.1 GB/s, 21.4% peak
+Warning: Kernel failed for B=1, S=256: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
 
-No results - kernel not available
 
-[FAILED] scaled_fp4_experts_quant: No CSV output (kernel not available or all runs failed)
+[FAILED] scaled_fp4_experts_quant: Exit code 1
 
 ======================================================================
 Running: cutlass_fp4_group_mm (MoE, Compute)
@@ -856,72 +886,19 @@ Benchmark: cutlass_fp4_group_mm (Kernel #19)
 ============================================================
 
 === Decode Phase: gate_up ===
-Warning: Kernel failed for B=1, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=16, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=32, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=64, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=128, S=1, op=gate_up: Number of experts in problem_sizes must match expert_offsets
+  B=1: 0.0334 ms, 14068.7 GFLOPS, 0.16% peak
+  B=2: 0.0373 ms, 25166.8 GFLOPS, 0.28% peak
+  B=4: 0.0349 ms, 53870.9 GFLOPS, 0.60% peak
+  B=8: 0.0394 ms, 95421.4 GFLOPS, 1.06% peak
+  B=16: 0.0367 ms, 204852.1 GFLOPS, 2.28% peak
+Warning: Kernel failed for B=32, S=1, op=gate_up: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
 
-=== Decode Phase: down ===
-Warning: Kernel failed for B=1, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=16, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=32, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=64, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=128, S=1, op=down: Number of experts in problem_sizes must match expert_offsets
 
-=== Prefill Phase: gate_up ===
-Warning: Kernel failed for B=1, S=128, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=256, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=512, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=1024, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=2048, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=128, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=256, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=512, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=1024, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=2048, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=128, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=256, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=512, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=1024, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=2048, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=128, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=256, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=512, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=1024, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=2048, op=gate_up: Number of experts in problem_sizes must match expert_offsets
-
-=== Prefill Phase: down ===
-Warning: Kernel failed for B=1, S=128, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=256, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=512, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=1024, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=1, S=2048, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=128, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=256, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=512, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=1024, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=2, S=2048, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=128, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=256, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=512, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=1024, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=4, S=2048, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=128, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=256, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=512, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=1024, op=down: Number of experts in problem_sizes must match expert_offsets
-Warning: Kernel failed for B=8, S=2048, op=down: Number of experts in problem_sizes must match expert_offsets
-
-No results - kernel not available
-
-[FAILED] cutlass_fp4_group_mm: No CSV output (kernel not available or all runs failed)
+[FAILED] cutlass_fp4_group_mm: Exit code 1
 
 ======================================================================
 Running: apply_shuffle_mul_sum (MoE, Memory)
@@ -931,40 +908,39 @@ Benchmark: apply_shuffle_mul_sum (Kernel #20)
 ============================================================
 
 === Decode Phase ===
-Warning: Kernel failed for B=1, S=1: Factors must match output dtype
-Warning: Kernel failed for B=2, S=1: Factors must match output dtype
-Warning: Kernel failed for B=4, S=1: Factors must match output dtype
-Warning: Kernel failed for B=8, S=1: Factors must match output dtype
-Warning: Kernel failed for B=16, S=1: Factors must match output dtype
-Warning: Kernel failed for B=32, S=1: Factors must match output dtype
-Warning: Kernel failed for B=64, S=1: Factors must match output dtype
-Warning: Kernel failed for B=128, S=1: Factors must match output dtype
+  B=1: 0.0031 ms, 42.3 GB/s, 0.5% peak
+  B=2: 0.0031 ms, 84.6 GB/s, 1.1% peak
+  B=4: 0.0030 ms, 170.8 GB/s, 2.1% peak
+  B=8: 0.0030 ms, 339.9 GB/s, 4.2% peak
+  B=16: 0.0030 ms, 683.2 GB/s, 8.5% peak
+  B=32: 0.0030 ms, 1355.9 GB/s, 16.9% peak
+  B=64: 0.0031 ms, 2677.0 GB/s, 33.5% peak
+  B=128: 0.0031 ms, 5289.7 GB/s, 66.1% peak
 
 === Prefill Phase ===
-Warning: Kernel failed for B=1, S=128: Factors must match output dtype
-Warning: Kernel failed for B=1, S=256: Factors must match output dtype
-Warning: Kernel failed for B=1, S=512: Factors must match output dtype
-Warning: Kernel failed for B=1, S=1024: Factors must match output dtype
-Warning: Kernel failed for B=1, S=2048: Factors must match output dtype
-Warning: Kernel failed for B=2, S=128: Factors must match output dtype
-Warning: Kernel failed for B=2, S=256: Factors must match output dtype
-Warning: Kernel failed for B=2, S=512: Factors must match output dtype
-Warning: Kernel failed for B=2, S=1024: Factors must match output dtype
-Warning: Kernel failed for B=2, S=2048: Factors must match output dtype
-Warning: Kernel failed for B=4, S=128: Factors must match output dtype
-Warning: Kernel failed for B=4, S=256: Factors must match output dtype
-Warning: Kernel failed for B=4, S=512: Factors must match output dtype
-Warning: Kernel failed for B=4, S=1024: Factors must match output dtype
-Warning: Kernel failed for B=4, S=2048: Factors must match output dtype
-Warning: Kernel failed for B=8, S=128: Factors must match output dtype
-Warning: Kernel failed for B=8, S=256: Factors must match output dtype
-Warning: Kernel failed for B=8, S=512: Factors must match output dtype
-Warning: Kernel failed for B=8, S=1024: Factors must match output dtype
-Warning: Kernel failed for B=8, S=2048: Factors must match output dtype
+  B=1, S=128: 0.0031 ms, 5292.2 GB/s, 66.2% peak
+  B=1, S=256: 0.0042 ms, 7870.3 GB/s, 98.4% peak
+  B=1, S=512: 0.0067 ms, 9800.8 GB/s, 122.5% peak
+  B=1, S=1024: 0.0106 ms, 12470.4 GB/s, 155.9% peak
+  B=1, S=2048: 0.0189 ms, 14009.9 GB/s, 175.1% peak
+  B=2, S=128: 0.0042 ms, 7873.7 GB/s, 98.4% peak
+  B=2, S=256: 0.0067 ms, 9810.7 GB/s, 122.6% peak
+  B=2, S=512: 0.0106 ms, 12468.4 GB/s, 155.9% peak
+  B=2, S=1024: 0.0189 ms, 14024.1 GB/s, 175.3% peak
+  B=2, S=2048: 0.0379 ms, 13940.8 GB/s, 174.3% peak
+  B=4, S=128: 0.0067 ms, 9920.7 GB/s, 124.0% peak
+  B=4, S=256: 0.0105 ms, 12600.8 GB/s, 157.5% peak
+  B=4, S=512: 0.0189 ms, 13965.8 GB/s, 174.6% peak
+  B=4, S=1024: 0.0378 ms, 13977.4 GB/s, 174.7% peak
+  B=4, S=2048: 0.0731 ms, 14468.5 GB/s, 180.9% peak
+  B=8, S=128: 0.0105 ms, 12604.4 GB/s, 157.6% peak
+  B=8, S=256: 0.0190 ms, 13942.0 GB/s, 174.3% peak
+  B=8, S=512: 0.0381 ms, 13885.2 GB/s, 173.6% peak
+  B=8, S=1024: 0.0731 ms, 14469.3 GB/s, 180.9% peak
+  B=8, S=2048: 0.1427 ms, 14825.5 GB/s, 185.3% peak
+Saved ../results/apply_shuffle_mul_sum.csv
 
-No results - kernel not available
-
-[FAILED] apply_shuffle_mul_sum: No CSV output (kernel not available or all runs failed)
+[OK] apply_shuffle_mul_sum completed successfully
 
 ======================================================================
 Running: moe_align_block_size (MoE, Memory)
@@ -974,36 +950,36 @@ Benchmark: moe_align_block_size (Kernel #21)
 ============================================================
 
 === Decode Phase ===
-  B=1: 0.0045 ms, 15.1 GB/s, 0.2% peak
-  B=2: 0.0045 ms, 15.0 GB/s, 0.2% peak
-  B=4: 0.0045 ms, 15.0 GB/s, 0.2% peak
-  B=8: 0.0045 ms, 15.0 GB/s, 0.2% peak
-  B=16: 0.0046 ms, 15.0 GB/s, 0.2% peak
-  B=32: 0.0045 ms, 15.6 GB/s, 0.2% peak
-  B=64: 0.0045 ms, 16.0 GB/s, 0.2% peak
-  B=128: 0.0045 ms, 16.7 GB/s, 0.2% peak
+  B=1: 0.0040 ms, 17.0 GB/s, 0.2% peak
+  B=2: 0.0042 ms, 16.3 GB/s, 0.2% peak
+  B=4: 0.0042 ms, 16.2 GB/s, 0.2% peak
+  B=8: 0.0042 ms, 16.1 GB/s, 0.2% peak
+  B=16: 0.0043 ms, 16.1 GB/s, 0.2% peak
+  B=32: 0.0046 ms, 15.2 GB/s, 0.2% peak
+  B=64: 0.0046 ms, 15.5 GB/s, 0.2% peak
+  B=128: 0.0047 ms, 16.1 GB/s, 0.2% peak
 
 === Prefill Phase ===
-  B=1, S=128: 0.0045 ms, 16.8 GB/s, 0.2% peak
-  B=1, S=256: 0.0049 ms, 17.1 GB/s, 0.2% peak
-  B=1, S=512: 0.0058 ms, 17.4 GB/s, 0.2% peak
-  B=1, S=1024: 0.0074 ms, 18.1 GB/s, 0.2% peak
-  B=1, S=2048: 0.0088 ms, 22.8 GB/s, 0.3% peak
-  B=2, S=128: 0.0049 ms, 17.1 GB/s, 0.2% peak
-  B=2, S=256: 0.0058 ms, 17.4 GB/s, 0.2% peak
-  B=2, S=512: 0.0074 ms, 18.1 GB/s, 0.2% peak
-  B=2, S=1024: 0.0087 ms, 22.9 GB/s, 0.3% peak
-  B=2, S=2048: 0.0135 ms, 24.6 GB/s, 0.3% peak
-  B=4, S=128: 0.0058 ms, 17.4 GB/s, 0.2% peak
-  B=4, S=256: 0.0074 ms, 18.1 GB/s, 0.2% peak
-  B=4, S=512: 0.0088 ms, 22.8 GB/s, 0.3% peak
-  B=4, S=1024: 0.0135 ms, 24.6 GB/s, 0.3% peak
-  B=4, S=2048: 0.0231 ms, 25.8 GB/s, 0.3% peak
-  B=8, S=128: 0.0074 ms, 18.1 GB/s, 0.2% peak
-  B=8, S=256: 0.0087 ms, 22.9 GB/s, 0.3% peak
-  B=8, S=512: 0.0136 ms, 24.4 GB/s, 0.3% peak
-  B=8, S=1024: 0.0231 ms, 25.8 GB/s, 0.3% peak
-  B=8, S=2048: 0.0418 ms, 26.9 GB/s, 0.3% peak
+  B=1, S=128: 0.0047 ms, 16.1 GB/s, 0.2% peak
+  B=1, S=256: 0.0051 ms, 16.4 GB/s, 0.2% peak
+  B=1, S=512: 0.0059 ms, 16.9 GB/s, 0.2% peak
+  B=1, S=1024: 0.0076 ms, 17.6 GB/s, 0.2% peak
+  B=1, S=2048: 0.0089 ms, 22.4 GB/s, 0.3% peak
+  B=2, S=128: 0.0051 ms, 16.4 GB/s, 0.2% peak
+  B=2, S=256: 0.0059 ms, 16.9 GB/s, 0.2% peak
+  B=2, S=512: 0.0076 ms, 17.6 GB/s, 0.2% peak
+  B=2, S=1024: 0.0089 ms, 22.4 GB/s, 0.3% peak
+  B=2, S=2048: 0.0134 ms, 24.8 GB/s, 0.3% peak
+  B=4, S=128: 0.0059 ms, 16.9 GB/s, 0.2% peak
+  B=4, S=256: 0.0076 ms, 17.6 GB/s, 0.2% peak
+  B=4, S=512: 0.0089 ms, 22.4 GB/s, 0.3% peak
+  B=4, S=1024: 0.0134 ms, 24.8 GB/s, 0.3% peak
+  B=4, S=2048: 0.0229 ms, 26.1 GB/s, 0.3% peak
+  B=8, S=128: 0.0076 ms, 17.7 GB/s, 0.2% peak
+  B=8, S=256: 0.0089 ms, 22.4 GB/s, 0.3% peak
+  B=8, S=512: 0.0135 ms, 24.6 GB/s, 0.3% peak
+  B=8, S=1024: 0.0230 ms, 25.9 GB/s, 0.3% peak
+  B=8, S=2048: 0.0415 ms, 27.1 GB/s, 0.3% peak
 Saved ../results/moe_align_block_size.csv
 
 [OK] moe_align_block_size completed successfully
@@ -1016,8 +992,10 @@ Benchmark: trtllm_fp4_block_scale_moe (Kernel #22)
 ============================================================
 
 === Decode Phase ===
-  B=1: Skipped (minimum batch size for FP4 MoE is 2)
-Warning: Kernel failed for B=2, S=1: Error in function 'run' at /usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/trtllm_batched_gemm_runner.cu:258: Error occurred when running GEMM! (numBatches:  256 , GemmMNK:  2   4096   7168 , Kernel:  bmm_E2m1_E2m1E2m1_Fp32_t128x8x512u2_s5_et128x8_m128x8x64_cga1x1x1_16dp256b_rM_TN_transOut_schedP2x1x2x3_bN_ldgsts_tmaOpt_clmp_swiGlu_dynBatch_sm100f )
+  B=1: Skipped (minimum batch size for FP4 MoE is 8)
+  B=2: Skipped (minimum batch size for FP4 MoE is 8)
+  B=4: Skipped (minimum batch size for FP4 MoE is 8)
+Warning: Kernel failed for B=8, S=1: Error in function 'run' at /usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/trtllm_batched_gemm_runner.cu:258: Error occurred when running GEMM! (numBatches:  256 , GemmMNK:  8   4096   7168 , Kernel:  bmm_E2m1_E2m1E2m1_Fp32_t128x8x512u2_s5_et128x8_m128x8x64_cga1x1x1_16dp256b_rM_TN_transOut_schedP2x1x2x3_bN_ldgsts_tmaOpt_clmp_swiGlu_dynBatch_sm100f )
 
 [FAILED] trtllm_fp4_block_scale_moe: Exit code 1
 
@@ -1029,43 +1007,43 @@ Benchmark: fused_moe_kernel (Kernel #23)
 ============================================================
 
 === Decode Phase ===
-Warning: Kernel failed for B=1, S=1: 'module' object is not callable
-Warning: Kernel failed for B=2, S=1: 'module' object is not callable
-Warning: Kernel failed for B=4, S=1: 'module' object is not callable
-Warning: Kernel failed for B=8, S=1: 'module' object is not callable
-Warning: Kernel failed for B=16, S=1: 'module' object is not callable
-Warning: Kernel failed for B=32, S=1: 'module' object is not callable
-Warning: Kernel failed for B=64, S=1: 'module' object is not callable
-Warning: Kernel failed for B=128, S=1: 'module' object is not callable
+Warning: Kernel failed for B=1, S=1: Global server args is not set yet!
+Warning: Kernel failed for B=2, S=1: Global server args is not set yet!
+Warning: Kernel failed for B=4, S=1: Global server args is not set yet!
+Warning: Kernel failed for B=8, S=1: Global server args is not set yet!
+Warning: Kernel failed for B=16, S=1: Global server args is not set yet!
+Warning: Kernel failed for B=32, S=1: Global server args is not set yet!
+Warning: Kernel failed for B=64, S=1: Global server args is not set yet!
+Warning: Kernel failed for B=128, S=1: Global server args is not set yet!
 
 === Prefill Phase ===
-Warning: Kernel failed for B=1, S=128: 'module' object is not callable
-Warning: Kernel failed for B=1, S=256: 'module' object is not callable
-Warning: Kernel failed for B=1, S=512: 'module' object is not callable
-Warning: Kernel failed for B=1, S=1024: 'module' object is not callable
-Warning: Kernel failed for B=1, S=2048: 'module' object is not callable
-Warning: Kernel failed for B=2, S=128: 'module' object is not callable
-Warning: Kernel failed for B=2, S=256: 'module' object is not callable
-Warning: Kernel failed for B=2, S=512: 'module' object is not callable
-Warning: Kernel failed for B=2, S=1024: 'module' object is not callable
-Warning: Kernel failed for B=2, S=2048: 'module' object is not callable
-Warning: Kernel failed for B=4, S=128: 'module' object is not callable
-Warning: Kernel failed for B=4, S=256: 'module' object is not callable
-Warning: Kernel failed for B=4, S=512: 'module' object is not callable
-Warning: Kernel failed for B=4, S=1024: 'module' object is not callable
-Warning: Kernel failed for B=4, S=2048: 'module' object is not callable
-Warning: Kernel failed for B=8, S=128: 'module' object is not callable
-Warning: Kernel failed for B=8, S=256: 'module' object is not callable
-Warning: Kernel failed for B=8, S=512: 'module' object is not callable
-Warning: Kernel failed for B=8, S=1024: 'module' object is not callable
-Warning: Kernel failed for B=8, S=2048: 'module' object is not callable
+Warning: Kernel failed for B=1, S=128: Global server args is not set yet!
+Warning: Kernel failed for B=1, S=256: Global server args is not set yet!
+Warning: Kernel failed for B=1, S=512: Global server args is not set yet!
+Warning: Kernel failed for B=1, S=1024: Global server args is not set yet!
+Warning: Kernel failed for B=1, S=2048: Global server args is not set yet!
+Warning: Kernel failed for B=2, S=128: Global server args is not set yet!
+Warning: Kernel failed for B=2, S=256: Global server args is not set yet!
+Warning: Kernel failed for B=2, S=512: Global server args is not set yet!
+Warning: Kernel failed for B=2, S=1024: Global server args is not set yet!
+Warning: Kernel failed for B=2, S=2048: Global server args is not set yet!
+Warning: Kernel failed for B=4, S=128: Global server args is not set yet!
+Warning: Kernel failed for B=4, S=256: Global server args is not set yet!
+Warning: Kernel failed for B=4, S=512: Global server args is not set yet!
+Warning: Kernel failed for B=4, S=1024: Global server args is not set yet!
+Warning: Kernel failed for B=4, S=2048: Global server args is not set yet!
+Warning: Kernel failed for B=8, S=128: Global server args is not set yet!
+Warning: Kernel failed for B=8, S=256: Global server args is not set yet!
+Warning: Kernel failed for B=8, S=512: Global server args is not set yet!
+Warning: Kernel failed for B=8, S=1024: Global server args is not set yet!
+Warning: Kernel failed for B=8, S=2048: Global server args is not set yet!
 
 No results - kernel not available
 
 [FAILED] fused_moe_kernel: No CSV output (kernel not available or all runs failed)
 
 Aggregated results saved to ../results/all_kernels.csv
-Total benchmark results: 531
+Total benchmark results: 559
 
 Summary saved to ../results/benchmark_summary.md
 
@@ -1073,9 +1051,9 @@ Summary saved to ../results/benchmark_summary.md
 Benchmark Complete!
 Successful: 18/23
 Failed kernels:
-  - scaled_fp4_experts_quant: No CSV output (kernel not available or all runs failed)
-  - cutlass_fp4_group_mm: No CSV output (kernel not available or all runs failed)
-  - apply_shuffle_mul_sum: No CSV output (kernel not available or all runs failed)
+  - prepare_moe_input: Exit code 1
+  - scaled_fp4_experts_quant: Exit code 1
+  - cutlass_fp4_group_mm: Exit code 1
   - trtllm_fp4_block_scale_moe: Exit code 1
   - fused_moe_kernel: No CSV output (kernel not available or all runs failed)
 ======================================================================

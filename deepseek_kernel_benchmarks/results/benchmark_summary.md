@@ -1,6 +1,6 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-27 16:25:42
+**Generated:** 2026-01-27 16:52:06
 
 **Total Kernels:** 23
 **Kernels Run:** 23
@@ -30,10 +30,10 @@ CUDA crashes in one kernel do not affect other kernels.
 | 14 | `topk_softmax` | MoE Routing | Memory | ✓ OK | OK |
 | 15 | `topk_sigmoid` | MoE Routing | Memory | ✓ OK | OK |
 | 16 | `moe_fused_gate` | MoE Routing | Memory | ✓ OK | OK |
-| 17 | `prepare_moe_input` | MoE | Memory | ✓ OK | OK |
-| 18 | `scaled_fp4_experts_quant` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
-| 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
-| 20 | `apply_shuffle_mul_sum` | MoE | Memory | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
+| 17 | `prepare_moe_input` | MoE | Memory | ✗ FAILED | Exit code 1 |
+| 18 | `scaled_fp4_experts_quant` | MoE | Memory | ✗ FAILED | Exit code 1 |
+| 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✗ FAILED | Exit code 1 |
+| 20 | `apply_shuffle_mul_sum` | MoE | Memory | ✓ OK | OK |
 | 21 | `moe_align_block_size` | MoE | Memory | ✓ OK | OK |
 | 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✗ FAILED | Exit code 1 |
 | 23 | `fused_moe_kernel` | MoE | Mixed | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
@@ -42,6 +42,7 @@ CUDA crashes in one kernel do not affect other kernels.
 
 - `all_kernels.csv`
 - `apply_rope_with_cos_sin_cache_inplace.csv`
+- `apply_shuffle_mul_sum.csv`
 - `bmm_fp8.csv`
 - `concat_mla_k.csv`
 - `cutlass_mla_decode.csv`
