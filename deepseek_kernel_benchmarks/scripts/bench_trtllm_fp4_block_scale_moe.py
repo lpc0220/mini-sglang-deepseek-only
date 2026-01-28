@@ -304,6 +304,61 @@ def run_benchmark_isolated(B: int, S: int, hidden_size: int, num_experts: int,
         return None
 
 
+def run_flashinfer_benchmark(num_tokens: int, hidden_size: int, intermediate_size: int,
+                              num_experts: int, top_k: int) -> Optional[float]:
+    """Run flashinfer's own benchmark for trtllm_fp4_block_scale_moe.
+
+    Returns median time in ms if successful, None if failed.
+    """
+    import subprocess
+    import sys
+
+    # Find flashinfer benchmark script
+    flashinfer_bench = None
+    for path in [
+        "/Users/lpc/workspace/sglang-deepseek-only/flashinfer/benchmarks/flashinfer_benchmark.py",
+        "../../flashinfer/benchmarks/flashinfer_benchmark.py",
+    ]:
+        import os
+        if os.path.exists(path):
+            flashinfer_bench = path
+            break
+
+    if not flashinfer_bench:
+        return None
+
+    cmd = [
+        sys.executable, flashinfer_bench,
+        "--routine", "trtllm_fp4_block_scale_moe",
+        "--num_tokens", str(num_tokens),
+        "--hidden_size", str(hidden_size),
+        "--intermediate_size", str(intermediate_size),
+        "--num_experts", str(num_experts),
+        "--top_k", str(top_k),
+        "--n_group", str(N_GROUP),
+        "--topk_group", str(TOPK_GROUP),
+        "--routed_scaling_factor", str(ROUTED_SCALING_FACTOR),
+        "--routing_method", "deepseek_v3",
+        "--num_iters", "10",
+        "--dry_run_iters", "3",
+    ]
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        if result.returncode == 0:
+            # Parse output for median time
+            for line in result.stdout.split('\n'):
+                if 'median' in line.lower() or 'time' in line.lower():
+                    print(f"  flashinfer output: {line}")
+            return None  # For now, just report what flashinfer says
+        else:
+            print(f"  flashinfer benchmark failed: {result.stderr[:200]}")
+            return None
+    except Exception as e:
+        print(f"  flashinfer benchmark error: {e}")
+        return None
+
+
 def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
     """Run trtllm_fp4_block_scale_moe benchmarks with subprocess isolation."""
     flashinfer = check_flashinfer()
@@ -313,13 +368,21 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
 
     results = []
 
+    # Note: This kernel appears to have issues with DeepSeek's 256 experts configuration
+    # The TRT-LLM FP4 batched GEMM kernel fails with "Error occurred when running GEMM!"
+    # when numBatches=256 (one batch per expert).
+    print("\nNote: Testing with DeepSeek config (256 experts, top-8)")
+    print("This kernel may not fully support this configuration.\n")
+
     # Decode phase (S=1)
-    print("\n=== Decode Phase ===")
+    print("=== Decode Phase ===")
     for B in batch_sizes:
         result = run_benchmark_isolated(B, 1, H, E, K, I, "decode")
         if result:
             results.append(result)
             print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
+        else:
+            print(f"  B={B}: FAILED (kernel error)")
 
     # Prefill phase
     print("\n=== Prefill Phase ===")
@@ -329,11 +392,14 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
             if result:
                 results.append(result)
                 print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
+            else:
+                print(f"  B={B}, S={S}: FAILED (kernel error)")
 
     if results:
         save_results(results, output_dir, "trtllm_fp4_block_scale_moe")
     else:
-        print("\nNo results - kernel not available")
+        print("\nNo successful results - kernel may not support DeepSeek's 256-expert config")
+        print("Consider testing with smaller num_experts (e.g., 8 or 64)")
 
 
 def main():
