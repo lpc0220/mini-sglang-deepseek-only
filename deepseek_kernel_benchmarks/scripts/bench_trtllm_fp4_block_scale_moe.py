@@ -375,130 +375,78 @@ def run_flashinfer_benchmark(num_tokens: int, hidden_size: int, intermediate_siz
 
 
 def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
-    """Run trtllm_fp4_block_scale_moe benchmarks by directly calling flashinfer's test function."""
-    flashinfer = check_flashinfer()
-    if not flashinfer:
-        print("ERROR: flashinfer not available")
-        return
-
-    print("\nNote: This kernel requires complex weight preprocessing (shuffling, permutation)")
-    print("that is difficult to replicate outside flashinfer's test framework.")
-    print("Importing and running flashinfer's test routine directly...\n")
-
+    """Run trtllm_fp4_block_scale_moe benchmarks using flashinfer's benchmark CLI."""
+    import subprocess
     import sys
     import os
 
-    # Find flashinfer benchmark directory and add to path
+    print("\nRunning flashinfer benchmark CLI for trtllm_fp4_block_scale_moe...\n")
+
+    # Find flashinfer benchmark script
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    flashinfer_bench_dir = os.path.join(script_dir, "../../flashinfer/benchmarks")
-    if not os.path.exists(flashinfer_bench_dir):
-        print("ERROR: Cannot find flashinfer benchmarks directory")
+    flashinfer_bench_script = os.path.join(script_dir, "../../flashinfer/benchmarks/flashinfer_benchmark.py")
+
+    if not os.path.exists(flashinfer_bench_script):
+        print("ERROR: Cannot find flashinfer benchmark script")
+        print(f"  Expected: {flashinfer_bench_script}")
         print("Please clone flashinfer under the project root:")
         print(f"  git clone https://github.com/flashinfer-ai/flashinfer.git")
         return
 
-    # Add flashinfer benchmarks to path so we can import routines
-    if flashinfer_bench_dir not in sys.path:
-        sys.path.insert(0, flashinfer_bench_dir)
-
-    try:
-        from routines.moe import testTrtllmFp4BlockScaleMoe
-        from argparse import Namespace
-    except ImportError as e:
-        print(f"ERROR: Failed to import flashinfer benchmark routines: {e}")
-        print("Make sure flashinfer is cloned under the project root.")
-        return
-
-    # Test configurations matching flashinfer's test parameters
-    # Note: The kernel tests use hidden_size=1024, not 7168. Full DeepSeek dimensions
-    # may not be supported by the current kernel implementation.
-    # First try with test-compatible dimensions, then optionally with DeepSeek dimensions.
-
-    # Use smaller dimensions that match flashinfer test cases
-    test_hidden_size = 1024  # flashinfer test uses 1024
-    test_intermediate_size = 1024  # flashinfer test uses up to 2048
-    test_num_experts = 128  # flashinfer test uses 128 or 256
-
+    # Test configurations - use dimensions that work with the kernel
+    # The kernel works with hidden_size=1024, intermediate_size=1024, num_experts=128
     test_configs = [
-        # (num_tokens, description)
-        (8, "decode B=8"),
-        (128, "prefill B=1,S=128"),
-        (768, "prefill B=1,S=768"),
+        # (num_tokens, hidden_size, intermediate_size, num_experts, top_k, description)
+        (1, 1024, 1024, 128, 4, "decode B=1"),
+        (8, 1024, 1024, 128, 8, "decode B=8"),
+        (128, 1024, 1024, 128, 8, "prefill S=128"),
+        (1024, 1024, 1024, 128, 8, "prefill S=1024"),
     ]
 
     print("=== Running flashinfer benchmark ===")
-    print(f"  Using test-compatible dimensions: hidden={test_hidden_size}, intermediate={test_intermediate_size}, experts={test_num_experts}")
-    print(f"  (Full DeepSeek dimensions: hidden={H}, intermediate={I}, experts={E})")
-    print(f"  Using Renormalize routing (type=1) for compatibility with flashinfer tests")
-    for num_tokens, desc in test_configs:
-        # Create args namespace matching flashinfer's expected format
-        # Include all required arguments from flashinfer_benchmark.py and parse_moe_args
-        # Note: Use Renormalize routing (type=1) instead of DeepSeekV3 (type=2)
-        # because flashinfer tests primarily test Renormalize/RenormalizeNaive/TopK routing
-        args = Namespace(
-            # Required MoE args
-            routine="trtllm_fp4_block_scale_moe",
-            num_tokens=num_tokens,
-            hidden_size=test_hidden_size,
-            intermediate_size=test_intermediate_size,
-            num_experts=test_num_experts,
-            top_k=K,
-            # Use Renormalize routing (more widely tested than DeepSeekV3)
-            # RoutingMethodType: 0=Default, 1=Renormalize, 2=DeepSeekV3, 3=Llama4, 4=RenormalizeNaive, 5=TopK
-            n_group=None,  # Not needed for Renormalize routing
-            topk_group=None,  # Not needed for Renormalize routing
-            routed_scaling_factor=None,  # Not needed for Renormalize routing
-            routing_method="renormalize",
-            routing_method_type=ROUTING_METHOD_RENORMALIZE,  # Use Renormalize (1) instead of DeepSeekV3 (2)
-            # Local expert config
-            local_expert_offset=0,
-            local_num_experts=test_num_experts,
-            # Weight layout
-            use_shuffled_weight=False,
-            weight_layout=0,  # MajorK
-            # Data types
-            input_dtype="bfloat16",
-            weight_dtype="bfloat16",
-            # Activation
-            gated_act="swiglu",
-            gated_act_type=0,  # swiglu = 0
-            # Routing options
-            use_routing_bias=False,
-            use_routing_scales_on_input=False,
-            # Benchmark options
-            num_iters=10,
-            dry_run_iters=5,
-            verbose=0,
-            backends=None,
-            autotune=False,
-            # Shared args from flashinfer_benchmark.py
-            random_seed=42,
-            no_cuda_graph=False,
-            use_cupti=False,
-            use_cuda_events=False,
-            refcheck=False,
-            allow_output_mismatch=False,
-            output_path=None,
-            case_tag=None,
-            generate_repro_command=False,
-            repro_command="",
-        )
+    print(f"  Benchmark script: {flashinfer_bench_script}")
+    print(f"  Routing method: renormalize (type=1)")
+    print()
 
-        print(f"\n  {desc} (tokens={num_tokens}):")
+    for num_tokens, hidden_size, intermediate_size, num_experts, top_k, desc in test_configs:
+        print(f"  {desc} (tokens={num_tokens}, H={hidden_size}, I={intermediate_size}, E={num_experts}, K={top_k}):")
+
+        cmd = [
+            sys.executable,
+            flashinfer_bench_script,
+            "trtllm_fp4_block_scale_moe",
+            "--num_tokens", str(num_tokens),
+            "--hidden_size", str(hidden_size),
+            "--intermediate_size", str(intermediate_size),
+            "--num_experts", str(num_experts),
+            "--top_k", str(top_k),
+            "--routing_method", "renormalize",
+            "--num_iters", "10",
+            "--dry_run_iters", "5",
+        ]
+
         try:
-            result = testTrtllmFp4BlockScaleMoe(args)
-            if result:
-                for r in result:
-                    backend = r.get('backend', 'unknown')
-                    median_time = r.get('median_time', 0)
-                    tflops = r.get('tflops', 0)
-                    print(f"    {backend}: {median_time:.4f} ms, {tflops:.2f} TFLOPS")
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            # Parse output for performance metrics
+            output_lines = result.stdout.strip().split('\n')
+            for line in output_lines:
+                if 'trtllm' in line.lower() or 'tflops' in line.lower() or 'median' in line.lower() or 'tb/s' in line.lower():
+                    print(f"    {line.strip()}")
+            if result.returncode != 0:
+                print(f"    ERROR (exit code {result.returncode})")
+                if result.stderr:
+                    # Print first few lines of stderr
+                    stderr_lines = result.stderr.strip().split('\n')[:5]
+                    for line in stderr_lines:
+                        print(f"    {line}")
+        except subprocess.TimeoutExpired:
+            print(f"    TIMEOUT")
         except Exception as e:
             print(f"    ERROR: {e}")
+        print()
 
-    print("\n" + "=" * 60)
-    print("Note: This kernel benchmark uses flashinfer's internal benchmark tool.")
-    print("Results may differ from other kernels due to different measurement methods.")
+    print("=" * 60)
+    print("Note: This benchmark uses flashinfer's official benchmark CLI.")
     print("=" * 60)
 
 
