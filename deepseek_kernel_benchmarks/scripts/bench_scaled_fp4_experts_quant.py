@@ -20,6 +20,8 @@ Usage:
 """
 
 import argparse
+import multiprocessing as mp
+import sys
 from typing import List, Optional
 
 import torch
@@ -119,8 +121,48 @@ def bench_scaled_fp4_experts_quant(sgl_kernel, B: int, S: int, hidden_size: int,
     )
 
 
+def _run_single_benchmark(B: int, S: int, hidden_size: int, num_experts: int,
+                          topk: int, phase: str, queue: mp.Queue):
+    """Run a single benchmark in a subprocess and put result in queue."""
+    try:
+        sgl_kernel = check_sgl_kernel()
+        if not sgl_kernel:
+            queue.put(None)
+            return
+        result = bench_scaled_fp4_experts_quant(sgl_kernel, B, S, hidden_size, num_experts, topk, phase)
+        queue.put(result)
+    except Exception as e:
+        print(f"Warning: Subprocess failed for B={B}, S={S}: {e}")
+        queue.put(None)
+
+
+def run_benchmark_isolated(B: int, S: int, hidden_size: int, num_experts: int,
+                           topk: int, phase: str, timeout: int = 60) -> Optional[BenchmarkResult]:
+    """Run a single benchmark in an isolated subprocess to prevent CUDA context corruption."""
+    ctx = mp.get_context('spawn')
+    queue = ctx.Queue()
+    proc = ctx.Process(target=_run_single_benchmark, args=(B, S, hidden_size, num_experts, topk, phase, queue))
+    proc.start()
+    proc.join(timeout=timeout)
+
+    if proc.is_alive():
+        proc.terminate()
+        proc.join()
+        print(f"Warning: Benchmark timed out for B={B}, S={S}")
+        return None
+
+    if proc.exitcode != 0:
+        print(f"Warning: Subprocess crashed for B={B}, S={S} (exit code {proc.exitcode})")
+        return None
+
+    try:
+        return queue.get_nowait()
+    except:
+        return None
+
+
 def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
-    """Run scaled_fp4_experts_quant benchmarks."""
+    """Run scaled_fp4_experts_quant benchmarks with subprocess isolation."""
     sgl_kernel = check_sgl_kernel()
     if not sgl_kernel:
         print("ERROR: sgl_kernel not available")
@@ -131,7 +173,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     # Decode phase (S=1)
     print("\n=== Decode Phase ===")
     for B in batch_sizes:
-        result = bench_scaled_fp4_experts_quant(sgl_kernel, B, 1, H, E, K, "decode")
+        result = run_benchmark_isolated(B, 1, H, E, K, "decode")
         if result:
             results.append(result)
             print(f"  B={B}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")
@@ -140,7 +182,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     print("\n=== Prefill Phase ===")
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            result = bench_scaled_fp4_experts_quant(sgl_kernel, B, S, H, E, K, "prefill")
+            result = run_benchmark_isolated(B, S, H, E, K, "prefill")
             if result:
                 results.append(result)
                 print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.bandwidth_gbs:.1f} GB/s, {result.peak_pct:.1f}% peak")

@@ -12,6 +12,7 @@ Usage:
 """
 
 import argparse
+import multiprocessing as mp
 from typing import List, Optional
 
 import torch
@@ -260,8 +261,51 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
     )
 
 
+def _run_single_benchmark(B: int, S: int, hidden_size: int, num_experts: int,
+                          topk: int, intermediate_size: int, phase: str, queue: mp.Queue):
+    """Run a single benchmark in a subprocess and put result in queue."""
+    try:
+        flashinfer = check_flashinfer()
+        if not flashinfer:
+            queue.put(None)
+            return
+        result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, S, hidden_size,
+                                                   num_experts, topk, intermediate_size, phase)
+        queue.put(result)
+    except Exception as e:
+        print(f"Warning: Subprocess failed for B={B}, S={S}: {e}")
+        queue.put(None)
+
+
+def run_benchmark_isolated(B: int, S: int, hidden_size: int, num_experts: int,
+                           topk: int, intermediate_size: int, phase: str,
+                           timeout: int = 60) -> Optional[BenchmarkResult]:
+    """Run a single benchmark in an isolated subprocess to prevent CUDA context corruption."""
+    ctx = mp.get_context('spawn')
+    queue = ctx.Queue()
+    proc = ctx.Process(target=_run_single_benchmark,
+                      args=(B, S, hidden_size, num_experts, topk, intermediate_size, phase, queue))
+    proc.start()
+    proc.join(timeout=timeout)
+
+    if proc.is_alive():
+        proc.terminate()
+        proc.join()
+        print(f"Warning: Benchmark timed out for B={B}, S={S}")
+        return None
+
+    if proc.exitcode != 0:
+        print(f"Warning: Subprocess crashed for B={B}, S={S} (exit code {proc.exitcode})")
+        return None
+
+    try:
+        return queue.get_nowait()
+    except:
+        return None
+
+
 def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
-    """Run trtllm_fp4_block_scale_moe benchmarks."""
+    """Run trtllm_fp4_block_scale_moe benchmarks with subprocess isolation."""
     flashinfer = check_flashinfer()
     if not flashinfer:
         print("ERROR: flashinfer not available")
@@ -272,7 +316,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     # Decode phase (S=1)
     print("\n=== Decode Phase ===")
     for B in batch_sizes:
-        result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, 1, H, E, K, I, "decode")
+        result = run_benchmark_isolated(B, 1, H, E, K, I, "decode")
         if result:
             results.append(result)
             print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
@@ -281,7 +325,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     print("\n=== Prefill Phase ===")
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            result = bench_trtllm_fp4_block_scale_moe(flashinfer, B, S, H, E, K, I, "prefill")
+            result = run_benchmark_isolated(B, S, H, E, K, I, "prefill")
             if result:
                 results.append(result)
                 print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")

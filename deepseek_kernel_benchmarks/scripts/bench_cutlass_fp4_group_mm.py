@@ -22,6 +22,7 @@ Usage:
 """
 
 import argparse
+import multiprocessing as mp
 from typing import List, Optional, Dict, Any
 
 import torch
@@ -164,8 +165,52 @@ def bench_cutlass_fp4_group_mm(sgl_kernel, B: int, S: int, num_experts: int,
     )
 
 
+def _run_single_benchmark(B: int, S: int, num_experts: int, topk: int,
+                          hidden_size: int, intermediate_size: int,
+                          op_name: str, phase: str, queue: mp.Queue):
+    """Run a single benchmark in a subprocess and put result in queue."""
+    try:
+        sgl_kernel = check_sgl_kernel()
+        if not sgl_kernel:
+            queue.put(None)
+            return
+        result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, num_experts, topk,
+                                            hidden_size, intermediate_size, op_name, phase)
+        queue.put(result)
+    except Exception as e:
+        print(f"Warning: Subprocess failed for B={B}, S={S}, op={op_name}: {e}")
+        queue.put(None)
+
+
+def run_benchmark_isolated(B: int, S: int, num_experts: int, topk: int,
+                           hidden_size: int, intermediate_size: int,
+                           op_name: str, phase: str, timeout: int = 60) -> Optional[BenchmarkResult]:
+    """Run a single benchmark in an isolated subprocess to prevent CUDA context corruption."""
+    ctx = mp.get_context('spawn')
+    queue = ctx.Queue()
+    proc = ctx.Process(target=_run_single_benchmark,
+                      args=(B, S, num_experts, topk, hidden_size, intermediate_size, op_name, phase, queue))
+    proc.start()
+    proc.join(timeout=timeout)
+
+    if proc.is_alive():
+        proc.terminate()
+        proc.join()
+        print(f"Warning: Benchmark timed out for B={B}, S={S}, op={op_name}")
+        return None
+
+    if proc.exitcode != 0:
+        print(f"Warning: Subprocess crashed for B={B}, S={S}, op={op_name} (exit code {proc.exitcode})")
+        return None
+
+    try:
+        return queue.get_nowait()
+    except:
+        return None
+
+
 def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
-    """Run cutlass_fp4_group_mm benchmarks."""
+    """Run cutlass_fp4_group_mm benchmarks with subprocess isolation."""
     sgl_kernel = check_sgl_kernel()
     if not sgl_kernel:
         print("ERROR: sgl_kernel not available")
@@ -176,14 +221,14 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     # Decode phase (S=1)
     print("\n=== Decode Phase: gate_up ===")
     for B in batch_sizes:
-        result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "gate_up", "decode")
+        result = run_benchmark_isolated(B, 1, E, K, H, I, "gate_up", "decode")
         if result:
             results.append(result)
             print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
 
     print("\n=== Decode Phase: down ===")
     for B in batch_sizes:
-        result = bench_cutlass_fp4_group_mm(sgl_kernel, B, 1, E, K, H, I, "down", "decode")
+        result = run_benchmark_isolated(B, 1, E, K, H, I, "down", "decode")
         if result:
             results.append(result)
             print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
@@ -192,7 +237,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     print("\n=== Prefill Phase: gate_up ===")
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "gate_up", "prefill")
+            result = run_benchmark_isolated(B, S, E, K, H, I, "gate_up", "prefill")
             if result:
                 results.append(result)
                 print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
@@ -200,7 +245,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     print("\n=== Prefill Phase: down ===")
     for B in batch_sizes[:4]:
         for S in seq_lens:
-            result = bench_cutlass_fp4_group_mm(sgl_kernel, B, S, E, K, H, I, "down", "prefill")
+            result = run_benchmark_isolated(B, S, E, K, H, I, "down", "prefill")
             if result:
                 results.append(result)
                 print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak")
