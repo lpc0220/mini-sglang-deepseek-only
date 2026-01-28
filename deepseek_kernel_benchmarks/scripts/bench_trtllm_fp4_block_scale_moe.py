@@ -414,7 +414,7 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
         cmd = [
             sys.executable,
             flashinfer_bench_script,
-            "trtllm_fp4_block_scale_moe",
+            "--routine", "trtllm_fp4_block_scale_moe",
             "--num_tokens", str(num_tokens),
             "--hidden_size", str(hidden_size),
             "--intermediate_size", str(intermediate_size),
