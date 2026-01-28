@@ -1,0 +1,10 @@
+kernel,op,phase,B,S,M,N,K,latency_ms,gflops,peak_pct,bandwidth_gbs,arith_intensity,bound
+scaled_fp4_experts_quant,experts_quant,decode,1,1,8,7168,0,0.007367,15.57,0.25,19.94,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,decode,2,1,16,7168,0,0.007252,31.63,0.51,40.52,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,decode,4,1,32,7168,0,0.007480,61.33,0.98,78.58,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,decode,8,1,64,7168,0,0.007974,115.07,1.84,147.43,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,decode,16,1,128,7168,0,0.009261,198.14,3.17,253.86,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,decode,32,1,256,7168,0,0.012346,297.26,4.76,380.86,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,decode,64,1,512,7168,0,0.006757,1086.29,17.40,1391.81,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,decode,128,1,1024,7168,0,0.010883,1348.86,21.60,1728.22,0.7805,memory
+scaled_fp4_experts_quant,experts_quant,prefill,1,128,1024,7168,0,0.010868,1350.72,21.63,1730.60,0.7805,memory
