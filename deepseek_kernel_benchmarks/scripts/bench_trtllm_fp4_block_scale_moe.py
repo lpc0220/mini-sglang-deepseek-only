@@ -267,8 +267,8 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
 
     # TRT-LLM FP4 MoE kernel has minimum token requirements
     # The kernel crashes with small batch sizes due to GEMM dimension requirements
-    # Testing shows B=8 also fails with GEMM error, need B>=16 for decode
-    MIN_DECODE_BATCH = 16  # Minimum batch size for decode phase
+    # Testing shows B=16 also fails with GEMM error, need B>=32 for decode
+    MIN_DECODE_BATCH = 32  # Minimum batch size for decode phase
 
     # Decode phase (S=1)
     print("\n=== Decode Phase ===")
