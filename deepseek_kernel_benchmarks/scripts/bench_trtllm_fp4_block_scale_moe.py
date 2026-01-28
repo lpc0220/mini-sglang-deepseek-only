@@ -76,11 +76,10 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
                                       phase: str, device: str = "cuda") -> Optional[BenchmarkResult]:
     """Benchmark TRT-LLM FP4 block-scaled MoE kernel.
 
-    Based on flashinfer/benchmarks/routines/moe.py testTrtllmFp4BlockScaleMoe:
-        - Requires FP4 quantized weights (uint8 packed)
-        - Requires FP8 scale tensors
+    Based on flashinfer/tests/moe/test_trtllm_gen_routed_fused_moe.py:
+        - Uses NvFP4 quantization mode (sf_vec_size=16, use_ue8m0=False, is_sf_swizzled_layout=False for input)
         - Uses routing_logits, not pre-computed expert indices
-        - DeepSeek V3 routing method
+        - DeepSeek V3 routing method with n_group=8, topk_group=4
     """
     try:
         from flashinfer.fused_moe import trtllm_fp4_block_scale_moe
@@ -95,71 +94,76 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
 
     torch.manual_seed(42)
 
-    # Routing logits: [tokens, num_experts] - float32 for DeepSeek V3
-    routing_logits = torch.randn(tokens, num_experts, dtype=torch.float32, device=device)
-    routing_bias = None  # Optional for DeepSeek V3
+    # Routing logits: [tokens, num_experts] - bfloat16 for non-DeepSeekV3, float32 for DeepSeekV3
+    # But the test uses bfloat16 for routing_logits
+    routing_logits = torch.rand(tokens, num_experts, dtype=torch.bfloat16, device=device)
+    # DeepSeek V3 uses routing bias
+    routing_bias = torch.zeros(num_experts, dtype=torch.bfloat16, device=device)
 
     # Hidden states: [tokens, hidden_size] - start with bfloat16 for quantization
-    hidden_states_bf16 = 2 * torch.randn(tokens, hidden_size, dtype=torch.bfloat16, device=device)
+    # Match test: use * 0.1 to scale down values
+    hidden_states_bf16 = torch.randn(tokens, hidden_size, dtype=torch.bfloat16, device=device) * 0.1
 
     # Create weights: [num_experts, 2 * intermediate_size, hidden_size] for gemm1
     #                 [num_experts, hidden_size, intermediate_size] for gemm2
+    # Match test: use * 0.1 to scale down values
     gemm1_weights = torch.randn(
         num_experts, 2 * intermediate_size, hidden_size,
         dtype=torch.bfloat16, device=device
-    )
+    ) * 0.1
     gemm2_weights = torch.randn(
         num_experts, hidden_size, intermediate_size,
         dtype=torch.bfloat16, device=device
+    ) * 0.1
+
+    # FP4 quantization setup - match test configuration for NvFP4
+    # Use fixed global scale factor as in test: 448.0 * 6.0 = 2688.0
+    fixed_global_scale = torch.tensor([448.0 * 6.0], device=device)
+    global_scale_inv = 1.0 / 448.0 / 6.0  # For output scaling
+
+    # Quantize hidden states with is_sf_swizzled_layout=False (match test)
+    hidden_states_fp4_bytes, hidden_states_scale_fp4_bytes = fp4_quantize(
+        hidden_states_bf16,
+        fixed_global_scale,
+        sf_vec_size=16,
+        sf_use_ue8m0=False,
+        is_sf_swizzled_layout=False,  # Match test!
     )
-
-    # FP4 quantization setup
-    use_ue8m0 = False
-
-    # Calculate global scale factor for hidden states
-    hidden_states_scale_global = calculate_fp4_global_scale_factor(hidden_states_bf16)
-
-    # Quantize weights
-    gemm1_weights_fp4_bytes, gemm1_scales_fp4_bytes, gemm1_scales_global = (
-        quant_fp4_batches_simple(gemm1_weights, num_experts, use_ue8m0, True)
-    )
-    gemm2_weights_fp4_bytes, gemm2_scales_fp4_bytes, gemm2_scales_global = (
-        quant_fp4_batches_simple(gemm2_weights, num_experts, use_ue8m0, True)
-    )
-
-    # Quantize hidden states
-    hidden_states_fp4_bytes, hidden_states_scale_fp4_bytes, _ = quant_fp4_simple(
-        hidden_states_bf16, hidden_states_scale_global, use_ue8m0, True
-    )
-
-    # Reshape hidden states for the kernel (pack 2 FP4 values into 1 byte)
     hidden_states_fp4 = hidden_states_fp4_bytes.view(torch.uint8).reshape(
         tokens, hidden_size // 2
     )
-    # Hidden-states scale for FP4 must be 2D: [num_tokens, hidden_size // 16]
-    hidden_states_scale_linear_fp4 = hidden_states_scale_fp4_bytes.view(torch.float8_e4m3fn)
-    expected_scale_elems = (tokens * hidden_size) // 16
-    if hidden_states_scale_linear_fp4.numel() != expected_scale_elems:
-        hidden_states_scale_linear_fp4 = torch.ones(
-            expected_scale_elems, device=device, dtype=torch.float8_e4m3fn
-        )
-    hidden_states_scale_linear_fp4 = hidden_states_scale_linear_fp4.reshape(
-        tokens, hidden_size // 16
+    hidden_states_scale_linear_fp4 = hidden_states_scale_fp4_bytes.view(torch.float8_e4m3fn).reshape(
+        tokens, -1
     )
 
-    # Prepare weights for kernel (uint8 packed format)
+    # Quantize weights with is_sf_swizzled_layout=True (default for weights)
+    gemm1_weights_fp4_bytes, gemm1_weights_scale_bytes = fp4_quantize(
+        gemm1_weights.reshape(-1, gemm1_weights.shape[-1]),  # Flatten experts for quantization
+        fixed_global_scale,
+        sf_vec_size=16,
+        sf_use_ue8m0=False,
+        is_sf_swizzled_layout=True,
+    )
+    # Reshape back
     gemm1_weights_fp4 = gemm1_weights_fp4_bytes.view(torch.uint8).reshape(
         num_experts, 2 * intermediate_size, hidden_size // 2
     )
-    gemm1_weights_scale = gemm1_scales_fp4_bytes.view(torch.float8_e4m3fn).reshape(
-        num_experts, 2 * intermediate_size, hidden_size // 16
+    gemm1_weights_scale = gemm1_weights_scale_bytes.view(torch.float8_e4m3fn).reshape(
+        num_experts, 2 * intermediate_size, -1
     )
 
+    gemm2_weights_fp4_bytes, gemm2_weights_scale_bytes = fp4_quantize(
+        gemm2_weights.reshape(-1, gemm2_weights.shape[-1]),
+        fixed_global_scale,
+        sf_vec_size=16,
+        sf_use_ue8m0=False,
+        is_sf_swizzled_layout=True,
+    )
     gemm2_weights_fp4 = gemm2_weights_fp4_bytes.view(torch.uint8).reshape(
         num_experts, hidden_size, intermediate_size // 2
     )
-    gemm2_weights_scale = gemm2_scales_fp4_bytes.view(torch.float8_e4m3fn).reshape(
-        num_experts, hidden_size, intermediate_size // 16
+    gemm2_weights_scale = gemm2_weights_scale_bytes.view(torch.float8_e4m3fn).reshape(
+        num_experts, hidden_size, -1
     )
 
     # Optional parameters (None for benchmarking)
@@ -169,10 +173,17 @@ def bench_trtllm_fp4_block_scale_moe(flashinfer, B: int, S: int, hidden_size: in
     gemm1_clamp_limit = None
     gemm2_bias = None
 
-    # Create scale scalars
-    output1_scale_scalar = torch.ones(local_num_experts, device=device, dtype=torch.float32)
-    output1_scale_gate_scalar = torch.ones(local_num_experts, device=device, dtype=torch.float32)
-    output2_scale_scalar = torch.ones(local_num_experts, device=device, dtype=torch.float32)
+    # Create scale scalars - use global_scale_inv for proper dequantization
+    # Match test: output1_scale = hidden_states_global_scale * w13_global_scale
+    output1_scale_scalar = torch.tensor(
+        [global_scale_inv * global_scale_inv] * num_experts, device=device, dtype=torch.float32
+    )
+    output1_scale_gate_scalar = torch.tensor(
+        [global_scale_inv * global_scale_inv] * num_experts, device=device, dtype=torch.float32
+    )
+    output2_scale_scalar = torch.tensor(
+        [global_scale_inv * global_scale_inv] * num_experts, device=device, dtype=torch.float32
+    )
 
     def kernel_fn():
         trtllm_fp4_block_scale_moe(
@@ -360,46 +371,86 @@ def run_flashinfer_benchmark(num_tokens: int, hidden_size: int, intermediate_siz
 
 
 def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
-    """Run trtllm_fp4_block_scale_moe benchmarks with subprocess isolation."""
+    """Run trtllm_fp4_block_scale_moe benchmarks using flashinfer's benchmark tool."""
     flashinfer = check_flashinfer()
     if not flashinfer:
         print("ERROR: flashinfer not available")
         return
 
+    print("\nNote: This kernel requires complex weight preprocessing (shuffling, permutation)")
+    print("that is difficult to replicate outside flashinfer's test framework.")
+    print("Using flashinfer's own benchmark infrastructure...\n")
+
+    # Try to run flashinfer's benchmark directly
+    import subprocess
+    import sys
+    import os
+
+    # Find flashinfer benchmark script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    flashinfer_bench = os.path.join(script_dir, "../../flashinfer/benchmarks/flashinfer_benchmark.py")
+    if not os.path.exists(flashinfer_bench):
+        flashinfer_bench = "/Users/lpc/workspace/sglang-deepseek-only/flashinfer/benchmarks/flashinfer_benchmark.py"
+
+    if not os.path.exists(flashinfer_bench):
+        print("ERROR: Cannot find flashinfer benchmark script")
+        print("Please run flashinfer's benchmark directly:")
+        print(f"  cd flashinfer/benchmarks")
+        print(f"  python flashinfer_benchmark.py --routine trtllm_fp4_block_scale_moe \\")
+        print(f"    --num_tokens <tokens> --hidden_size {H} --intermediate_size {I} \\")
+        print(f"    --num_experts {E} --top_k {K} --n_group {N_GROUP} --topk_group {TOPK_GROUP} \\")
+        print(f"    --routed_scaling_factor {ROUTED_SCALING_FACTOR} --routing_method deepseek_v3")
+        return
+
     results = []
 
-    # Note: This kernel appears to have issues with DeepSeek's 256 experts configuration
-    # The TRT-LLM FP4 batched GEMM kernel fails with "Error occurred when running GEMM!"
-    # when numBatches=256 (one batch per expert).
-    print("\nNote: Testing with DeepSeek config (256 experts, top-8)")
-    print("This kernel may not fully support this configuration.\n")
+    # Test configurations matching flashinfer's test parameters
+    test_configs = [
+        # (num_tokens, description)
+        (8, "decode B=8"),
+        (128, "prefill B=1,S=128"),
+        (256, "prefill B=1,S=256"),
+        (1024, "prefill B=1,S=1024"),
+    ]
 
-    # Decode phase (S=1)
-    print("=== Decode Phase ===")
-    for B in batch_sizes:
-        result = run_benchmark_isolated(B, 1, H, E, K, I, "decode")
-        if result:
-            results.append(result)
-            print(f"  B={B}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
-        else:
-            print(f"  B={B}: FAILED (kernel error)")
+    print("=== Running flashinfer benchmark ===")
+    for num_tokens, desc in test_configs:
+        cmd = [
+            sys.executable, flashinfer_bench,
+            "--routine", "trtllm_fp4_block_scale_moe",
+            "--num_tokens", str(num_tokens),
+            "--hidden_size", str(H),
+            "--intermediate_size", str(I),
+            "--num_experts", str(E),
+            "--top_k", str(K),
+            "--n_group", str(N_GROUP),
+            "--topk_group", str(TOPK_GROUP),
+            "--routed_scaling_factor", str(ROUTED_SCALING_FACTOR),
+            "--routing_method", "deepseek_v3",
+            "--num_iters", "10",
+            "--dry_run_iters", "5",
+            "--verbose", "0",
+        ]
 
-    # Prefill phase
-    print("\n=== Prefill Phase ===")
-    for B in batch_sizes[:4]:
-        for S in seq_lens:
-            result = run_benchmark_isolated(B, S, H, E, K, I, "prefill")
-            if result:
-                results.append(result)
-                print(f"  B={B}, S={S}: {result.latency_ms:.4f} ms, {result.gflops:.1f} GFLOPS, {result.peak_pct:.2f}% peak ({result.bound})")
+        print(f"\n  {desc} (tokens={num_tokens}):")
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            if result.returncode == 0:
+                # Parse output for performance metrics
+                for line in result.stdout.split('\n'):
+                    if 'trtllm' in line.lower() or 'tflops' in line.lower() or 'median' in line.lower():
+                        print(f"    {line.strip()}")
             else:
-                print(f"  B={B}, S={S}: FAILED (kernel error)")
+                print(f"    FAILED: {result.stderr[:200] if result.stderr else 'Unknown error'}")
+        except subprocess.TimeoutExpired:
+            print(f"    TIMEOUT")
+        except Exception as e:
+            print(f"    ERROR: {e}")
 
-    if results:
-        save_results(results, output_dir, "trtllm_fp4_block_scale_moe")
-    else:
-        print("\nNo successful results - kernel may not support DeepSeek's 256-expert config")
-        print("Consider testing with smaller num_experts (e.g., 8 or 64)")
+    print("\n" + "=" * 60)
+    print("Note: This kernel benchmark uses flashinfer's internal benchmark tool.")
+    print("Results may differ from other kernels due to different measurement methods.")
+    print("=" * 60)
 
 
 def main():
