@@ -1,11 +1,11 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-27 16:52:06
+**Generated:** 2026-01-27 17:00:14
 
 **Total Kernels:** 23
 **Kernels Run:** 23
-**Successful:** 18
-**Failed:** 5
+**Successful:** 19
+**Failed:** 4
 
 **Note:** Each kernel runs in a separate subprocess for isolation.
 CUDA crashes in one kernel do not affect other kernels.
@@ -30,7 +30,7 @@ CUDA crashes in one kernel do not affect other kernels.
 | 14 | `topk_softmax` | MoE Routing | Memory | ✓ OK | OK |
 | 15 | `topk_sigmoid` | MoE Routing | Memory | ✓ OK | OK |
 | 16 | `moe_fused_gate` | MoE Routing | Memory | ✓ OK | OK |
-| 17 | `prepare_moe_input` | MoE | Memory | ✗ FAILED | Exit code 1 |
+| 17 | `prepare_moe_input` | MoE | Memory | ✓ OK | OK |
 | 18 | `scaled_fp4_experts_quant` | MoE | Memory | ✗ FAILED | Exit code 1 |
 | 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✗ FAILED | Exit code 1 |
 | 20 | `apply_shuffle_mul_sum` | MoE | Memory | ✓ OK | OK |
