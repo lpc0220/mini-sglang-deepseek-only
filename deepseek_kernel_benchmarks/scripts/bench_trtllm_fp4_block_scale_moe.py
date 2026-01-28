@@ -371,7 +371,7 @@ def run_flashinfer_benchmark(num_tokens: int, hidden_size: int, intermediate_siz
 
 
 def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str):
-    """Run trtllm_fp4_block_scale_moe benchmarks using flashinfer's benchmark tool."""
+    """Run trtllm_fp4_block_scale_moe benchmarks by directly calling flashinfer's test function."""
     flashinfer = check_flashinfer()
     if not flashinfer:
         print("ERROR: flashinfer not available")
@@ -379,31 +379,31 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
 
     print("\nNote: This kernel requires complex weight preprocessing (shuffling, permutation)")
     print("that is difficult to replicate outside flashinfer's test framework.")
-    print("Using flashinfer's own benchmark infrastructure...\n")
+    print("Importing and running flashinfer's test routine directly...\n")
 
-    # Try to run flashinfer's benchmark directly
-    import subprocess
     import sys
     import os
 
-    # Find flashinfer benchmark directory - need to run from there for relative imports
+    # Find flashinfer benchmark directory and add to path
     script_dir = os.path.dirname(os.path.abspath(__file__))
     flashinfer_bench_dir = os.path.join(script_dir, "../../flashinfer/benchmarks")
     if not os.path.exists(flashinfer_bench_dir):
-        flashinfer_bench_dir = None
-
-    if not flashinfer_bench_dir:
         print("ERROR: Cannot find flashinfer benchmarks directory")
-        print("Please clone flashinfer and run the benchmark directly:")
+        print("Please clone flashinfer under the project root:")
         print(f"  git clone https://github.com/flashinfer-ai/flashinfer.git")
-        print(f"  cd flashinfer/benchmarks")
-        print(f"  python flashinfer_benchmark.py --routine trtllm_fp4_block_scale_moe \\")
-        print(f"    --num_tokens <tokens> --hidden_size {H} --intermediate_size {I} \\")
-        print(f"    --num_experts {E} --top_k {K} --n_group {N_GROUP} --topk_group {TOPK_GROUP} \\")
-        print(f"    --routed_scaling_factor {ROUTED_SCALING_FACTOR} --routing_method deepseek_v3")
         return
 
-    results = []
+    # Add flashinfer benchmarks to path so we can import routines
+    if flashinfer_bench_dir not in sys.path:
+        sys.path.insert(0, flashinfer_bench_dir)
+
+    try:
+        from routines.moe import testTrtllmFp4BlockScaleMoe
+        from argparse import Namespace
+    except ImportError as e:
+        print(f"ERROR: Failed to import flashinfer benchmark routines: {e}")
+        print("Make sure flashinfer is cloned under the project root.")
+        return
 
     # Test configurations matching flashinfer's test parameters
     test_configs = [
@@ -415,39 +415,34 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     ]
 
     print("=== Running flashinfer benchmark ===")
-    print(f"  (running from: {flashinfer_bench_dir})")
     for num_tokens, desc in test_configs:
-        # Run from flashinfer/benchmarks directory so relative imports work
-        cmd = [
-            sys.executable, "flashinfer_benchmark.py",
-            "--routine", "trtllm_fp4_block_scale_moe",
-            "--num_tokens", str(num_tokens),
-            "--hidden_size", str(H),
-            "--intermediate_size", str(I),
-            "--num_experts", str(E),
-            "--top_k", str(K),
-            "--n_group", str(N_GROUP),
-            "--topk_group", str(TOPK_GROUP),
-            "--routed_scaling_factor", str(ROUTED_SCALING_FACTOR),
-            "--routing_method", "deepseek_v3",
-            "--num_iters", "10",
-            "--dry_run_iters", "5",
-            "--verbose", "0",
-        ]
+        # Create args namespace matching flashinfer's expected format
+        args = Namespace(
+            routine="trtllm_fp4_block_scale_moe",
+            num_tokens=num_tokens,
+            hidden_size=H,
+            intermediate_size=I,
+            num_experts=E,
+            top_k=K,
+            n_group=N_GROUP,
+            topk_group=TOPK_GROUP,
+            routed_scaling_factor=ROUTED_SCALING_FACTOR,
+            routing_method="deepseek_v3",
+            num_iters=10,
+            dry_run_iters=5,
+            verbose=0,
+            backends=None,
+        )
 
         print(f"\n  {desc} (tokens={num_tokens}):")
         try:
-            # Run from flashinfer/benchmarks directory
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, cwd=flashinfer_bench_dir)
-            if result.returncode == 0:
-                # Parse output for performance metrics
-                for line in result.stdout.split('\n'):
-                    if 'trtllm' in line.lower() or 'tflops' in line.lower() or 'median' in line.lower():
-                        print(f"    {line.strip()}")
-            else:
-                print(f"    FAILED: {result.stderr[:200] if result.stderr else 'Unknown error'}")
-        except subprocess.TimeoutExpired:
-            print(f"    TIMEOUT")
+            result = testTrtllmFp4BlockScaleMoe(args)
+            if result:
+                for r in result:
+                    backend = r.get('backend', 'unknown')
+                    median_time = r.get('median_time', 0)
+                    tflops = r.get('tflops', 0)
+                    print(f"    {backend}: {median_time:.4f} ms, {tflops:.2f} TFLOPS")
         except Exception as e:
             print(f"    ERROR: {e}")
 
