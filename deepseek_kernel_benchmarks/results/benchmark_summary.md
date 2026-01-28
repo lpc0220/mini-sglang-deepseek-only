@@ -1,11 +1,11 @@
 # DeepSeek-R1-NVFP4-v2 Kernel Benchmark Summary
 
-**Generated:** 2026-01-27 20:19:56
+**Generated:** 2026-01-27 20:38:17
 
 **Total Kernels:** 23
 **Kernels Run:** 23
-**Successful:** 19
-**Failed:** 4
+**Successful:** 20
+**Failed:** 3
 
 **Note:** Each kernel runs in a separate subprocess for isolation.
 CUDA crashes in one kernel do not affect other kernels.
@@ -21,7 +21,7 @@ CUDA crashes in one kernel do not affect other kernels.
 | 5 | `dsv3_router_gemm` | GEMM | Compute | ✓ OK | OK |
 | 6 | `bmm_fp8` | BMM | Compute | ✓ OK | OK |
 | 7 | `cutlass_mla_decode` | Attention | Mixed | ✓ OK | OK |
-| 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✗ FAILED | Exit code 1 |
+| 8 | `trtllm_batch_decode_with_kv_cache_mla` | Attention | Mixed | ✓ OK | OK |
 | 9 | `trtllm_ragged_attention_deepseek` | Attention | Mixed | ✓ OK | OK |
 | 10 | `mla_rope_quantize_fp8` | Attention | Memory | ✓ OK | OK |
 | 11 | `apply_rope_with_cos_sin_cache_inplace` | RoPE | Memory | ✓ OK | OK |
@@ -35,7 +35,7 @@ CUDA crashes in one kernel do not affect other kernels.
 | 19 | `cutlass_fp4_group_mm` | MoE | Compute | ✗ FAILED | Exit code 1 |
 | 20 | `apply_shuffle_mul_sum` | MoE | Memory | ✓ OK | OK |
 | 21 | `moe_align_block_size` | MoE | Memory | ✓ OK | OK |
-| 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✗ FAILED | No CSV output (kernel not available or all runs fa... |
+| 22 | `trtllm_fp4_block_scale_moe` | MoE | Mixed | ✗ FAILED | Exit code 1 |
 | 23 | `fused_moe_kernel` | MoE | Mixed | ✓ OK | OK |
 
 ## CSV Files Generated
