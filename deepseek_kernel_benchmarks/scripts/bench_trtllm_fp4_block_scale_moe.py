@@ -417,21 +417,53 @@ def run_benchmarks(batch_sizes: List[int], seq_lens: List[int], output_dir: str)
     print("=== Running flashinfer benchmark ===")
     for num_tokens, desc in test_configs:
         # Create args namespace matching flashinfer's expected format
+        # Include all required arguments from flashinfer_benchmark.py and parse_moe_args
         args = Namespace(
+            # Required MoE args
             routine="trtllm_fp4_block_scale_moe",
             num_tokens=num_tokens,
             hidden_size=H,
             intermediate_size=I,
             num_experts=E,
             top_k=K,
+            # DeepSeek V3 routing args
             n_group=N_GROUP,
             topk_group=TOPK_GROUP,
             routed_scaling_factor=ROUTED_SCALING_FACTOR,
             routing_method="deepseek_v3",
+            routing_method_type=2,  # deepseek_v3 = 2
+            # Local expert config
+            local_expert_offset=0,
+            local_num_experts=E,
+            # Weight layout
+            use_shuffled_weight=False,
+            weight_layout=0,  # MajorK
+            # Data types
+            input_dtype="bfloat16",
+            weight_dtype="bfloat16",
+            # Activation
+            gated_act="swiglu",
+            gated_act_type=0,  # swiglu = 0
+            # Routing options
+            use_routing_bias=False,
+            use_routing_scales_on_input=False,
+            # Benchmark options
             num_iters=10,
             dry_run_iters=5,
             verbose=0,
             backends=None,
+            autotune=False,
+            # Shared args from flashinfer_benchmark.py
+            random_seed=42,
+            no_cuda_graph=False,
+            use_cupti=False,
+            use_cuda_events=False,
+            refcheck=False,
+            allow_output_mismatch=False,
+            output_path=None,
+            case_tag=None,
+            generate_repro_command=False,
+            repro_command="",
         )
 
         print(f"\n  {desc} (tokens={num_tokens}):")
